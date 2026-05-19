@@ -1,0 +1,225 @@
+\documentclass[journal]{IEEEtran}
+
+% packages
+\usepackage{ulem}
+\usepackage{hyperref}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+%% footnote packages
+\usepackage{footnote}
+\makesavenoteenv{table}
+\makesavenoteenv{tabular}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\leftmargini}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% nomenclature
+\input{nomenclature}
+
+% document
+\begin{document}
+
+\section{Mathematical Framework}
+\label{sec:mathematical_framework}
+
+This section describes the real-value \textbf{second-order cone} feasible set for the deterministic harmonic hosting capacity (\texttt{dHHC\_SOC}) in the rectangular current-voltage formulation for a balanced three-phase power system. 
+
+\subsection{Sets}
+
+\begin{table}[H]
+    \centering
+    \caption{Relevant sets for the SOC formulation.}
+    \label{tab:sets_soc}
+    \begin{tabular}{l l l }
+        symbol                                  & index         & definition                                                \\ \hline
+        $\NodeSet$                              & $\Node$       & set of nodes                                              \\
+        $\quad \RefNodeSet$                     & $\Node$       & set of reference node                                     \\ 
+        $\LineSet$                              & $\Line$       & set of branches                                           \\ 
+        $\XfmrSet$                              & $\Xfmr$       & set of transformers                                       \\ 
+        $\WindingSet_{\Xfmr}$                   & $\Winding$    & set of transformer windings                               \\
+        $\quad \WindingSet^{\text{e}}_{\Xfmr}$  & $\Winding$    & set of earthed transformer windings                       \\
+        $\quad \WindingSet^{\text{ne}}_{\Xfmr}$ & $\Winding$    & set of non-earthed transformer windings                   \\
+        $\quad \WindingSet^{\text{d}}_{\Xfmr}$  & $\Winding$    & set of delta transformer windings                         \\
+        $\HarmonicUnitSet$                      & $\Unit$       & set of harmonic units                                     \\   
+        $\HarmonicSet$                          & $\Harmonic$   & set of harmonic numbers, \textbf{excluding fundamental}   \\ 
+        $\quad \PositiveHarmonicSet$            & $\Harmonic$   & set of positive sequence harmonic numbers                 \\ 
+        $\quad \NegativeHarmonicSet$            & $\Harmonic$   & set of negative sequence harmonic numbers                 \\ 
+        $\quad \ZeroHarmonicSet$                & $\Harmonic$   & set of zero sequence harmonic numbers                     \\ \hline
+        $\LineTupleSet$                         & $\LineTuple$  & tuple set of branches and corr. nodes                     \\ 
+        $\LineTupleSetFr$                       & $\LineTuple$  & tuple set of branches and corr. nodes (side: fr)          \\
+        $\UnitTupleSet$                         & $\UnitTuple$  & tuple set of units and corr. node                         \\
+        $\quad \HarmonicUnitTupleSet$           & $\UnitTuple$  & tuple set of harmonic units and corr. node                \\
+    \end{tabular}
+\end{table}
+
+\subsection{Parameters}
+
+\begin{table}[H]
+    \centering
+    \caption{Relevant parameters for the SOC formulation.}
+    \label{tab:parameters_soc}
+    \begin{tabular}{l l }
+        symbol                                                                      & definition                                        \\ \hline
+        $\ShuntConductance{\Node/\text{$\Xfmr$,}\Winding/\LineTuple,\Harmonic}$     & shunt conductance                                 \\
+        $\ShuntSusceptance{\Node/\text{$\Xfmr$,}\Winding/\LineTuple,\Harmonic}$     & shunt susceptance                                 \\
+        $\Resistance_{\Xfmr,\Winding,\Harmonic}$                                    & resistance                                        \\
+        $\SeriesResistance{\Line,\Harmonic}$                                        & series resistance                                 \\
+        $\ShuntResistance{\Xfmr,\Harmonic}$                                         & shunt resistance                                  \\
+        $\Resistance^{\text{0}}_{\Xfmr,\Winding,\Harmonic}$                         & zero-sequence reactance                           \\
+        $\SeriesReactance{\Line/\Xfmr,\Harmonic}$                                   & series reactance                                  \\
+        $\Reactance^{\text{0}}_{\Xfmr,\Winding,\Harmonic}$                          & zero-sequence reactance                           \\ \hline
+        $\RealVectorGroupTransform_{\Xfmr,\Harmonic}$                               & real transform due to tap ratio and vector group  \\
+        $\ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}$                          & imag transform due to tap ratio and vector group  \\ \hline
+        $\RatedCurrent_{\LineTuple/\Xfmr,\Winding}$                                 & rated current magnitude                           \\ 
+        $\FundamentalCurrentMagnitude{\LineTuple/\text{$\Xfmr$,}\Winding}$          & fundemental current magnitude                     \\ \hline
+        $\RealRefVoltage_{\Node,\Harmonic}$                                         & real reference voltage                            \\
+        $\FundamentalVoltageMagnitude{\Node}$                                       & fundamental voltage magnitude                     \\
+        $\MinimumVoltage_{\Node}$                                                   & min rms voltage magnitude                         \\
+        $\MaximumVoltage_{\Node}$                                                   & max rms voltage magnitude                         \\
+        $\MinimumVoltage_{\Node,\Harmonic}$                                         & min harmonic voltage magnitude                    \\
+        $\MaximumVoltage_{\Node,\Harmonic}$                                         & max harmonic voltage magnitude                    \\
+        $\text{IHD}^{\text{u}}_{\Node,\Harmonic}$                                   & max individual harmonic voltage distortion        \\
+        $\text{THD}^{\text{u}}_{\Node,\Harmonic}$                                   & max total harmonic voltage distortion             \\ \hline
+        $\alpha^{\text{sin,min}}_{\Unit,\Harmonic}$                                 & min sinus component of the current angle cone\footnote{$\alpha^{\text{x,y}}_{\Unit,\Harmonic} = y(x(\varphi_{\Unit,\Harmonic}^{\text{min}}),x(\varphi_{\Unit,\Harmonic}^{\text{max}}))$, e.g., $\varphi_{\Unit,\Harmonic}^{\text{cos,min}} = \min(\sin(\varphi_{\Unit,\Harmonic}^{\text{min}},\varphi_{\Unit,\Harmonic}^{\text{max}}))$}       \\
+        $\alpha^{\text{sin,max}}$                                                   & max sinus component of the current angle cone     \\
+        $\alpha^{\text{cos,min}}$                                                   & min cosinus component of the current angle cone   \\
+        $\alpha^{\text{cos,max}}$                                                   & max cosinus component of the current angle cone   \\
+    \end{tabular}
+\end{table}
+
+\subsection{Variables}
+
+\begin{table}[H]
+    \centering
+    \caption{Relevant variables for the SOC formulation.}
+    \label{tab:variables_nlp}
+    \begin{tabular}{l r r l l }
+        symbol                                                  & lb                                    & ub                                        & definition                                & HPM.jl            \\ \hline
+        $\RealVoltage_{\Node,\Harmonic}$                        & -$\MaximumVoltage_{\Node,\Harmonic}$   & $\MaximumVoltage_{\Node,\Harmonic}$      & real part of the voltage                  & \texttt{vr}       \\
+        $\ImaginaryVoltage_{\Node,\Harmonic}$                   & -$\MaximumVoltage_{\Node,\Harmonic}$   & $\MaximumVoltage_{\Node,\Harmonic}$      & imag part of the voltage                  & \texttt{vi}       \\ \hline
+        $\RealCurrent_{\Unit,\Harmonic}$                        & -                                     & -                                         & real part of the current                  & \texttt{crd/g}    \\ 
+        $\ImaginaryCurrent_{\Unit,\Harmonic}$                   & -                                     & -                                         & imaginary part of the current             & \texttt{cid/g}    \\ 
+        $\CurrentMagnitude_{\Unit,\Harmonic}$                   & -                                     & -                                         & magnitude of the current                  & \texttt{cmd}      \\ \hline
+        $\RealCurrent_{\LineTuple,\Harmonic}$                   & -                                     & -                                         & real part of the total current            & \texttt{cr}       \\ 
+        $\ImaginaryCurrent_{\LineTuple,\Harmonic}$              & -                                     & -                                         & imag part of the total current            & \texttt{ci}       \\ 
+        $\RealSeriesCurrent_{\LineTuple,\Harmonic}$             & -                                     & -                                         & real part of the series current           & \texttt{csr}      \\ 
+        $\ImaginarySeriesCurrent_{\LineTuple,\Harmonic}$        & -                                     & -                                         & imag part of the series current           & \texttt{csi}      \\ \hline
+        $\RealExcitationVoltage_{\Xfmr,\Harmonic}$              & -                                     & -                                         & real part of the excitation voltage       & \texttt{ert}      \\
+        $\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic}$         & -                                     & -                                         & imag part of the excitation voltage       & \texttt{eit}      \\
+        $\RealMagnetizingCurrent_{\Xfmr,\Harmonic}$             & -                                     & -                                         & real part of the magnitizing current      & \texttt{cmrt}     \\
+        $\ImaginaryMagnetizingCurrent_{\Xfmr,\Harmonic}$        & -                                     & -                                         & imag part of the magnitizing current      & \texttt{cmit}     \\
+        $\RealAltVoltage_{\Xfmr,\Winding,\Harmonic}$            & -                                     & -                                         & real part of the winding voltage          & \texttt{vrt}      \\
+        $\ImaginaryAltVoltage_{\Xfmr,\Winding,\Harmonic}$       & -                                     & -                                         & imag part of the winding voltage          & \texttt{vit}      \\
+        $\RealCurrent_{\Xfmr,\Winding,\Harmonic}$               & -                                     & -                                         & real part of the total winding current    & \texttt{crt}      \\ 
+        $\ImaginaryCurrent_{\Xfmr,\Winding,\Harmonic}$          & -                                     & -                                         & imag part of the total winding current    & \texttt{cit}      \\ 
+        $\RealSeriesCurrent_{\Xfmr,\Winding,\Harmonic}$         & -                                     & -                                         & real part of the series winding current   & \texttt{csrt}     \\ 
+        $\ImaginarySeriesCurrent_{\Xfmr,\Winding,\Harmonic}$    & -                                     & -                                         & imag part of the series winding current   & \texttt{csit}     \\
+    \end{tabular}
+\end{table}
+
+\subsection{Model}
+
+{\allowdisplaybreaks 
+\begin{IEEEeqnarray}{ 0 l }
+    \textsc{objective function} \nonumber \\
+    \quad \max \sum_{\Unit \in \HarmonicUnitSet}\sum_{\Harmonic \in \HarmonicSet}  \CurrentMagnitude_{\Unit,\Harmonic} \\
+    \textsc{Node Constraints} \nonumber \\
+    \text{reference node --~} \forall \Node \in \RefNodeSet, \Harmonic \in \HarmonicSet: \nonumber\\
+    \quad \RealVoltage_{\Node,\Harmonic} = \RealRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_a} \\ 
+    \quad \ImaginaryVoltage_{\Node,\Harmonic} = 0, \label{eq_ref_bus_volt_source_b} \\
+    \text{root mean square voltage limit --~} \forall \Node \in \NodeSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\MaximumVoltage_{\Node})^{2} - (\FundamentalVoltageMagnitude{\Node})^{2}, \label{eq:voltage_bounds_fund} \\
+    \text{total harmonic voltage limit --~} \forall \Node \in \NodeSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\text{THD}_{\Node}^{\text{u}})^2\,(\FundamentalVoltageMagnitude{\Node})^{2},  \label{eq:thd_bounds} \\
+    \text{individual harmonic voltage limit --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\text{IDH}^{\text{u}}_{\Node,\Harmonic})^{2}\,(\FundamentalVoltageMagnitude{\Node})^{2},
+    \label{eq:harmonic_bounds} \\
+    \text{Kirchhoff's current law --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \sum_{\LineTuple \in \LineTupleSet} \mkern-6mu \RealCurrent_{\LineTuple,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \RealCurrent_{\UnitTuple,\Harmonic}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic} -\ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic}  = 0, \label{eq:kcl_node_real} \\
+    \quad \sum_{\LineTuple \in \LineTupleSet} \mkern-6mu \ImaginaryCurrent_{\LineTuple,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \ImaginaryCurrent_{\UnitTuple,\Harmonic} + \ShuntConductance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + \ShuntSusceptance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic}= 0, \label{eq:kcl_node_imag} \\
+    \textsc{Branch Constraints} \nonumber \\
+    \text{Ohm's law --~} \forall \LineTuple \in \LineTupleSetFr, \Harmonic \in \HarmonicSet: \nonumber\\
+    \quad \RealVoltage_{\AltNode,\Harmonic} = \RealVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic} +
+    \SeriesReactance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_real} \\ 
+    \quad \ImaginaryVoltage_{\AltNode,\Harmonic} = \ImaginaryVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic} -
+    \SeriesReactance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_imag} \\
+    \text{branch total current --~} \forall \LineTuple \in \LineTupleSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \RealCurrent_{\LineTuple,\Harmonic} =
+    \ShuntConductance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} - 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} +
+    \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_real} \\
+    \quad \ImaginaryCurrent_{\LineTuple,\Harmonic} =
+    \ShuntConductance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} +
+    \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_imag} \\
+    \text{root mean square current limits --~} \forall \LineTuple \in \LineTupleSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealCurrent_{\LineTuple,\Harmonic})^{2} + (\ImaginaryCurrent_{\LineTuple,\Harmonic})^{2} \leq (\RatedCurrent_{\LineTuple})^{2} - (\FundamentalCurrentMagnitude{\LineTuple})^2, \\
+    \textsc{Transformer Constraints} \nonumber \\
+    \text{xfmr core --~} \forall \Xfmr \in \XfmrSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \RealMagnetizingCurrent_{\Xfmr,\Harmonic} +  \frac{\RealExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}} =
+    \sum_{\Winding \in \WindingSet_{\Xfmr}} \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealSeriesCurrent_{\Xfmr,\Winding,\Harmonic} + \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginarySeriesCurrent_{\Xfmr,\Winding,\Harmonic}, \\
+    \quad \ImaginaryMagnetizingCurrent_{\Xfmr,\Harmonic} +  \frac{\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}} =
+    \sum_{\Winding \in \WindingSet_{\Xfmr}} \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginarySeriesCurrent_{\Xfmr,\Winding,\Harmonic} - \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealSeriesCurrent_{\Xfmr,\Winding,\Harmonic}, \\
+    \quad \RealAltVoltage_{\Xfmr,1,\Harmonic} = \RealExcitationVoltage_{\Xfmr,\Harmonic} - \SeriesReactance{\Xfmr,\Harmonic} \,\ImaginarySeriesCurrent_{\Xfmr,1,\Harmonic},\\
+    \quad \ImaginaryAltVoltage_{\Xfmr,1,\Harmonic} = \ImaginaryExcitationVoltage_{\Xfmr,\Harmonic} + \SeriesReactance{\Xfmr,\Harmonic}\,\RealSeriesCurrent_{\Xfmr,1,\Harmonic}, \\
+    \quad \RealAltVoltage_{\Xfmr,2,\Harmonic} = \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealExcitationVoltage_{\Xfmr,\Harmonic} - \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic}, \\
+    \quad \ImaginaryAltVoltage_{\Xfmr,2,\Harmonic} = \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic} + \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealExcitationVoltage_{\Xfmr,\Harmonic}, \\
+    \text{xfmr winding  --~} \forall \Xfmr \in \XfmrSet, \Winding \in \WindingSet_{\Xfmr}, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \RealSeriesCurrent_{\Xfmr,\Winding,\Harmonic} = \RealCurrent_{\Xfmr,\Winding,\Harmonic} + 
+    \ShuntConductance{\Xfmr,\Winding,\Harmonic}\,\RealAltVoltage_{\Xfmr,\Winding,\Harmonic} - 
+    \ShuntSusceptance{\Xfmr,\Winding,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr,\Winding,\Harmonic}, \\
+    \quad \ImaginarySeriesCurrent_{\Xfmr,\Winding,\Harmonic} = \ImaginaryCurrent_{\Xfmr,\Winding,\Harmonic} + \ShuntConductance{\Xfmr,\Winding,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr,\Winding,\Harmonic} + 
+    \ShuntSusceptance{\Xfmr,\Winding,\Harmonic}\,\RealAltVoltage_{\Xfmr,\Winding,\Harmonic}, \\
+    \text{xfmr winding  --~} \forall \Xfmr \in \XfmrSet, \Winding \in \WindingSet_{\Xfmr}, \Harmonic \in \PositiveHarmonicSet \cup \NegativeHarmonicSet: \Winding \to \Node: \nonumber\\
+    \quad \RealVoltage_{\Node,\Harmonic}  = \RealAltVoltage_{\Xfmr,\Winding,\Harmonic} + \Resistance_{\Xfmr,\Winding,\Harmonic}\,\RealCurrent_{\Xfmr,\Winding,\Harmonic},  \\
+    \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryAltVoltage_{\Xfmr,\Winding,\Harmonic} + \Resistance_{\Xfmr,\Winding,\Harmonic}\,\ImaginaryCurrent_{\Xfmr,\Winding,\Harmonic}, \\ 
+    \text{xfmr winding  --~} \forall \Xfmr \in \XfmrSet, \Winding \in \WindingSet^{\text{e}}_{\Xfmr}, \Harmonic \in \ZeroHarmonicSet: \Winding \to \Node: \nonumber \\
+    \quad \RealVoltage_{\Node,\Harmonic}  = \RealAltVoltage_{\Xfmr,\Winding,\Harmonic} + (r_{\Xfmr,\Winding,\Harmonic}+3r^{\text{0}}_{\Xfmr,\Winding,\Harmonic})\,\RealCurrent_{\Xfmr,\Winding,\Harmonic} - 3x^{\text{0}}_{\Xfmr,\Winding,\Harmonic}\,\ImaginaryCurrent_{\Xfmr,\Winding,\Harmonic},  \nonumber \\ \\
+    \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryAltVoltage_{\Xfmr,\Winding,\Harmonic} + (r_{\Xfmr,\Winding,\Harmonic}+3r^{\text{0}}_{\Xfmr,\Winding,\Harmonic})\,\ImaginaryCurrent_{\Xfmr,\Winding,\Harmonic} + 3x^{\text{0}}_{\Xfmr,\Winding,\Harmonic}\,\RealCurrent_{\Xfmr,\Winding,\Harmonic}, \nonumber \\ \\
+    \text{xfmr winding  --~} \forall \Xfmr \in \XfmrSet, \Winding \in \WindingSet^{\text{ne}}_{\Xfmr} \cup \WindingSet^{\text{d}}_{\Xfmr}, \Harmonic \in \ZeroHarmonicSet: \Winding \to \Node: \nonumber \\
+    \quad \RealCurrent_{\Xfmr,\Winding,\Harmonic} = 0, \\ 
+    \quad \ImaginaryCurrent_{\Xfmr,\Winding,\Harmonic} = 0, \label{eq_zero_se_block} \\
+    \text{root mean square current limits --~} \forall \Xfmr \in \XfmrSet, \Winding \in \WindingSet_{\Xfmr}: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealCurrent_{\Xfmr,\Winding,\Harmonic})^{2} + (\ImaginaryCurrent_{\Xfmr,\Winding,\Harmonic})^{2} \leq (\RatedCurrent_{\Xfmr,\Winding})^{2} - (\FundamentalCurrentMagnitude{\Xfmr,\Winding})^2, \\
+    \textsc{Unit Constraints} \nonumber \\
+    \text{harmonic current limits --~} \forall \UnitTuple \in \HarmonicUnitTupleSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \alpha_{\Unit,\Harmonic}^{\text{cos,min}} \, \CurrentMagnitude_{\Unit,\Harmonic} \leq 
+    \RealCurrent_{\Unit,\Harmonic} \leq 
+    \alpha_{\Unit,\Harmonic}^{\text{cos,max}} \, \CurrentMagnitude_{\Unit,\Harmonic} \\
+    \quad \alpha_{\Unit,\Harmonic}^{\text{sin,min}} \, \CurrentMagnitude_{\Unit,\Harmonic} \leq 
+    \ImaginaryCurrent_{\Unit,\Harmonic} \leq 
+    \alpha_{\Unit,\Harmonic}^{\text{sin,max}} \, \CurrentMagnitude_{\Unit,\Harmonic} \\
+    \quad (\CurrentMagnitude_{\Unit,\Harmonic})^{2} \geq 
+    (\RealCurrent_{\Unit,\Harmonic})^2 + (\ImaginaryCurrent_{\Unit,\Harmonic})^2 
+\end{IEEEeqnarray}}
+
+\end{document}

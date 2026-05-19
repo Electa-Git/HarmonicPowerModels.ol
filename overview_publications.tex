@@ -1,0 +1,25 @@
+\documentclass{article}
+
+\usepackage[landscape]{geometry}
+
+\usepackage{array}
+\usepackage{varwidth}
+
+\begin{document}
+    \section{Overview of the Publications}
+
+    \begin{table}[ht!]
+        \centering
+        \caption{Overview of the Publications\newline}
+        \label{tab:my_label}
+        \begin{tabular}{ c | V{4.5cm} c c c c V{4.5cm}}
+            \#  & title                                                         & authors       & type          & publication               & deadline      & description                                                                   \\ \hline
+            1   & Lower Bound for Harmonic Hosting Capacity                     & TVA, HE       & journal       & IEEE trans. on PD (?)     & 01/09/24 (?)  & soc model for deterministic harmonic hosting capacity                         \\
+            2   & Robust Lower Bound for Harmonic Hosting Capacity              & TVA, HE, BL   & journal       & (?)                       & 01/01/25 (?)  & robust soc model against voltage and impedance uncertainty                    \\
+            3   & Robust Harmonic Hosting Capacity (?)                          & TVA, HE       & journal       & (?)                       & 01/06/25 (?)  & robust soc model with uncertainty on harmonic current injection               \\ \hline
+            4   & Impact of Grid Exploitation on Harmonic Hosting Capacity      & TVA, HE       & conference    & PES GM 25                 & 11/11/24      & monte-carlo on grid exploitation                                              \\ 
+            5   & Impact of Component Uncertainty on Harmonic Hosting Capacity  & TVA, HE, AB   & conference    & PSCC 26                   & 30/06/25      & impact component engineering data uncertainty on harmonic hosting capacity    \\
+        \end{tabular}
+    \end{table}  
+    
+\end{document}

@@ -1,0 +1,64 @@
+\section{Discussion on Future Work}
+\label{sec:future_work}
+
+\subsection{Stochastic Representation}
+
+\textcolor{orange}{The primary contribution of this paper is a deterministic harmonic hosting capacity model that remains tractable for large-scale problems. As highlighted in \S~\ref{sec:stochastic_representation} and the accompanying Table~\ref{tab:literature_review}, different sources of uncertainty have an impact on harmonic hosting capacity. Future work will include these different sources of uncertainty in the presented tractable harmonic hosting capacity model to provide more accurate harmonic hosting capacity. As such, in what follows, for the different sources of uncertainty, a high-level strategy is discussed to include these uncertainty sources in the harmonic hosting capacity model presented in this paper.
+\begin{enumerate}
+    \item [a)] Unit harmonic injection -- Uncertainty on the angle of the injected harmonic current can be taken into account through polynomial chaos expansion~\cite{sullivan_introduction_2015}, allowing representation of the angle as a probability density function, e.g., normal distribution.
+    \item [b)] Background harmonic distortion -- Uncertainty on background harmonic distortion can also be taken into account through polynomial chaos expansion.
+    \item [c)] network parameters -- Uncertainty on network parameters, e.g., line impedance, can be taken into account using robust programming~\cite{nemirovski_robust_2019}.
+    \item [d)] network exploitation -- Uncertainty on network exploitation is best taken into account through a scenario-based approach, given the discrete nature of this uncertainty source.
+    \item [e)] harmonic limits -- Stochastic bounds on harmonic limits as in the different standards, e.g., EN50160: within a week, 95\,\% of the time, the total harmonic distortion needs to be below 8\,\%, are best enforced using chance constraints~\cite{birge_introduction_2011}.
+\end{enumerate}}
+
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}
+        \begin{semilogyaxis}[   
+                        axis lines=left,
+                        xlabel={\footnotesize harmonic~$h$ [-]},
+                        x label style={at={(axis description cs:0.5,-0.125)},anchor=north},
+                        ylabel={\footnotesize voltage magn.~$|\ComplexVoltage|$ [pu]},
+                        y label style={at={(axis description cs:-0.100,0.50)},anchor=south},
+                        clip=false,
+                        height=44mm, width=90mm,
+                        xmin = 2.0, xmax = 50.0,
+                        ymin = 1e-5, ymax = 1e-1,
+                        ytick = {1e-5, 1e-4, 1e-3, 1e-2, 1e-1},
+                        yticklabels = { \footnotesize 1e-5, \footnotesize 1e-4, \footnotesize 1e-3, 
+                                        \footnotesize 1e-2, \footnotesize 1e-1},
+                        xtick = {2, 10, 20, 30, 40, 50},
+                        xticklabels = { \footnotesize 2, \footnotesize 10, \footnotesize 20, 
+                                        \footnotesize 30, \footnotesize 40, \footnotesize 50},
+                        xmajorgrids=true,
+                        ymajorgrids=true,
+                        grid style={gray!10},
+                        axis on top,
+                        legend style={at={(0.4,-0.25)},anchor=north,draw=none, legend columns=-1}
+                    ]
+            \addplot[blue, densely dotted, mark=*, mark size=1.5pt] table [x=h, y=ae, col sep=comma]{files/avg_vmh.csv};
+            \addlegendentry{\footnotesize abs. eq.}
+            \addplot[orange, densely dotted, mark=*, mark size=1.5pt] table [x=h, y=me, col sep=comma]{files/avg_vmh.csv};
+            \addlegendentry{\footnotesize max. eff.}
+            \addplot[magenta, densely dotted, mark=*, mark size=1.5pt] table [x=h, y=mm, col sep=comma]{files/avg_vmh.csv};
+            \addlegendentry{\footnotesize maximin}
+            \addplot[green, densely dotted, mark=*, mark size=1.5pt] table [x=h, y=ksb, col sep=comma]{files/avg_vmh.csv};
+            \addlegendentry{\footnotesize KS barg.}
+            \addplot[black, densely dotted, mark=*, mark size=1.5pt] table [x=h, y=lim, col sep=comma]{files/avg_vmh.csv};
+            \addlegendentry{\footnotesize ihd limit}
+        \end{semilogyaxis}
+    \end{tikzpicture}
+    \caption{Average harmonic voltage magnitude for the different harmonics and fairness criteria and ihd limits (IEC61000-3-6:2008).}
+    \label{fig:avg_vmh}
+\end{figure}
+
+\subsection{Modeling of unbalanced networks}
+
+\textcolor{red}{Although the focus of this paper is on high voltage networks where the system unbalance has negligible effect, the developed model can be extended to unbalanced networks for accurate representation of medium and low voltage distribution grids.}
+
+\textcolor{red}{First and of foremost, the second order cone representation of the harmonic hosting capacity model employs the formulation of the harmonic power flow equations in the rectangular voltage-current (IVR) variable space. This approach is particularly suitable for unbalanced systems with the explicit representation of a neutral conductor, as this approach behaves numerically much more stable than power-voltage based formulations of the problem. In cases where the neutral voltage is close to zero, the power voltage based formulations cannot properly represent the current flow through the neutral as $U \approx 0$ also results in $P \approx 0 $. Explicit representation of the current avoids this issue as demonstrated in the literature in different contexts \cite{claeys_applications_2021, jat_hybrid_2024}.}
+
+\textcolor{red}{A potential challenge to represent unbalanced networks is to correctly model harmonic order of $3n$, associated with the homopolar currents / voltages. However, as the current model already incorporates the behavior of $\Delta - Y$ transformers in this respect, the authors believe this should not pose a significant challenge. For more complex transformer designs used in distribution grids, e.g., n-winding transformers, or zig-zag transformers, the approach utilized in \cite{claeys_decomposition_2020} can be employed for an accurate representation.}
+
+\textcolor{red}{With respect to the computational efficiency and convergence of the model, one of the points of attention will be the exactness of the relaxed power flow model. In unbalanced systems the positive semi-definite (PSD) relaxation can be applied, which is exact for radial systems \cite{geth_pitfalls_2023}. In the case of medium voltage and low voltage networks, which often are operated as radials or open-rings this assumption could hold. However, current open-source and commercial solvers able to handle PSD constraint are not as performant as their second-order cone counterparts. This could hinder the applicability of the unbalanced model to very large distribution systems. Yet again, for radial distribution systems consisting of single medium voltage feeders and connected underlying low voltage networks, an iterative and distributed optimization approach, e.g., by separately modeling low voltage feeders in parallel, and re-joining the harmonic injections on the medium voltage level can be chosen to jointly determine the harmonic hosting capacity of the whole distribution grid in a reasonable time frame.}

@@ -1,0 +1,438 @@
+\section{Mathematical Framework}
+\label{sec:mathematical_framework}
+
+This section presents the mathematical framework for the harmonic hosting capacity problem of a phase-balanced three-phase power system. To this end, first, the impact of incorporating harmonics into a phase-balanced power flow problem is discussed. Second, two formulations, i.e., non-linear and second-order cone, of the harmonic hosting capacity problem are introduced. The harmonic hosting capacity problem determines the maximum amount of harmonic current injected by units, given a fairness principle, without violating voltage and current bounds.
+
+In the following table, a general overview and generic examples of the notation used throughout the mathematical framework are provided.
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{ l l c }
+        element         & notation                  & example                           \\ \hline
+        index           & lower-case italic         & $x$                               \\
+        set             & calligraphic              & $\mathcal{X}$                     \\ 
+        variable        & sans serif                & $\mathsf{X}$                      \\
+        parameter       & italic                    & $X$                               \\
+        complex quant.  & bar notation              & $\bar{\mathsf{X}}$, $\bar{X}$     \\
+        complex operator & & $\bm{j}$
+    \end{tabular}
+\end{table}
+
+\vspace{-0.5cm}
+
+\subsection{Harmonic Power Flow}
+\label{sec:harmonic_power_flow}
+
+Under steady-state conditions, current and voltage waves are not necessarily purely sinusoidal, but rather are, more generically, periodic waves. The Fourier transform may be used to decompose periodic waves into the superposition of sinusoidal waves, i.e., harmonics. A harmonic voltage or current oscillates at a multiple~$\Harmonic \in \HarmonicSet \subset \NaturalNumberSet$ of the fundamental frequency, e.g., 50\,Hz or 60\,Hz\footnote{Note that, for the purpose of this paper, this implies that a potential dc component is omitted.}. A phase-balanced three-phase power system allows a single-phase representation of the system for all individual harmonic. Specifically, the harmonics are classified into three types:
+\begin{enumerate}
+    \item positive sequence~$\Harmonic \in \PositiveHarmonicSet \subset \HarmonicSet$:~$\Harmonic=1+3n$,
+    \item negative sequence~$\Harmonic \in \NegativeHarmonicSet \subset \HarmonicSet$:~$\Harmonic=2+3n$, and
+    \item zero sequence~$\Harmonic \in \ZeroHarmonicSet \subset \HarmonicSet$:~$\Harmonic=3+3n$,
+\end{enumerate}
+where~$n \in \NaturalNumberSet_{0}$. Historically, in such power systems, only odd-order harmonics, i.e.,~$\Harmonic \in \{1,3,5,...\}$ were present, whereas even-order harmonics, i.e.,~$\Harmonic \in \{2,4,6,...\}$ were only present given half-wave or defective full-wave rectifiers. However, with the advent of active front-end converters, all harmonics are expected. Furthermore, in such power systems, zero-sequence harmonics are in phase and therefore produce a significant neutral current, provided there is a path for that current to flow. This effect is most prominent in transformers depending on their configuration, e.g., non-earthed and delta windings block zero-sequence harmonic currents.
+
+The harmonic power flow can be decoupled as multiple independent power flows for each harmonic~$\Harmonic \in \HarmonicSet$, under the condition (proof: \cite{nilsson_electric_2015} \S\,16.6) that:~
+\begin{itemize}
+    \item the overall active/reactive power is the sum of the individual harmonic active/reactive power; and
+    \item the circuit laws, i.e., Kirchhoff's current law and Ohm's law, can be decoupled.
+\end{itemize}
+For the purpose of harmonic power flow, it is most natural to use the rectangular current-voltage formulation~\cite{geth_pitfalls_2023}. The power system of interest is represented by an extended graph~$(\NodeSet,\EdgeSet,\UnitSet)_{\Harmonic}$ for each harmonic~$\Harmonic \in \HarmonicSet$. 
+
+In what follows, the components of such an extended graph are enumerated and the associated variables, and parameters are introduced, and lastly, the real-valued feasible set for the harmonic power flow is presented.
+
+\subsubsection{Buses~$\Node \in \NodeSet$} are the vertices of the graph. The bus voltage is,
+\begin{IEEEeqnarray}{ r C l }
+    \ComplexVoltage_{\Node,\Harmonic} &=& \RealVoltage_{\Node,\Harmonic} + \bm{j}\,\ImaginaryVoltage_{\Node,\Harmonic}. 
+\end{IEEEeqnarray}
+The shunt admittance at a bus~$\Node$ is given by~$\ShuntAdmittance{\Node,\Harmonic}$, where~$\ShuntConductance{\Node,\Harmonic}$ and~$\ShuntSusceptance{\Node,\Harmonic}$ denote the corresponding conductance and susceptance, respectively.
+
+\subsubsection{Edges~$\Edge \in \EdgeSet = \LineSet \cup \XfmrSet$} are the lines of the graph, consisting of subsets branches~$\Line \in \LineSet$ and two-winding transformers~$\Xfmr \in \XfmrSet$. A tuple~$\Edge\Node\AltNode \in \EdgeTupleSetFr$ links an edge~$\Edge$ to its from-bus~$\Node$ and to-bus~$\AltNode$; $\EdgeTupleSetTo$ contains the equivalent tuples with $\Node$ and $\AltNode$ reversed, and the union set is $\EdgeTupleSet = \EdgeTupleSetFr \cup \EdgeTupleSetTo$.
+
+\subsubsection{Branches~$\Line \in \LineSet \subset \EdgeSet$} are represented by a $\pi$-model (Fig.~\ref{fig:branch}). The current flowing through a branch~$\Line$ from bus~$\Node$ to $\AltNode$ is,
+\begin{IEEEeqnarray}{ r C l }
+    \ComplexCurrent_{\LineTuple,\Harmonic}  &=& \RealCurrent_{\LineTuple,\Harmonic} +  \bm{j}\,\ImaginaryCurrent_{\LineTuple,\Harmonic}       \\
+                                            &=& \ComplexShuntCurrent_{\LineTuple,\Harmonic} + \ComplexSeriesCurrent_{\LineTuple,\Harmonic}            \\
+                                            &=& (\RealShuntCurrent_{\LineTuple,\Harmonic} + \RealSeriesCurrent_{\LineTuple,\Harmonic}) 
+                                                + \bm{j}\,(\ImaginaryShuntCurrent_{\LineTuple,\Harmonic} + \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}).
+\end{IEEEeqnarray}
+Note that this notation implies~$\ComplexSeriesCurrent_{\LineTuple,\Harmonic}+\ComplexSeriesCurrent_{\AltLineTuple,\Harmonic}=0$. The series impedance of a branch~$\Line$ is given by~$\SeriesImpedance{\Line,\Harmonic}$, where~$\SeriesResistance{\Line,\Harmonic}$ and~$\SeriesReactance{\Line,\Harmonic}$ denote the corresponding series resistance and reactance, respectively. The shunt admittance of a branch~$\Line$ connected at bus~$\Node$ is given by~$\ShuntAdmittance{\LineTuple,\Harmonic}$, where~$\ShuntConductance{\LineTuple,\Harmonic}$ and~$\ShuntSusceptance{\LineTuple,\Harmonic}$ denote the corresponding shunt conductance and susceptance, respectively. 
+
+\begin{figure*}[t!]
+    \centering
+    \subfloat[branch~$\Line \in \LineSet$ \label{fig:branch}]
+    {
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (0.00,0.00) to [short, -*, i=\footnotesize{$\ComplexCurrent_{\LineTuple,\Harmonic}$}] 
+                (1.50,0.00) to [short, i=\footnotesize{$\ComplexSeriesCurrent_{\LineTuple,\Harmonic}$}]
+                (3.00,0.00) to [european resistor, /tikz/circuitikz/bipoles/length=0.95cm, l=\footnotesize{$\SeriesImpedance{\Line,\Harmonic}$}]
+                (4.50,0.00); 
+        \draw   (6.00,0.00) to [short, i_=\footnotesize{$\ComplexSeriesCurrent_{\AltLineTuple,\Harmonic}$}]
+                (4.50,0.00);
+        \draw   (7.50,0.00) to [short, -*, i_=\footnotesize{$\ComplexCurrent_{\AltLineTuple,\Harmonic}$}]
+                (6.00,0.00);
+        \draw   (1.50,0.00) to [short, i=\footnotesize{$\ComplexShuntCurrent_{\LineTuple,\Harmonic}$}]
+                (1.50,-0.80) to [european resistor, /tikz/circuitikz/bipoles/length=0.95cm, l=\footnotesize{$\ShuntAdmittance{\LineTuple,\Harmonic}$}]
+                (1.50,-1.60) to [short]
+                (1.50,-2.10);
+        \draw   (6.00,0.00) to [short, i_=\footnotesize{$\ComplexShuntCurrent_{\AltLineTuple,\Harmonic}$}]
+                (6.00,-0.80) to [european resistor, /tikz/circuitikz/bipoles/length=0.95cm,
+                l_=\footnotesize{$\ShuntAdmittance{\AltLineTuple,\Harmonic}$}]
+                (6.00,-1.60) to [short]
+                (6.00,-2.10);
+        \draw   (0.00,-2.10) to [open, v=\footnotesize{$\ComplexVoltage_{\Node,\Harmonic}$}]
+                (0.00,0.00);
+        \draw   (7.50,-2.10) to [open, v=\footnotesize{$\ComplexVoltage_{\AltNode,\Harmonic}$}]
+                (7.50,0.00);
+        \draw   (0.00,-2.10) to [short, -*]
+                (1.50,-2.10) to [short]
+                (6.00,-2.10) to [short, *-]
+                (7.50,-2.10);
+    \end{circuitikz}
+    }
+    \hfill
+    \subfloat[core of transformer~$\Xfmr \in \XfmrSet$ \label{fig:xfmr_core}]
+    {
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (-1.00,0.00) to [short, -*, i=\footnotesize{$\ComplexSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic}$}]
+                (0.00,0.00) node (v1_a) {} to [L, l_=\footnotesize{$L_{\Xfmr}^{\sigma}$}, /tikz/circuitikz/bipoles/length=0.90cm] 
+                (1.65,0.00) node (e_a) {} to [short, *-*]
+                (3.50,0.00) node [transformer core, anchor=A1] (T) {}
+                (T.base) node {$\xleftrightarrow{t^{\text{vg}}_{\Xfmr,\Harmonic}}$};
+        \draw   (T.A2) to [short, *-] 
+                ++(-1.85,0.00) node (e_b) {} to [short, *-]
+                ++(-1.65,0.00) node (v1_b) {} to [short, *-]
+                ++(-1.00,0.00);
+        \draw   (T.B1) to [short, *-, i<=\footnotesize{$\ComplexSeriesCurrent_{\Xfmr\AltNode\Node,\Harmonic}$}]
+                ++(1.00,0.00);
+        \draw   (T.B2) to [short, *-]
+                ++(1.00,0.00);
+        \draw   (2.50,0.00) to [short, *-]
+                (2.50,-0.1) to
+                    [   R,
+                        /tikz/circuitikz/bipoles/length=1.0cm,
+                        l_ = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                 $r^{\text{sh}}_{\Xfmr,\Harmonic}$
+                                }
+                            }
+                    ] 
+                (2.50,-2.00) to [short, -*]
+                (2.50,-2.10);
+        \draw   (3.50,0.00) to 
+                    [   american current source, 
+                        /tikz/circuitikz/bipoles/length=1.0cm, 
+                        l_ = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                 $\ComplexCurrent^{\text{m}}_{\Xfmr,\Harmonic}$
+                                }
+                            }
+                    ]
+                (3.50,-2.10);
+        \draw   (0.00,0.00) to [short]
+                ++ (0.00,0.50) to [C= \footnotesize{$\Capacitance^{\text{12}}_{\Xfmr}$}, /tikz/circuitikz/bipoles/length=0.70cm]
+                ++ (1.65,0.00) to [short]
+                ++ (0.00,-0.50);
+        \draw   (v1_b) to 
+                    [open, 
+                        v^ = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                    $\ComplexAltVoltage_{\Xfmr\Node\AltNode,\Harmonic}$
+                                }
+                            }
+                    ] 
+                (v1_a);
+        \draw   (e_b) to 
+                    [   open, 
+                        v^ = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                    $\ComplexExcitationVoltage_{\Xfmr,\Harmonic}$
+                                }
+                            }
+                    ] 
+                (e_a);
+        \draw   (T.B2) to 
+                    [open, 
+                        v = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                    $\ComplexAltVoltage_{\Xfmr\AltNode\Node,\Harmonic}$
+                                }
+                            }
+                    ] 
+                (T.B1);
+        %\draw 
+        \draw   [dashed] (-0.10,-0.55) rectangle (1.75,1.15) node [below right] {$\SeriesReactance{\Xfmr,\Harmonic}$};
+    \end{circuitikz}
+    }
+    \hfill
+    \subfloat[winding~$\Xfmr\Node\AltNode \in \XfmrTupleSet$ (pos./neg. seq.) \label{fig:pos_neg_seq_winding}]
+    {
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (0.00,0.00) to [short, -*, i=\footnotesize{$\ComplexCurrent_{\Xfmr\Node\AltNode,\Harmonic}$}] 
+                (1.00,0.00) to [resistor, /tikz/circuitikz/bipoles/length=0.95cm, l=\footnotesize{$r_{\Xfmr\Node\AltNode,\Harmonic}$}]
+                (6.00,0.00) to [short]
+                (6.50,0.00) to [short, *-, i=\footnotesize{$\ComplexSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic}$}]
+                (7.50,0.00);
+        \draw   (6.00,0.00) to [C, /tikz/circuitikz/bipoles/length=0.95cm, l_=\footnotesize{$C^{w\text{0}}_{\Xfmr\Node\AltNode}$}]
+                (6.00,-2.10);
+        \draw   (1.00,-2.10) to [open, v^=\footnotesize{$\ComplexVoltage_{\Node,\Harmonic}$}]
+                (1.00,0.00);
+        \draw   (6.50,-2.10) to [open, v=\footnotesize{$\ComplexAltVoltage_{\Xfmr\Node\AltNode,\Harmonic}$}]
+                (6.50,0.00);
+        \draw   (0.00,-2.10) to [short, -*]
+                (1.00,-2.10) to [short]
+                (6.50,-2.10) to [short, *-]
+                (7.50,-2.10);
+    \end{circuitikz}
+    }
+    \hfill
+    \subfloat[winding~$\Xfmr\Node\AltNode \in \XfmrTupleSet$ (zero seq.) \label{fig:zero_seq_winding}]
+    {
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (0.00,0.00) to [short, -*, i=\footnotesize{$\ComplexCurrent_{\Xfmr\Node\AltNode,\Harmonic}$}] 
+                (1.00,0.00) to [european resistor, /tikz/circuitikz/bipoles/length=0.95cm, l=\footnotesize{$3\Impedance^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}$}]
+                (2.50,0.00) to [short]
+                (3.50,0.00) to [open]
+                (4.00,0.00) to [resistor, /tikz/circuitikz/bipoles/length=0.95cm, l=\footnotesize{$r_{\Xfmr\Node\AltNode,\Harmonic}$}]
+                (6.50,0.00) to [short, *-, i=\footnotesize{$\ComplexSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic}$}]
+                (7.50,0.00);
+        \draw   (6.00,0.00) to [C, /tikz/circuitikz/bipoles/length=0.95cm, l_=\footnotesize{$C^{w\text{0}}_{\Xfmr\Node\AltNode}$}]
+                (6.00,-2.10);
+        \draw   (1.00,-2.10) to [open, v^=\footnotesize{$\ComplexVoltage_{\Node,\Harmonic}$}]
+                (1.00,0.00);
+        \draw   (6.50,-2.10) to [open, v=\footnotesize{$\ComplexAltVoltage_{\Xfmr\Node\AltNode,\Harmonic}$}]
+                (6.50,0.00);
+        \draw   (0.00,-2.10) to [short, -*]
+                (1.00,-2.10) to [short]
+                (6.50,-2.10) to [short, *-]
+                (7.50,-2.10);
+        \draw   (4.00,0.00) -- (4.25,0.00) node[rotary switch -=3 in 45 wiper 15, anchor=in, rotate=180](A){};
+        \draw   (A.out 1) node [below left] {\footnotesize delta};
+        \draw   (A.out 2) node [above left] {\footnotesize earthed};
+        \draw   (A.out 3) node [above left] {\footnotesize non-earthed};
+        \draw   (3.685,-0.575) to [short] (3.685,-2.10);
+    \end{circuitikz}
+    }
+    \caption{Equivalent single-phase circuit diagram of (Fig.~\ref{fig:branch}) branch~$\Line \in \LineSet$ for a given harmonic~$\Harmonic \in \HarmonicSet$, (Fig.~\ref{fig:xfmr_core}) core of a two-winding three-phase transformer~$\Xfmr \in \XfmrSet$ for a given harmonic~$\Harmonic \in \HarmonicSet$, (Fig.~\ref{fig:pos_neg_seq_winding}) winding~$\Xfmr\Node\AltNode \in \XfmrTupleSet$ of transformer~$\Xfmr \in \XfmrSet$ for a given positive or negative sequence harmonic~$\Harmonic \in \PositiveHarmonicSet \cup \NegativeHarmonicSet$, and (Fig.~\ref{fig:zero_seq_winding}) winding~$\Xfmr\Node\AltNode \in \XfmrTupleSet$ of transformer~$\Xfmr \in \XfmrSet$ for a given zero sequence harmonic~$\Harmonic \in \ZeroHarmonicSet$.} 
+    \label{fig:zero_sequence_winding}
+\end{figure*}
+
+\subsubsection{Two-Winding Transformers~$\Xfmr \in \XfmrSet \subset \EdgeSet$} are represented by a $t$-model (Fig.~\ref{fig:xfmr_core}, \ref{fig:pos_neg_seq_winding} and \ref{fig:zero_seq_winding}) and are split into two parts: core and windings. The current flowing through the core of transformer~$\Xfmr$ from bus~$\Node$ to $\AltNode$ is,
+\begin{IEEEeqnarray}{ r C l }
+    \ComplexSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} = \RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} + \bm{j}\,\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic}. 
+\end{IEEEeqnarray}
+The excitation voltage of transformer~$\Xfmr$ is,
+\begin{IEEEeqnarray}{ r C l }
+    \ComplexExcitationVoltage_{\Xfmr,\Harmonic}=\RealExcitationVoltage_{\Xfmr,\Harmonic} + \bm{j}\,\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic}.
+\end{IEEEeqnarray}
+The core captures the effects of 
+\begin{enumerate}
+    \item the vector group through the transformation~$t^{\text{vg}}_{\Xfmr,\Harmonic}$, 
+    \item the series reactance~$\SeriesReactance{\Xfmr,\Harmonic}$, representing the parallel circuit of the leakage inductance~$L^{\sigma}_{\Xfmr}$ and stray inter-winding capacitance~$\Capacitance^{\text{12}}_{\Xfmr}$, and 
+    \item the excitation current, consisting of: 
+        \begin{enumerate}
+            \item the core loss current, modeled through the excitation voltage relative to a shunt resistance~$\ShuntResistance{\Xfmr,\Harmonic}$, and
+            \item the magnitizing current~$\ComplexCurrent^{\text{m}}_{\Xfmr,\Harmonic}=\RealMagnetizingCurrent_{\Xfmr,\Harmonic} + \bm{j}\,\ImaginaryMagnetizingCurrent_{\Xfmr,\Harmonic}$.
+        \end{enumerate}
+\end{enumerate}
+Note that, for the purpose of this paper, the magnitizing current is omitted. However, a detailed description on how to include the magnitizing current is available  in~\cite{geth_harmonic_2022}.
+
+The current flowing through a winding~$\Xfmr\Node\AltNode \in \XfmrTupleSet$ from node~$\Node$ to the transformer core is,
+\begin{IEEEeqnarray}{ r C l }
+    \ComplexCurrent_{\Xfmr\Node,\AltNode,\Harmonic} = \RealCurrent_{\Xfmr\Node,\AltNode,\Harmonic} + \bm{j}\,\ImaginaryCurrent_{\Xfmr\Node,\AltNode,\Harmonic}.
+\end{IEEEeqnarray}    
+The internal winding voltage is,
+\begin{IEEEeqnarray}{ r C l }
+    \ComplexAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} &=& \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + \bm{j}\,\ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic}. 
+\end{IEEEeqnarray}
+The windings capture the effects of 
+\begin{enumerate}
+    \item the winding resistance~$\Resistance_{\Xfmr\Node\AltNode,\Harmonic}$,
+    \item the stray capacitance between winding and transformer tank~$\Capacitance^{\text{w0}}_{\Xfmr\Node\AltNode}$, and
+    \item the impact of the winding configuration for zero sequence harmonics~$\Harmonic \in \ZeroHarmonicSet$ (Fig.~\ref{fig:zero_seq_winding}), with the zero sequence neutral impedance given by~$\Impedance^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}$, where~$\Resistance^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}$ and~$\Reactance^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}$ denote the zero-sequence neutral resistance and reactance, respectively.
+\end{enumerate}
+
+\subsubsection{Units~$\Unit \in \UnitSet$} generalize loads and generators. A tuple~$\UnitTuple \in \UnitTupleSet$ links a unit~$\Unit$ to a specific bus~$\Node$. The current flowing from the bus~$\Node$ to the unit~$\Unit$ is,
+\begin{IEEEeqnarray}{ r C l }
+    \ComplexCurrent_{\Unit,\Harmonic} &=& \RealCurrent_{\Unit,\Harmonic} + \bm{j}\,\ImaginaryCurrent_{\Unit,\Harmonic}.
+\end{IEEEeqnarray}
+
+\subsubsection{Feasible Set} In the rectangular current-voltage formulation, the set of linear equality constraints~\eqref{eq_ref_bus_volt_source_a}-\eqref{eq_zero_se_block} uniquely describing the real-valued feasible set for the harmonic power flow of a phase-balanced three-phase power system is, 
+\begin{IEEEeqnarray}{ 0 l }
+    \textsc{Bus Constraints} \nonumber \\
+    \text{reference bus voltage --~} \forall \Node \in \RefNodeSet, \Harmonic \in \HarmonicSet: \nonumber\\
+    \quad \RealVoltage_{\Node,\Harmonic} = \RealRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_a} \\
+    \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_b} \\
+    \text{Kirchhoff's current law --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \RealCurrent_{\Edge\Node\AltNode,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \RealCurrent_{\UnitTuple,\Harmonic}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic} -\ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic}  = 0, \label{eq:kcl_node_real} \\
+    \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \ImaginaryCurrent_{\Edge\Node\AltNode,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \ImaginaryCurrent_{\UnitTuple,\Harmonic} + \ShuntConductance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + \ShuntSusceptance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic}= 0, \label{eq:kcl_node_imag} 
+\end{IEEEeqnarray}
+\begin{IEEEeqnarray}{ 0 l }
+    \textsc{Branch Constraints} \nonumber \\
+    \text{Ohm's law --~} \forall \LineTuple \in \LineTupleSetFr, \Harmonic \in \HarmonicSet: \nonumber\\
+    \quad \RealVoltage_{\AltNode,\Harmonic} = \RealVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic} +
+    \SeriesReactance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_real} \\
+    \quad \ImaginaryVoltage_{\AltNode,\Harmonic} = \ImaginaryVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic} -
+    \SeriesReactance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_imag} \\
+    \text{branch total current --~} \forall \LineTuple \in \LineTupleSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \RealCurrent_{\LineTuple,\Harmonic} =
+    \ShuntConductance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} - 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} +
+    \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_real} \\
+    \quad \ImaginaryCurrent_{\LineTuple,\Harmonic} =
+    \ShuntConductance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} +
+    \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_imag} \\
+    \textsc{Transformer Core Constraints} \nonumber \\
+    \text{Ohm's law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSetFr, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} = \RealExcitationVoltage_{\Xfmr,\Harmonic} - \SeriesReactance{\Xfmr,\Harmonic} \,\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic}, \\
+    \quad \ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} = \ImaginaryExcitationVoltage_{\Xfmr,\Harmonic} + \SeriesReactance{\Xfmr,\Harmonic}\,\RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic}, \\ 
+    \text{Kirchhoff's current law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSetFr, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \RealSeriesCurrent_{\Xfmr\AltNode\Node,\Harmonic} + \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} - \RealMagnetizingCurrent_{\Xfmr,\Harmonic} - \frac{\RealExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) \nonumber \\ 
+    \qquad \quad \,\, +\,\ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} - \ImaginaryMagnetizingCurrent_{\Xfmr,\Harmonic} -  \frac{\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) = 0 \\
+    \quad \ImaginarySeriesCurrent_{\Xfmr\AltNode\Node,\Harmonic} + \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} - \ImaginaryMagnetizingCurrent_{\Xfmr,\Harmonic} -  \frac{\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) \nonumber \\ 
+    \qquad \quad \,\, +\,\ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} - \RealMagnetizingCurrent_{\Xfmr,\Harmonic} - \frac{\RealExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) = 0 \\
+    \text{transformer phase shift --~} \forall \Xfmr\AltNode\Node \in \XfmrTupleSetTo, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \RealExcitationVoltage_{\Xfmr,\Harmonic} = \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealAltVoltage_{\Xfmr\AltNode\Node,\Harmonic} - \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\AltNode\Node,\Harmonic}, \\
+    \quad \ImaginaryExcitationVoltage_{\Xfmr,\Harmonic} = \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\AltNode\Node,\Harmonic} + \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealAltVoltage_{\Xfmr\AltNode\Node,\Harmonic}, \\
+    \textsc{Transformer Winding Constraints} \nonumber \\
+    \text{Kirchhoff's current law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} = \RealCurrent_{\Xfmr\Node\AltNode,\Harmonic} + 
+    \ShuntConductance{\Xfmr\Node\AltNode,\Harmonic}\,\RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} - 
+    \ShuntSusceptance{\Xfmr\Node\AltNode,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic}, \label{eq:xfmr_winding_series_real} \\
+    \quad \ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} = \ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic} + \ShuntConductance{\Xfmr\Node\AltNode,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + 
+    \ShuntSusceptance{\Xfmr\Node\AltNode,\Harmonic}\,\RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic}, \label{eq:xfmr_winding_series_imag}
+\end{IEEEeqnarray}
+Note that, for~\eqref{eq:xfmr_winding_series_real} and~\eqref{eq:xfmr_winding_series_imag}, the parameters $\ShuntConductance{\Xfmr\Node\AltNode,\Harmonic}$ and~$\ShuntSusceptance{\Xfmr\Node\AltNode,\Harmonic}$ represent the stray capacitance~$C^{\text{w0}}_{\Xfmr\Node\AltNode}$. Alternatively, in case of a delta winding for zero-sequence harmonic~$\Harmonic \in \ZeroHarmonicSet$, $\ShuntConductance{\Xfmr\Node\AltNode,\Harmonic}$ and~$\ShuntSusceptance{\Xfmr\Node\AltNode,\Harmonic}$ represent the parallel circuit of winding resistance~$\Resistance_{\Xfmr\Node\AltNode,\Harmonic}$ and stray capacitance~$C^{\text{w0}}_{\Xfmr\Node\AltNode}$ (Fig.~\ref{fig:zero_seq_winding}).
+\begin{IEEEeqnarray}{ 0 l }
+    \text{Ohm's law (pos./neg. seq.) --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet, \Harmonic \in \PositiveHarmonicSet \cup \NegativeHarmonicSet: \nonumber\\
+    \quad \RealVoltage_{\Node,\Harmonic}  = \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + \Resistance_{\Xfmr\Node\AltNode,\Harmonic}\,\RealCurrent_{\Xfmr\Node\AltNode,\Harmonic},  \\
+    \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + \Resistance_{\Xfmr\Node\AltNode,\Harmonic}\,\ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic}, \\
+    \text{Ohm's law (zero seq.) --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet^{\text{,earthed}}, \Harmonic \in \ZeroHarmonicSet: \nonumber \\
+    \quad \RealVoltage_{\Node,\Harmonic}  = \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + (r_{\Xfmr\Node\AltNode,\Harmonic}+3r^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}) \RealCurrent_{\Xfmr\Node\AltNode,\Harmonic} %\nonumber \\ 
+    %\qquad \qquad \qquad \quad 
+    - \, 3x^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}\ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic},\\
+    \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + (r_{\Xfmr\Node\AltNode,\Harmonic}+3r^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}) \ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic} %\nonumber \\ 
+    %\qquad \qquad \qquad \quad 
+    +\,3x^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}\RealCurrent_{\Xfmr\Node\AltNode,\Harmonic}, \\
+    \text{zero seq. current blocking --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet^{\text{,ne}} \cup \XfmrTupleSet^{\text{,delta}}, \Harmonic \in \ZeroHarmonicSet: \nonumber \\
+    \quad \RealCurrent_{\Xfmr\Node\AltNode,\Harmonic} = 0, \\ 
+    \quad \ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic} = 0. \label{eq_zero_se_block}
+\end{IEEEeqnarray}
+
+\subsection{Harmonic Hosting Capacity}
+\label{sec:harmonic_hosting_capacity}
+
+Extending on the harmonic power flow~\eqref{eq_ref_bus_volt_source_a}-\eqref{eq_zero_se_block}, the harmonic hosting capacity problem determines the maximum amount of harmonic current injected by units at specified buses, given a fairness and harmonic current co-ordination principle, without violating voltage and current bounds as defined in relevant power quality standards. 
+
+\begin{table}[b!]
+    \centering
+    \caption{Objective, harmonic set, and constraints of the two formulations of the harmonic hosting capacity problem.}
+    \label{tab:harmonic_hosting_capacity_formulations}
+    \begin{tabular}{ l c c c c }
+                        & \multicolumn{2}{c}{~~~~non-linear~~~~}                          & \multicolumn{2}{c}{second-order cone}                                                   \\ \hline 
+        harmonic set    & \multicolumn{2}{c}{$\HarmonicSet \subset \NaturalNumberSet$}  & \multicolumn{2}{c}{$\HarmonicSet \subset \NaturalNumberSet\backslash\{1\}$}               \\ \hline
+        objective       & \multicolumn{4}{c}{\eqref{eq:obj_max_efficiency} or \eqref{eq:obj_abs_equality} or \eqref{eq:obj_maximin} or \eqref{eq:obj_ks_bargaining}}                \\
+        fairness        & \multicolumn{4}{c}{$\mkern44mu$-$\mkern12mu$ or \eqref{eq:abs_equality} or \eqref{eq:maximin} or \eqref{eq:ks_bargaining_a}-\eqref{eq:ks_bargaining_b}}   \\
+        power flow      & \multicolumn{4}{c}{\eqref{eq_ref_bus_volt_source_a}-\eqref{eq_zero_se_block}}                                                                             \\
+        harm. units     & \multicolumn{2}{c}{\eqref{eq:real_harmonic_unit_current}-\eqref{eq:fund_reactive_bounds}}    & \multicolumn{2}{c}{\eqref{eq:real_harmonic_unit_current}-\eqref{eq:imag_harmonic_unit_current}} \\
+        voltage lim.    & \multicolumn{2}{c}{\eqref{eq:nlp_rms}-\eqref{eq:nlp_ihd}}     & \multicolumn{2}{c}{\eqref{eq:soc_rms}-\eqref{eq:soc_ihd}}                                 \\
+        current lim.    & \multicolumn{2}{c}{\eqref{eq:nlp_rms_current}}                & \multicolumn{2}{c}{\eqref{eq:soc_rms_current}}                                            \\
+    \end{tabular}
+\end{table}
+
+Two formulations of the harmonic hosting capacity problem are presented (Table~\ref{tab:harmonic_hosting_capacity_formulations}): non-linear and second-order cone, each requiring slightly different variants of certain constraints, as such annotated with \textit{nl} and \textit{soc}, respectively. The second-order cone formulation of the harmonic hosting capacity problem does not consider the fundamental harmonic, rather optionally takes the fundamental power flow as input.
+
+In what follows, the extensions on the harmonic power flow problem toward the harmonic hosting capacity problem are presented. 
+
+\subsubsection{Fairness Objective}
+
+The objective of the harmonic hosting capacity problem is to determine the maximum amount of harmonic current that can be injected by units at specified buses. However, given that the harmonic hosting capacity of a power system is limited, the question becomes how to distribute harmonic current injection limits among the connected units in socially justified and economic ways. 
+
+The non-linear nature of the Th\'evenin-equivalent harmonic impedance at any given node introduces a bias between different nodes in terms of 'natural' harmonic hosting capacity. Given the competing interests of the connected users, i.e., the monetary cost of different equipment, and the regulated nature of the electric power industry, more equitable distribution of harmonic hosting capacity seem prudent. This naturally leads to the question of how to (best) balance these interests, which is approached mathematically in a variety of ways, balancing efficiency, equity, fairness and equality~\cite{xinying_chen_guide_2023}. The objective and constraints introduced by a number of fairness criteria are,
+\begin{IEEEeqnarray}{ 0 l C l C l }
+    \text{max. efficiency:}     &\,& \text{max}  && \sum_{\Unit \in \HarmonicUnitSet} \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \CurrentMagnitude_{\Unit,\Harmonic}, \label{eq:obj_max_efficiency} \\
+    \text{abs. equality:}       &\,& \text{max}  && \sum_{\Unit \in \HarmonicUnitSet} \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \CurrentMagnitude_{\Unit,\Harmonic}, \label{eq:obj_abs_equality} \\
+                                &\,& \text{s.t.} && \CurrentMagnitude_{\Unit,\Harmonic} = \CurrentMagnitude_{\upsilon,\Harmonic},~\forall \Unit, \upsilon \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}, \label{eq:abs_equality} \\
+    \text{maximin:}             &\,& \text{max}  && \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \CurrentMagnitude_{\Harmonic}, \label{eq:obj_maximin} \\
+                                &\,& \text{s.t.} && \CurrentMagnitude_{\Harmonic} \leq \CurrentMagnitude_{\Unit,\Harmonic},~\forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}, \label{eq:maximin} \\
+    \text{KS bargaining:}       &\,& \text{max}  && \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \mathsf{f}_{\Harmonic}, \label{eq:obj_ks_bargaining} \\
+                                &\,& \text{s.t.} && \CurrentMagnitude_{\Unit,\Harmonic} = \mathsf{f}_{\Harmonic} \hat{\CurrentParameter}^{\text{max}}_{\Unit,\Harmonic},~\forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}, \label{eq:ks_bargaining_a} \\
+                                &\,&             && 0 \leq \mathsf{f}_{\Harmonic} \leq 1,~~\,\,\forall \Harmonic \in \HarmonicSet \backslash \{1\}, \label{eq:ks_bargaining_b}
+\end{IEEEeqnarray}
+where~$\CurrentMagnitude_{\Unit,\Harmonic}$ denotes the harmonic current magnitude of a harmonic unit~$\Unit \in \HarmonicUnitSet$. 
+
+On the one extreme, the maximum efficiency criterion \eqref{eq:obj_max_efficiency} maximizes the injected harmonic current~$\CurrentMagnitude_{\Unit,\Harmonic}$ over all harmonic units~$\Unit \in \HarmonicUnitSet$ and harmonics~$\Harmonic \in \HarmonicSet$ without taking into account fairness, equality, or equity. On the other extreme, the absolute equality criterion \eqref{eq:obj_abs_equality} - \eqref{eq:abs_equality} ensures that the harmonic current~$\CurrentMagnitude_{\Unit,\Harmonic}$ injected by all harmonic units~$\Unit$ are equal for all individual harmonics~$\Harmonic$, likely reducing the efficiency. Balancing efficiency and equality, the maximin criterion \eqref{eq:obj_maximin} - \eqref{eq:maximin} maximizes the minimum harmonic current~$ \CurrentMagnitude_{\Harmonic}$ injected by any harmonic units, for all individual harmonics~$\Harmonic$. Alternatively, the Kalai-Smorodinsky bargaining criterion \eqref{eq:obj_ks_bargaining} - \eqref{eq:ks_bargaining_b} maximizes the minimum relative concession by maximizing equal fraction~$\mathsf{f}_{\Harmonic}$ of each harmonic current injected by a harmonic unit relative to its individual maximum harmonic current injection~$\hat{\CurrentParameter}^{\text{max}}_{\Unit,\Harmonic}$, for all individual harmonics~$\Harmonic$. %The latter can be obtained by solving the problem with the maximum efficiency criterion for that specific harmonic unit alone.
+
+\subsubsection{Harmonic Unit Model}
+
+In reality, the actual harmonic current at any point on a system is the result of the vector sum of the individual components, originating from harmonic units~$\Unit \in \HarmonicUnitSet$. Given no a priori knowledge of connected harmonic units or their harmonic behavior, the coordination of conducted disturbances requires the adaptation of hypotheses relevant to the summation of the disturbances produced by various harmonic units. The lower bound, i.e., minimum harmonic hosting capacity, occurs when all harmonic current injection~$\ComplexCurrent_{\Unit,\Harmonic}$ is in phase relative to a given reference angle~$\phi^{\text{ref}}_{\Unit,\Harmonic}$, accounting for the transformer phase shift~\cite{nakhodchi_impact_2023}, and is denoted as, 
+\begin{IEEEeqnarray}{ 0 l }
+    \text{harmonic current injection --~} \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+        \quad \cos(\phi^{\text{ref}}_{\Unit,\Harmonic}) \, \CurrentMagnitude_{\Unit,\Harmonic} = 
+        \RealCurrent_{\Unit,\Harmonic}, \label{eq:real_harmonic_unit_current} \\
+        \quad \sin(\phi^{\text{ref}}_{\Unit,\Harmonic}) \, \CurrentMagnitude_{\Unit,\Harmonic} =
+        \ImaginaryCurrent_{\Unit,\Harmonic}. \label{eq:imag_harmonic_unit_current}
+\end{IEEEeqnarray}
+
+% By allowing freedom with respect to 
+
+Lastly, for the non-linear formulation of the harmonic hosting capacity problem, the fundamental active and reactive power set-point or bounds, i.e., for a load and generator, respectively, are,
+\begin{IEEEeqnarray}{ 0 l }
+    \text{\textit{nl} - fundamental power limits --~}    \forall \UnitTuple \in \UnitTupleSet: \nonumber\\
+    \quad 
+    \MinimumRealPower_{\Unit} \leq 
+    \RealVoltage_{\Node,1} \RealCurrent_{\Unit,1} + 
+    \ImaginaryVoltage_{\Node,1} \ImaginaryCurrent_{\Unit,1} \leq
+    \MaximumRealPower_{\Unit}, \label{eq:fund_active_bounds} \\
+    \quad 
+    \MinimumImaginaryPower_{\Unit} \leq 
+    \ImaginaryVoltage_{\Node,1} \RealCurrent_{\Unit,1} - 
+    \RealVoltage_{\Node,1} \ImaginaryCurrent_{\Unit,1} \leq
+    \MaximumImaginaryPower_{\Unit}, \label{eq:fund_reactive_bounds}
+\end{IEEEeqnarray}
+where~$\MinimumRealPower_{\Node}$,~$\MaximumRealPower_{\Node}$,~$\MinimumImaginaryPower_{\Node}$ and~$\MaximumImaginaryPower_{\Node}$ denote the minimum and maximum fundamental active and reactive power, respectively. A fixed set-point is enforced by setting both the lower and upper bound equal to the intended set-point.
+
+\subsubsection{Bus Voltage Bounds}
+
+Relevant standards, e.g., IEC61000-2-4:2002~\cite{international_electrotechnical_commission_iec61000-2-4}, specify limits for a.o. individual harmonic voltage distortion, total harmonic voltage distortion, and root-mean-square voltage. Depending on the chosen formulation, these limits are enforced as,
+\begin{IEEEeqnarray}{ 0 l } 
+    \text{\textit{nl} - root mean square voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+    \quad (\MinimumVoltage_{\Node})^{2} \leq \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\MaximumVoltage_{\Node})^{2}, \label{eq:nlp_rms} \\
+    \text{\textit{nl} - total harmonic voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \mkern-12mu (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\VoltageParameter_{\Node}^{\text{thd}})^2\,\Big((\RealVoltage_{\Node,1})^{2} + (\ImaginaryVoltage_{\Node,1})^{2} \Big), \nonumber \\  \label{eq:nlp_thd} \\
+    \text{\textit{nl} - individual harmonic voltage --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \quad (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\VoltageParameter^{\text{ihd}}_{\Node,\Harmonic})^{2}\,\Big( (\RealVoltage_{\Node,1})^{2} + (\ImaginaryVoltage_{\Node,1})^{2} \Big), \label{eq:nlp_ihd}
+    \label{eq:harmonic_bounds}
+\end{IEEEeqnarray}
+where~$\MinimumVoltage_{\Node}$ and~$\MaximumVoltage_{\Node}$, $\VoltageParameter^{\text{thd}}_{\Node}$, and $\VoltageParameter^{\text{ihd}}_{\Node,\Harmonic}$ denote for a bus~$\Node \in \NodeSet$ the minimum and maximum root-mean-square voltage, total harmonic voltage distortion limit, and individual harmonic voltage distortion limit for harmonic~$\Harmonic$, respectively, or as,
+\begin{IEEEeqnarray}{ 0 l } 
+    \text{\textit{soc} - root mean square voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\MaximumVoltage_{\Node})^{2} - (\FundamentalVoltageMagnitude{\Node})^{2}, \label{eq:soc_rms} \\
+    \text{\textit{soc} - total harmonic voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\VoltageParameter_{\Node}^{\text{thd}})^2\,(\FundamentalVoltageMagnitude{\Node})^{2},  \label{eq:soc_thd} \\
+    \text{\textit{soc} - individual harmonic voltage --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\VoltageParameter^{\text{ihd}}_{\Node,\Harmonic})^{2}\,(\FundamentalVoltageMagnitude{\Node})^{2},
+    \label{eq:soc_ihd}
+\end{IEEEeqnarray}
+where~$\FundamentalVoltageMagnitude{\Node}$ denotes the fundamental voltage magnitude at a bus~$\Node \in \NodeSet$, obtained from a preceding fundamental power flow or freely chosen. 
+
+\subsubsection{Edge Current Bounds}
+
+Relevant standards, e.g., IEC60076-1:2011~\cite{international_electrotechnical_commission_iec60076-1_2011}, specify limits for a.o. root-mean-square current through the edges. Depending on the chosen formulation, these are enforces as, 
+\begin{IEEEeqnarray}{ 0 l } 
+    \text{\textit{nl} - root mean square current --~} \forall \Edge\Node\AltNode \in \EdgeTupleSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealCurrent_{\Edge\Node\AltNode,\Harmonic})^{2} + (\ImaginaryCurrent_{\Edge\Node\AltNode,\Harmonic})^{2} \leq (\RatedCurrent_{\Edge\Node\AltNode})^{2},  \label{eq:nlp_rms_current}
+\end{IEEEeqnarray}
+where~$\RatedCurrent_{\Edge\Node\AltNode}$ denotes the rated current limit of an edge~$\Edge\Node\AltNode$, or as,
+\begin{IEEEeqnarray}{ 0 l } 
+    \text{\textit{soc} - root mean square current --~} \forall \Edge\Node\AltNode \in \EdgeTupleSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealCurrent_{\Edge\Node\AltNode,\Harmonic})^{2} + (\ImaginaryCurrent_{\Edge\Node\AltNode,\Harmonic})^{2} \leq (\RatedCurrent_{\Edge\Node\AltNode})^{2} - (\FundamentalCurrentMagnitude{\Edge\Node\AltNode})^2, \label{eq:soc_rms_current}
+\end{IEEEeqnarray}
+where~$\FundamentalCurrentMagnitude{\Edge\Node\AltNode}$ denotes the fundamental current magnitude through an edge~$\Edge\Node\AltNode \in \EdgeTupleSet$, obtained from a preceding power flow or freely chosen.

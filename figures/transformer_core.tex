@@ -1,0 +1,125 @@
+\documentclass[journal]{IEEEtran}
+
+% packages
+\usepackage{ulem}
+\usepackage{hyperref}
+% \usepackage{flushend}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\leftmargini}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% definition setup
+%\theoremstyle{definition}
+
+\newtheorem{defn}{Definition}[section]
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% nomenclature
+\input{nomenclature}
+
+% document
+\begin{document}
+
+\begin{figure}[t!]
+    \centering
+     \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (-1.00,0.00) to [short, -*, i=\footnotesize{$\SeriesCurrentPhasor{1,\Harmonic}$}]
+                (0.00,0.00) node (v1_a) {} to [L, l_=\footnotesize{$L_{\Xfmr}^{\sigma}$}, /tikz/circuitikz/bipoles/length=0.90cm] 
+                (1.65,0.00) node (e_a) {} to [short, *-*]
+                (3.50,0.00) node [transformer core, anchor=A1] (T) {}
+                (T.base) node {$\xleftrightarrow{t^{\text{vg}}}$};
+        \draw   (T.A2) to [short, *-] 
+                ++(-1.85,0.00) node (e_b) {} to [short, *-]
+                ++(-1.65,0.00) node (v1_b) {} to [short, *-]
+                ++(-1.00,0.00);
+        \draw   (T.B1) to [short, *-, i<=\footnotesize{$\SeriesCurrentPhasor{2,\Harmonic}$}]
+                ++(1.00,0.00);
+        \draw   (T.B2) to [short, *-]
+                ++(1.00,0.00);
+        \draw   (2.50,0.00) to [short, *-]
+                (2.50,-0.1) to
+                    [   R,
+                        /tikz/circuitikz/bipoles/length=1.0cm,
+                        l_ = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                 $r^{\text{sh}}_{\Xfmr,\Harmonic}$
+                                }
+                            }
+                    ] 
+                (2.50,-2.00) to [short, -*]
+                (2.50,-2.10);
+        \draw   (3.50,0.00) to 
+                    [   american current source, 
+                        /tikz/circuitikz/bipoles/length=1.0cm, 
+                        l_ = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                 $\MagnetizingCurrentPhasor{\Xfmr,\Harmonic}$
+                                }
+                            }
+                    ]
+                (3.50,-2.10);
+        \draw   (0.00,0.00) to [short]
+                ++ (0.00,0.50) to [C= \footnotesize{$\Capacitance_{\Xfmr}$}, /tikz/circuitikz/bipoles/length=0.70cm]
+                ++ (1.65,0.00) to [short]
+                ++ (0.00,-0.50);
+        \draw   (v1_b) to 
+                    [open, 
+                        v^ = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                    $\AltVoltagePhasor{1,\Harmonic}$
+                                }
+                            }
+                    ] 
+                (v1_a);
+        \draw   (e_b) to 
+                    [   open, 
+                        v^ = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                    $\ExcitationVoltagePhasor{\Xfmr,\Harmonic}$
+                                }
+                            }
+                    ] 
+                (e_a);
+        \draw   (T.B2) to 
+                    [open, 
+                        v = \footnotesize{
+                                \rotatebox[origin=c]{90}{
+                                    $\AltVoltagePhasor{2,\Harmonic}$
+                                }
+                            }
+                    ] 
+                (T.B1);
+        %\draw 
+        \draw   [dashed] (-0.10,-0.60) rectangle (1.75,1.10) node [below right] {$\SeriesReactance{\Xfmr,\Harmonic}$};
+    \end{circuitikz}
+    \caption{Equivalent single-phase circuit diagram of the core of a two-winding three-phase transformer $\Xfmr \in \XfmrSet$ for a given harmonic~$\Harmonic \in \HarmonicSet$.}
+    \label{fig:equivalent_single_phase_circuit_diagram_core}
+\end{figure}
+
+\end{document}

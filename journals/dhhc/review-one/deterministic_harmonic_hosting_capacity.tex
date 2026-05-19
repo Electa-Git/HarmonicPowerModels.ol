@@ -1,0 +1,124 @@
+\documentclass[journal]{IEEEtran}
+
+% packages
+\usepackage{hyperref}
+% \usepackage{flushend}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+\usepackage{cite}
+\usepackage{bm}
+\usepackage{orcidlink}
+
+\usepackage[x11names]{xcolor}
+% \usepackage{microtype,xparse,tcolorbox}
+
+%% footnote
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\makesavenoteenv{tabular*}
+\makesavenoteenv{table*}
+% \usepackage{tablefootnote}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{pgfplots}
+    \pgfplotsset{compat=1.15}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% checkmark packages 
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\hoffset}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% definition setup
+%\theoremstyle{definition}
+
+\newtheorem{defn}{Definition}[section]
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% nomenclature
+\input{nomenclature}
+
+% document
+\begin{document}
+
+% title, authors and thanks
+\title{Exact Lower Bound for \\ Equitable Harmonic Hosting Capacity}
+\author{Tom~Van~Acker~\orcidlink{0000-0001-6283-1457},% 
+        and~Hakan~Ergun,~\IEEEmembership{Senior Member,~IEEE~\orcidlink{0000-0001-5171-1986}}% 
+\thanks{Tom Van Acker is with the Department of Technology Expertise Power, BASF Antwerp, 2000 Antwerp, Belgium (e-mail: tom.a.van-acker@basf.com).}% 
+\thanks{Hakan Ergun is with the Research Group ELECTA, Department of Electrical Engineering, KU Leuven, 3000 Leuven, Belgium, and also with Etch-EnergyVille, 3600 Genk, Belgium (e-mail: hakan.ergun@kuleuven.be).}
+\thanks{This work is supported by the Energy Transition Fund by FOD Economy, Belgium, project HARMONIC. The General Board on Energy of the FOD Economy is not liable for any use of the presented work and subsequent results.}
+\thanks{\textit{(Corresponding author: Tom~Van~Acker)}}}
+
+% paper headers
+\markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
+
+% make the title area
+\maketitle
+
+% abstract
+\begin{abstract}
+This paper introduces an optimization method to determine the lower bound on the harmonic hosting capacity in power systems. The novelty of this work lies in its comprehensive approach, which includes detailed network and unit representations, individual and system harmonic limits, and a variety of fairness criteria for equitable distribution of the available harmonic budget. The proposed method employs both non-linear and second-order cone models to analyze harmonic power flows, ensuring accurate and tractable solutions. Numerical illustrations show that the second-order cone relaxation approach, determines the harmonic hosting capacity lower bound in an exact and tractable way. The practical applicability of the approach is demonstrated on the Rte 1888 bus system, where the effects of the different fairness criteria and system wide harmonic limits are discussed. The optimization model is made available an open-source software package for further research and practical application in power system planning.
+\end{abstract}
+
+% keywords
+\begin{IEEEkeywords}
+Harmonic distortion, fairness, hosting capacity, mathematical optimization.
+\end{IEEEkeywords}
+
+% peer-review title
+\IEEEpeerreviewmaketitle
+
+% sections
+\input{sections/introduction}
+\input{sections/mathematical_framework}
+\input{sections/numerical_illustration}
+\input{sections/future_work}
+\input{sections/conclusion}
+
+% % appendices
+% \appendix
+
+\section*{Acknowledgement}
+The authors thank dr. Johan~Rimez for proof reading the paper.
+
+% bibliography
+\bibliographystyle{IEEEtran}
+\bibliography{journals/dhhc/review-one/harmonic_references}
+
+% biographies
+\begin{IEEEbiographynophoto}{Dr. Ir. Ing. Tom Van Acker} received the M.Eng., M.Sc. and Ph.D. degrees in Electrical Engineering from KU Leuven, Leuven, Belgium in 2012, 2014 and 2020, respectively. Currently, he is a Power System Expert at BASF Antwerp. His main areas of research interest are optimization and uncertainty in a power system context, specifically applied in the context of availability, harmonics, optimal power flow, and state estimation. 
+\end{IEEEbiographynophoto}
+
+\begin{IEEEbiographynophoto}{Dr. Dipl.-Ing. Hakan Ergun} has obtained his MSc in electrical engineering at the Graz University of Technology (TU Graz) and his PhD in electrical engineering at KU Leuven, respectively. In the past he has been a post – doctoral researcher, and a research expert at KU Leuven / EnergyVille. Currently he is an Associate Professor with KU Leuven and the Energy Transmission Competence Hub (Etch) within EnergyVille.
+His main research interest is to optimally develop and operate future energy networks for the renewable energy transition. He is the main developer of a number of open-source network modelling tools for optimal planning and operation of AC and DC grids, and stability and security constrained network operation. He is a senior member of IEEE and an active member of CIGRE. 
+
+\end{IEEEbiographynophoto}
+
+\end{document}

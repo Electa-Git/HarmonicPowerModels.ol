@@ -1,0 +1,292 @@
+\section{Case Study}
+\label{sec:case_study}
+
+As suggested by the joint CIGRE/CIRED working group CC02~\cite{robert_1997}, inrush of transformers makes for a suitable invasive transient harmonic source. Immediately after switching, its core saturates, providing a rich spectrum of harmonic current. For the purpose of this case study, a 35/10\,kV transformer with a nominal power of 25\,MVA is rushed in to determine the network impedance at 35\,kV with a minimum short-circuit power of 400\,MVA. Around the switching moment, i.e, at $t\approx0.065$\,s, the current and voltage are measured at the primary of the transformer (Fig.~\ref{fig:voltage_phase} and Fig.~\ref{fig:current_phase}) for a period of one second. A significant amount of phase unbalance is noticed for the current measurements (Fig.~\ref{fig:current_phase}), demonstrating the need for the Fortescue transform. 
+
+For the Taylor-Fourier transform to work accurately on the measured signals, they have to be band limited. To illustrate this, Fig.~\ref{fig:periodogram} shows the periodogram\footnote{The periodogram is estimated using the fast Fourier transform.} for the phase b current relative to its fundamental component. It can be seen that the band for each harmonic is limited around the corresponding harmonic number.  
+
+\begin{figure*}[t!]
+    \centering
+    \subfloat[phase voltages \label{fig:voltage_phase}]
+    {
+    \begin{tikzpicture}
+        \begin{axis}[   height=47.5mm, width=56.5 mm,
+                        xmin=0.05, xmax=0.11, 
+                        ymin=-35000, ymax=35000,
+                        clip=true,
+                        axis lines=center,
+                        xlabel={\footnotesize $t$ [s]},
+                        xlabel style={right},
+                        scaled y ticks = false,
+                        ylabel={\footnotesize $u(t)$ [V]},
+                        ylabel style={above},
+                        ytick = {-3e4, -2e4, -1e4, 0, 1e4, 2e4, 3e4},
+                        yticklabels = { \footnotesize -3e4, \footnotesize -2e4, \footnotesize -1e4, \footnotesize 0, \footnotesize 1e4, \footnotesize 2e4, \footnotesize 3e4},
+                        xtick={0.06, 0.08, 0.1, 0.12, 0.14},
+                        xticklabels = { \footnotesize 0.06, \footnotesize 0.08, \footnotesize 0.10, \footnotesize 0.12, \footnotesize 0.14},
+                        axis on top,]
+            \addplot [smooth,gray] table [x=time, y=Va, col sep=comma] {csv/voltages.csv};
+            \addplot [smooth,gray,dashdotted] table [x=time, y=Vb, col sep=comma] {csv/voltages.csv};
+            \addplot [smooth,gray,dashed] table [x=time, y=Vc, col sep=comma] {csv/voltages.csv};
+            \draw (axis cs:0.055,3.3e4) node {\footnotesize a};
+            \draw (axis cs:0.062,3.3e4) node {\footnotesize b};
+            \draw (axis cs:0.069,3.3e4) node {\footnotesize c};
+        \end{axis}
+    \end{tikzpicture}
+    }
+    \hfill
+    \subfloat[phase currents \label{fig:current_phase}]
+    {
+    \begin{tikzpicture}
+        \begin{axis}[   height=47.5mm, width=56.5 mm,
+                        xmin=0.05, xmax=0.11, 
+                        ymin=-1200, ymax=1200,
+                        clip=true,
+                        axis lines=center,
+                        xlabel={\footnotesize $t$ [s]},
+                        xlabel style={right},
+                        scaled y ticks = false,
+                        ylabel={\footnotesize $i(t)$ [A]},
+                        ylabel style={above},
+                        ytick = {-1000, -800, -600, -400, -200, 0, 200, 400, 600, 800, 1000},
+                        yticklabels = { \footnotesize -1000, \footnotesize -800, \footnotesize -600, \footnotesize -400, \footnotesize -200, \footnotesize 0, \footnotesize 200, \footnotesize 400, \footnotesize 600, \footnotesize 800, \footnotesize 1000},
+                        xtick={0.06, 0.08, 0.1, 0.12, 0.14},
+                        xticklabels = { \footnotesize 0.06, \footnotesize 0.08, \footnotesize 0.10, \footnotesize 0.12, \footnotesize 0.14},
+                        axis on top,]
+            \addplot [smooth,gray] table [x=time, y=Ia, col sep=comma] {csv/currents.csv};
+            \addplot [smooth,gray,dashdotted] table [x=time, y=Ib, col sep=comma] {csv/currents.csv};
+            \addplot [smooth,gray,dashed] table [x=time, y=Ic, col sep=comma] {csv/currents.csv};
+            \draw (axis cs:0.070,300) node {\footnotesize a};
+            \draw (axis cs:0.072,1000) node {\footnotesize b};
+            \draw (axis cs:0.071,-1000) node {\footnotesize c};
+        \end{axis}
+    \end{tikzpicture}
+    }
+    \hfill
+    \subfloat[periodogram of current in phase b \label{fig:periodogram}]
+    {
+    \begin{tikzpicture}
+        \begin{semilogyaxis}[   height=40.0mm, width=56.5 mm,
+                                xmin=0, xmax=50, 
+                                ymin=1e-8, ymax=1,
+                                clip=true,
+                                axis x line = bottom,
+                                axis y line = left,
+                                xlabel={\footnotesize harmonic [-]},
+                                scaled y ticks = false,
+                                ylabel={\footnotesize relative amplitude [-]},
+                                ytick = {1e0, 1e-2, 1e-4, 1e-6, 1e-8},
+                                yticklabels = { \footnotesize 1e0, \footnotesize 1e-2, \footnotesize 1e-4, \footnotesize 1e-6, \footnotesize 1e-8},
+                                xtick = {0, 10, 20, 30, 40, 50},
+                                xticklabels = {\footnotesize 0, \footnotesize 10, \footnotesize 20, \footnotesize 30, \footnotesize 40, \footnotesize 50},
+                                axis on top,]
+            \addplot [smooth,gray] table [x=freq, y=power, col sep=comma] {csv/periodogram.csv};
+        \end{semilogyaxis}
+    \end{tikzpicture}
+    }
+    \caption{Voltages (Fig.~\ref{fig:voltage_phase}) and current (Fig.~\ref{fig:current_phase}) measured in all three phases (a - full, b - dashdotted, and c - dashed) at the primary of a 35/10\,kV transformer ($S^{\text{nom}}$=25\,MVA) during its inrush. Fig.~\ref{fig:periodogram} shows the periodogram of the current in phase b.}
+    \label{fig:voltage_and_current_measurements}
+\end{figure*}
+
+Using the Taylor-Fourier transform, the measured signals are decomposed into their harmonic components. To this end, sequentially every half fundamental period, an odd and even O-spline filter are combined to limit the effect of energy entering the sidelobes of the O-spline filters. To put this into context, Fig.~\ref{fig:o_spline_degree} shows an illustration for the zeroth- and first-order derivative of seventh harmonic current in phase a. It can be seen that both odd (full gray line in Fig.~\ref{fig:o_spline_degree}) and even O-spline filters (dashdotted gray line in Fig.~\ref{fig:o_spline_degree}) experience a ripple due to the energy entering the sidelobes of the respective O-spline filters for half a fundamental period, sequentially. For more background on this phenomena, the reader is referred to \cite{delaOserna_2018}. 
+
+\begin{figure}
+    \centering
+    \subfloat[zeroth-order derivative of the seventh harmonic current in phase a \label{fig:o_spline_degree_zeroth}]
+    {
+    \begin{tikzpicture}
+        \begin{axis}[   height=41.5mm, width=86.5 mm,
+                        xmin=0.00, xmax=0.10, 
+                        ymin=0, ymax=25,
+                        clip=true,
+                        axis lines=center,
+                        legend pos=north west,
+                        xlabel={\footnotesize $t$ [s]},
+                        xlabel style={right},
+                        scaled y ticks = false,
+                        ylabel={\footnotesize $|\bar{I}_{7,a}^{(0)}(t)|$ [A]},
+                        ylabel style={above},
+                        ytick = {0, 5, 10, 15, 20, 25},
+                        yticklabels = { \footnotesize 0, \footnotesize 5, \footnotesize 10, \footnotesize 15, \footnotesize 20, \footnotesize 25},
+                        xtick={0.00, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12},
+                        xticklabels = { \footnotesize 0.00, \footnotesize 0.02, \footnotesize 0.04, \footnotesize 0.06, \footnotesize 0.08, \footnotesize 0.10, \footnotesize 0.12, \footnotesize 0.14},
+                        axis on top,]
+            \addplot [smooth,line width=0.75mm] table [x=time, y=agg, col sep=comma] {csv/zeroth_derivative.csv};
+            \addlegendentry{\footnotesize combination}
+            \addplot [smooth,gray,line width=0.4mm] table [x=time, y=odd, col sep=comma] {csv/zeroth_derivative.csv};
+            \addlegendentry{\footnotesize odd (K=9)}
+            \addplot [smooth,gray,dashdotted,line width=0.4mm] table [x=time, y=even, col sep=comma] {csv/zeroth_derivative.csv};
+            \addlegendentry{\footnotesize even (K=10)}
+        \end{axis}
+    \end{tikzpicture}
+    }
+    \hfill
+    \subfloat[first-order derivative of the seventh harmonic current in phase a \label{fig:o_spline_degree_first}]
+    {
+    \begin{tikzpicture}
+        \begin{axis}[   height=41.5mm, width=86.5 mm,
+                        xmin=0.00, xmax=0.10, 
+                        ymin=0, ymax=1500,
+                        clip=true,
+                        axis lines=center,
+                        legend pos=north west,
+                        xlabel={\footnotesize $t$ [s]},
+                        xlabel style={right},
+                        scaled y ticks = false,
+                        ylabel={\footnotesize $|\bar{I}_{7,a}^{(1)}(t)|$ [A/s]},
+                        ylabel style={above},
+                        ytick = {0, 250, 500, 750, 1000, 1250,1500},
+                        yticklabels = { \footnotesize 0, \footnotesize 250, \footnotesize 500, \footnotesize 750, \footnotesize 1000, \footnotesize 1250, \footnotesize 1500},
+                        xtick={0.00, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12},
+                        xticklabels = { \footnotesize 0.00, \footnotesize 0.02, \footnotesize 0.04, \footnotesize 0.06, \footnotesize 0.08, \footnotesize 0.10, \footnotesize 0.12, \footnotesize 0.14},
+                        axis on top,]
+            \addplot [smooth,line width=0.75mm] table [x=time, y=agg, col sep=comma] {csv/first_derivative.csv};
+            \addlegendentry{\footnotesize combination}
+            \addplot [smooth,gray,line width=0.4mm] table [x=time, y=odd, col sep=comma] {csv/first_derivative.csv};
+            \addlegendentry{\footnotesize odd (K=9)}
+            \addplot [smooth,gray,dashdotted,line width=0.4mm] table [x=time, y=even, col sep=comma] {csv/first_derivative.csv};
+            \addlegendentry{\footnotesize even (K=10)}
+        \end{axis}
+    \end{tikzpicture}
+    }
+    \caption{Illustration of the impact of the choice of O-spline degree based on the estimation of the amplitude of the zeroth- and first-order derivative of the seventh harmonic current in phase a.}
+    \label{fig:o_spline_degree}
+\end{figure}
+
+Using the individual harmonic phase components, the first-order derivative of the positive sequence voltage~$\VoltagePhasor{\Harmonic,1}^{(1)}(\Time)$ and current~$\CurrentPhasor{\Harmonic,1}^{(1)}(\Time)$ for all harmonic numbers~$\Harmonic \in \HarmonicSet$ are determined as,
+\begin{IEEEeqnarray}{ r C l }
+    \VoltagePhasor{\Harmonic,1}^{(1)}(\Time) &=& \frac{1}{3} \big(\VoltagePhasor{\Harmonic,a}^{(1)}(\Time) + a \VoltagePhasor{\Harmonic,b}^{(1)}(\Time) + a^2 \VoltagePhasor{\Harmonic,c}^{(1)}(\Time) \big), \\ 
+    \CurrentPhasor{\Harmonic,1}^{(1)}(\Time) &=& \frac{1}{3} \big(\CurrentPhasor{\Harmonic,a}^{(1)}(\Time) + a \CurrentPhasor{\Harmonic,b}^{(1)}(\Time) + a^2 \CurrentPhasor{\Harmonic,c}^{(1)}(\Time) \big),
+\end{IEEEeqnarray}
+where~$a=e^{i\,\frac{2\pi}{3}}$ denotes the phasor rotation operator. The average relative magnitude of the amplitude of the positive sequence harmonic current for the harmonic numbers~$\Harmonic \in \{1,...,29\}$ over the measurement period of one second is shown in Fig.~\ref{fig:relative_magnitude}. It can be seen that the relative amplitude of the positive sequence harmonic current phasor~$\CurrentAmplitude{h,1}$ is lower than 1\,\% of the fundamental~$\CurrentAmplitude{1,1}$ from the eleventh harmonic number on, exceeding the limit prescribed in~\cite{xi_2002}.
+
+\begin{figure}[t!]
+    \centering
+    \begin{tikzpicture}
+        \begin{semilogyaxis}[   height=41.5mm, width=86.5 mm,
+                                xmin=0, xmax=30, 
+                                ymin=1e-3, ymax=1,
+                                clip=true,
+                                scaled x ticks = false,
+                                axis x line = bottom,
+                                axis y line = left,
+                                legend pos=north west,
+                                xlabel={\footnotesize $h$ [-]},
+                                every axis x label/.style={at={(axis description cs:1.0,0.0)},anchor=west},
+                                scaled y ticks = false,
+                                ylabel={\footnotesize $\mathbb{E}[|\bar{I}^{(0)}_{h,1}(t)|^{\text{rel}}]$ [-]},
+                                every axis y label/.style={at={(current axis.above origin)},anchor=south},
+                                xtick={1,5,10,15,20,25,30},
+                                xticklabels={\footnotesize 1,\footnotesize 5,\footnotesize 10,\footnotesize 15,\footnotesize 20,\footnotesize 25,\footnotesize 30},
+                                ytick={0.001,0.01,0.1,1.0},
+                                yticklabels={\footnotesize 1e-3,\footnotesize 1e-2,\footnotesize 1e-1,\footnotesize 1e0},
+                        axis on top,]
+            \addplot [smooth] table [x=H, y=A, col sep=comma] {csv/max_amplitude.csv};
+            \addplot [dashed] coordinates {(0,0.01) (30,0.01)};
+            \draw (axis cs:29,0.01) node[above] {\footnotesize \cite{xi_2002}};
+        \end{semilogyaxis}
+    \end{tikzpicture}
+    \caption{Average relative magnitude of the amplitude of the positive sequence harmonic current.}
+    \label{fig:relative_magnitude}
+\end{figure}
+
+Given the transient signals, for each harmonic number~$h$, a time span~$\mathrm{d}t_{\Haramonic}$ is selected where the first-order derivative of the signals is most `powerful', i.e., where its amplitude is largest. Over this time frame~$\mathrm{d}t_{\Harmonic}$, the amplitude of the positive sequence harmonic network impedance~$|Z^{\text{ntw}}_{h,1}(t)|$ is determined. For example, for the seventh harmonic, the considered time frame equals (0.05,0.07)\,s. The corresponding amplitude of the positive sequence harmonic impedance~$|Z^{\text{ntw}}_{7,1}(t)|$ is depicted in Fig.~\ref{fig:seventh_harmonic_impedance}. Slight variation may be noticed in the harmonic network impedance.
+
+\begin{figure}[t!]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[   height=41.5mm, width=86.5 mm,
+                        xmin=0.049999, xmax=0.07, 
+                        ymin=5.9999, ymax=9,
+                        clip=true,
+                        scaled x ticks = false,
+                        axis lines=center,
+                        legend pos=north west,
+                        xlabel={\footnotesize $t$ [s]},
+                        xlabel style={right},
+                        scaled y ticks = false,
+                        ylabel={\footnotesize $|\bar{Z}_{7,1}^{\text{ntw]}}(t)|$ [$\Omega$]},
+                        ylabel style={above},
+                        ytick = {6, 7, 8, 9, 10},
+                        yticklabels = { \footnotesize 6, \footnotesize 7, \footnotesize 8, \footnotesize 9, \footnotesize 10},
+                        xtick={0.05, 0.055, 0.060, 0.065, 0.07},
+                        xticklabels = { \footnotesize 0.050, \footnotesize 0.055, \footnotesize 0.060, \footnotesize 0.065, \footnotesize 0.070},
+                        axis on top,]
+            \addplot [smooth] table [x=t, y=Z, col sep=comma] {csv/impedance.csv};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Positive sequence seventh harmonic network impedance during inrush of the transformer.}
+    \label{fig:seventh_harmonic_impedance}
+\end{figure}
+
+Fig.~\ref{fig:harmonic_impedance} depicts the amplitude of the positive sequence harmonic network impedance~$|\bar{Z}^{\text{ntw}}_{h,1}|$ for the harmonic numbers~$h\in\{1,..,29\}$. The obtained values are compared with those calculated based on a detailed network model in PowerFactory-DIgSILENT (full black line in Fig~\ref{fig:harmonic_impedance}). Furthermore, given the slight variations during the selected time frames, the mean, upper- and lower-quantile for the harmonic network impedance are given. The following observations can be made:
+\begin{enumerate}
+    \item for the considered harmonic numbers, the amplitude of the positive sequence harmonic impedance based on the measured signals corresponds very well with those calculated based on a detailed network model; and
+    \item for the selected time frames, the variation on the amplitude of the positive sequence harmonic impedance is very limited.
+\end{enumerate}
+Both observations remain valid even though for harmonic numbers higher than eleven, where the relative amplitude of the positive sequence harmonic current phasor~$\CurrentAmplitude{h,1}$ is lower than 1\,\% of the fundamental~$\CurrentAmplitude{1,1}$ (Fig.~\ref{fig:relative_magnitude}), exceeding the limit prescribed in \cite{xi_2002}.
+
+\begin{figure*}
+    \centering
+    \begin{tikzpicture}
+        \begin{semilogyaxis}[   height=54.5mm, width=170.5 mm,
+                                xmin=0, xmax=30, 
+                                ymin=0.1, ymax=2000,
+                                clip=true,
+                                axis x line = bottom,
+                                axis y line = left,
+                                legend pos=south east,
+                                legend cell align={left},
+                                scatter/classes={a={mark=o,draw=black}},
+                                xlabel={\footnotesize harmonic number $h$ [-]},
+                                % xlabel style={right},
+                                xtick={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30},
+                                xticklabels={\footnotesize 1,\footnotesize 2,\footnotesize 3,\footnotesize 4,\footnotesize 5,\footnotesize 6,\footnotesize 7,\footnotesize 8,\footnotesize 9,\footnotesize 10,\footnotesize 11,\footnotesize 12,\footnotesize 13,\footnotesize 14,\footnotesize 15,\footnotesize 16,\footnotesize 17,\footnotesize 18,\footnotesize 19,\footnotesize 20,\footnotesize 21,\footnotesize 22,\footnotesize 23,\footnotesize 24,\footnotesize 25,\footnotesize 26,\footnotesize 27,\footnotesize 28,\footnotesize 29,\footnotesize 30},
+                                scaled y ticks = false,
+                                ylabel={\footnotesize harmonic network impedance $|\bar{Z}^{\text{ntw}}_{h,1}|$ [$\Omega$]},
+                                % ylabel style={above},
+                                ytick={0.1,1.0,10.0,100.0,1000.0},
+                                yticklabels={\footnotesize 1e-1,\footnotesize 1e0,\footnotesize 1e1,\footnotesize 1e2,\footnotesize 1e3},
+                                axis on top,]
+            \addplot [smooth,line width=0.5mm] table [x=H, y=Z, col sep=comma] {csv/calc_impedance.csv};
+            \addlegendentry{\footnotesize calculated}
+            \addplot [scatter,only marks,mark=o] table [x=H, y=mean, col sep=comma] {csv/meas_impedance.csv};
+            \addlegendentry{\footnotesize measured (mean)}
+            \addplot [smooth,dashdotted] table [x=H, y=uquant, col sep=comma] {csv/meas_impedance.csv};
+            \addlegendentry{\footnotesize measured (90q.)}
+            \addplot [smooth,dashed] table [x=H, y=lquant, col sep=comma] {csv/meas_impedance.csv};
+            \addlegendentry{\footnotesize measured (10q.)}
+            \draw (axis cs:1,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:2,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:3,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:4,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:5,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:6,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:7,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:8,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:9,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:10,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:11,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:12,2e2) node[right, rotate=90] {\tiny (0.05,0.06)};
+            \draw (axis cs:13,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:14,2e2) node[right, rotate=90] {\tiny (0.05,0.07)};
+            \draw (axis cs:15,2e2) node[right, rotate=90] {\tiny (0.09,0.10)};
+            \draw (axis cs:16,2e2) node[right, rotate=90] {\tiny (0.11,0.12)};
+            \draw (axis cs:17,2e2) node[right, rotate=90] {\tiny (0.13,0.14)};
+            \draw (axis cs:18,2e2) node[right, rotate=90] {\tiny (0.35,0.36)};
+            \draw (axis cs:19,2e2) node[right, rotate=90] {\tiny (0.21,0.22)};
+            \draw (axis cs:20,2e2) node[right, rotate=90] {\tiny (0.21,0.22)};
+            \draw (axis cs:21,2e2) node[right, rotate=90] {\tiny (0.21,0.22)};
+            \draw (axis cs:22,2e2) node[right, rotate=90] {\tiny (0.44,0.45)};
+            \draw (axis cs:23,2e2) node[right, rotate=90] {\tiny (0.51,0.52)};
+            \draw (axis cs:24,2e2) node[right, rotate=90] {\tiny (0.60,0.61)};
+            \draw (axis cs:25,2e2) node[right, rotate=90] {\tiny (0.47,0.48)};
+            \draw (axis cs:26,2e2) node[right, rotate=90] {\tiny (0.71,0.72)};
+            \draw (axis cs:27,2e2) node[right, rotate=90] {\tiny (0.46,0.47)};
+            \draw (axis cs:28,2e2) node[right, rotate=90] {\tiny (0.44,0.45)};
+            \draw (axis cs:29,2e2) node[right, rotate=90] {\tiny (0.54,0.55)};
+        \end{semilogyaxis}
+    \end{tikzpicture}
+    \caption{Amplitude of the positive sequence harmonic network impedance~$|\bar{Z}^{\text{ntw}}_{h,1}|$ for the harmonic numbers~$\Harmonic \in \{1,...,29\}$. The obtained values are compared with values calculated using PowerFactory - DIgSILENT (solid black line) based on a detailed modeling of the network. Given slight variations during the selected time frames, annotated on top of the figure, the mean, upper and lower quantile of the positive sequence harmonic network impedance are shown using a hollow mark, dashdotted line and dashed line, respectively.}
+    \label{fig:harmonic_impedance}
+\end{figure*}

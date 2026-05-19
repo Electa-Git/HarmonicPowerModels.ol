@@ -1,0 +1,109 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+
+% packages
+\usepackage{hyperref}
+\usepackage{flushend}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+
+%% footnote
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\makesavenoteenv{tabular*}
+\makesavenoteenv{table*}
+% \usepackage{tablefootnote}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{colortbl}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\usepackage{orcidlink}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% checkmark packages 
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{cite}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\hoffset}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% definition setup
+%\theoremstyle{definition}
+
+\newtheorem{defn}{Definition}[section]
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% nomenclature
+\input{nomenclature}
+
+% addition for template 
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+    
+\begin{document}
+
+\title{Impact of Underground Cables on Harmonic Hosting Capacity
+\thanks{This work is supported by the Energy Transition Fund by FOD Economy, Belgium, project HARMONIC. The General Board on Energy of the FOD Economy is not liable for any use of the presented work and subsequent results.}}
+
+\author{
+\IEEEauthorblockN{Tom Van Acker \orcidlink{0000-0001-6283-1457}}
+\IEEEauthorblockA{\textit{Department of Technology Expertise Power} \\
+\textit{BASF Antwerp}\\
+Antwerp, Belgium %\\
+%ORCID: \href{https://orcid.org/0000-0001-6283-1457}{0000-0001-6283-1457}}
+}
+\and
+\IEEEauthorblockN{Hakan Ergun \orcidlink{0000-0001-5171-1986}}
+\IEEEauthorblockA{\textit{Department of Electrical Engineering} \\
+\textit{KU Leuven} / \textit{EnergyVille - Etch}\\
+Leuven / Genk, Belgium} %\\
+%ORCID: \href{https://orcid.org/0000-0001-5171-1986}{0000-0001-5171-1986}}
+}
+
+\maketitle
+
+\begin{abstract}
+In the context of increasing power electronic interfaced assets and underground cable connections, this paper presents a novel optimal harmonic hosting capacity method for  assignment of individual harmonic current limits to units in a phase-balanced three-phase power system. The approach is compared to those in the relevant standards:~IEEE519-2022 and~IEC61000-3-6:2008. The numerical results show that the proposed approach better utilizes the power system compared to the standards. Furthermore, the proposed approach avoids harmonic voltage violations in the presence of resonances, in contrast to the standards. This is especially important in power systems with increasing share of underground cable connections.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Harmonic distortion, underground cables, hosting capacity, mathematical optimization.
+\end{IEEEkeywords}
+
+\input{conference papers/pes-gm-cable/sections/introduction}
+\input{conference papers/pes-gm-cable/sections/mathematical_framework}
+\input{conference papers/pes-gm-cable/sections/case_study}
+\input{conference papers/pes-gm-cable/sections/conclusion}
+
+\section*{Acknowledgement}
+The authors thank dr. Johan~Rimez for proof reading the paper.
+
+% bibliography
+\bibliographystyle{ieeetr}
+\bibliography{journals/dhhc/harmonic_references}
+
+\end{document}

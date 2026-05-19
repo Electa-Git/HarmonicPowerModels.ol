@@ -1,0 +1,144 @@
+\section{Mathematical Framework}
+\label{sec:mathematical_framework}
+
+The harmonic hosting capacity problem determines the maximum amount of harmonic current that can be injected by units~$\Unit \in \UnitSet$, an umbrella term used for load and generation, without violating any voltage and current limits. A harmonic voltage or current oscillates at a multiple~$\Harmonic \in \HarmonicSet \subset \NaturalNumberSet$ of the fundamental frequency, e.g., 50\,Hz or 60\,Hz. This section presents three different methods to determine the harmonic hosting capacity in terms of individual harmonic current magnitude~$\Current^{\text{ihd}}_{\Unit,\Harmonic}$ that can be injected by every unit of a given phase-balanced three-phase power system:
+\begin{enumerate}[leftmargin=3em]
+    \item [\S\,\ref{sec:ieee519-2022}] look-up method to determine the \textit{nodal} harmonic hosting capacity as per std. IEEE519-2022,
+    \item [\S\,\ref{sec:iec61000-3-6}] analytical method to calculate the \textit{nodal} harmonic hosting capacity as per std. IEC61000-3-6:2008, and
+    \item [\S\,\ref{sec:optimization_method}] novel \textit{global} one-shot optimization method to calculate the harmonic hosting capacity. 
+\end{enumerate}
+It is assumed that no harmonic recombination occurs for all three methods providing the worst-case harmonic hosting capacities. The following notation is used throughout the mathematical framework.
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{ l l c }
+        element         & notation                  & example                           \\ \hline
+        index           & lower-case italic         & $x$                               \\
+        set             & calligraphic              & $\mathcal{X}$                     \\ 
+        variable        & sans serif                & $\mathsf{X}$                      \\
+        parameter       & italic                    & $X$                               \\
+        complex quant.  & bar notation              & $\bar{\mathsf{X}}$, $\bar{X}$
+    \end{tabular}
+\end{table}
+
+\subsection{Look-Up Method Following Std. IEEE519-2022}
+\label{sec:ieee519-2022}
+
+The IEEE519-2022 standard provides individual harmonic current limits~$\CurrentParameter^{\text{ihd}}_{\Unit,\Harmonic}$ for any unit~$\Unit$ with 
+\begin{enumerate*}
+    \item [a)] a mix of both linear and non-linear loads, and 
+    \item [b)] rated generation less than 10\,\% of annual average load,
+\end{enumerate*}
+relative to the fundamental unit current magnitude, depending on:
+\begin{enumerate*}
+    \item [a)] rated voltage magnitude, and 
+    \item [b)] ratio between short-circuit and maximum load current,
+\end{enumerate*}
+at the point-of-common-coupling. For the actual values, in general, the reader is referred to Tables~2-4 of the std. IEEE519-2022, respectively.
+%at pg.~19,~20 and~21
+\subsection{Analytical Method Following Std. IEC61000-3-6:2008}
+\label{sec:iec61000-3-6}
+
+The standard IEC61000-3-6:2008 describes a three stage approach for limiting individual harmonic current injection thus ensuring the voltage distortion to remain below the planning levels. We focus on stage two for (extra) high-voltage power systems, evaluating the emission limits relative to the actual system characteristics. Before allocating emission limits to individual units,  the common planning harmonic voltage limits are shared between the unit buses~$\Node \in \NodeSet^{\text{u}} \subset \NodeSet$. The standard proposes to distribute these planning levels based on the (future) connected nodal apparent power~$S^{\text{tot}}_{i}$ and influence coefficients~$K_{ij,h}$,
+\begin{IEEEeqnarray}{ r C l }
+    \Voltage_{\Node,\Harmonic}^{\text{ihd}} &\leq& \frac{S^{\text{tot}}_{\Node}}{\sum_{\AltNode \in \NodeSet^{\text{u}}} K_{\Node\AltNode,\Harmonic}\, S^{\text{tot}}_{\AltNode}}\,\VoltageParameter^{\text{ihd}}_{\Harmonic},~\forall \Node \in \NodeSet^{\text{u}}, \Harmonic \in \HarmonicSet.
+\end{IEEEeqnarray}
+The influence coefficient~$K_{\Node\AltNode,\Harmonic}$ gives the harmonic voltage that is caused at node~$\AltNode$ when a harmonic voltage of 1\,pu is applied at node~$\Node$. The individual harmonic voltage limits of the unit buses are further divided among the units~$\Unit$ connected to that unit bus~$\Node$,
+\begin{IEEEeqnarray}{ r C l }
+    \Voltage_{\Unit,\Harmonic}^{\text{ihd}} &=& \Voltage_{\Node,\Harmonic}^{\text{ihd}}\,\frac{S_{\Unit}}{S^{\text{tot}}_{\Unit}},~\forall \UnitTuple \in \UnitTupleSet, \Harmonic \in \HarmonicSet,
+\end{IEEEeqnarray}
+and, the harmonic current limits~$\Current^{\text{ihd}}_{\Unit,\Harmonic}$ for the individual unit~$\Unit$ is determined using the harmonic impedance $Z_{\Node,\Harmonic}$ at bus~$\Node$:
+\begin{IEEEeqnarray}{ r C l }
+    \Current_{\Unit,\Harmonic}^{\text{ihd}} &=& \frac{\Voltage^{\text{ihd}}_{\Unit,\Harmonic}}{Z_{\Node,\Harmonic}},~\forall \UnitTuple \in \UnitTupleSet, \Harmonic \in \HarmonicSet.
+\end{IEEEeqnarray}
+% with~$Z_{\Node,\Harmonic}$ denoting the harmonic impedance at bus~$\Node$.
+
+\subsection{Novel Global One-Shot Optimization Method}
+\label{sec:optimization_method}
+
+The global one-shot optimal power flow framework for determining the harmonic hosting capacity exploits the fact that harmonic power flows can be decoupled as multiple independent power flows for each harmonic~$\Harmonic \in \HarmonicSet$ (proof: \cite{nilsson_electric_2015} \S\,16.6). The harmonic power flows can best be represented using the rectangular current-voltage formulation~\cite{geth_pitfalls_2023} and the power system is represented by an extended graph~$(\NodeSet,\EdgeSet,\UnitSet)_{\Harmonic}$ for each harmonic~$\Harmonic \in \HarmonicSet$, using following variables.
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{ l l l l }
+        name            & base-set                & tuple-set                                 & variable \\ \midrule
+        bus voltage     & $\Node \in \NodeSet$    & -                                         & $\ComplexVoltage_{\Node,\Harmonic} = \RealVoltage_{\Node,\Harmonic} + j\,\ImaginaryVoltage_{\Node,\Harmonic}$ \\
+        edge current    & $\Edge \in \EdgeSet$    & $\EdgeTuple \in \EdgeTupleSet$            & $\ComplexCurrent_{\EdgeTuple,\Harmonic}  = (\RealShuntCurrent_{\EdgeTuple,\Harmonic} + \RealSeriesCurrent_{\EdgeTuple,\Harmonic})$ \\
+                        &                         &                                           & 
+        \qquad\qquad$+\,j\,(\ImaginaryShuntCurrent_{\EdgeTuple,\Harmonic} + \ImaginarySeriesCurrent_{\EdgeTuple,\Harmonic})$, \\
+                        &                         &                                           & this implies~$\ComplexSeriesCurrent_{\EdgeTuple,\Harmonic}+\ComplexSeriesCurrent_{\AltEdgeTuple,\Harmonic}=0$ \\
+        unit current    & $\Unit \in \UnitSet$    & $\UnitTuple \in \UnitTupleSet$            & $\ComplexCurrent_{\Unit,\Harmonic} = \RealCurrent_{\Unit,\Harmonic} + j\,\ImaginaryCurrent_{\Unit,\Harmonic}$
+    \end{tabular}
+\end{table}
+
+In the rectangular current-voltage formulation, the set of linear equality constraints~\eqref{eq_ref_bus_volt_source_a}-\eqref{eq:abs_equality} uniquely describing the real-valued feasible set for the harmonic power flow in the power system is, 
+\begin{IEEEeqnarray}{ 0 l }
+    \textsc{Bus Constraints} \nonumber \\
+    \text{reference bus voltage --~} \forall \Node \in \RefNodeSet, \Harmonic \in \HarmonicSet: \nonumber\\
+    \quad \RealVoltage_{\Node,\Harmonic} = \RealRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_a} \\
+    \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_b} 
+\end{IEEEeqnarray}
+\begin{IEEEeqnarray}{ 0 l }
+    \text{Kirchhoff's current law --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \RealCurrent_{\Edge\Node\AltNode,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \RealCurrent_{\UnitTuple,\Harmonic}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic} -\ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic}  = 0, \label{eq:kcl_node_real} \\
+    \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \ImaginaryCurrent_{\Edge\Node\AltNode,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \ImaginaryCurrent_{\UnitTuple,\Harmonic} + \ShuntConductance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + \ShuntSusceptance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic}= 0, \label{eq:kcl_node_imag} \\
+    \text{root mean square voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+    \quad (\MinimumVoltage)^{2} \leq \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\MaximumVoltage)^{2}, \label{eq:nlp_rms} \\
+    \text{total harmonic voltage distortion --~} \forall \Node \in \NodeSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \mkern-12mu (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\VoltageParameter^{\text{thd}})^2\,((\RealVoltage_{\Node,1})^{2} + (\ImaginaryVoltage_{\Node,1})^{2}),  \label{eq:nlp_thd} \\
+    \text{individual harmonic voltage distortion --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \quad (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\VoltageParameter^{\text{ihd}}_{\Harmonic})^{2}\,((\RealVoltage_{\Node,1})^{2} + (\ImaginaryVoltage_{\Node,1})^{2}), \label{eq:nlp_ihd}
+\end{IEEEeqnarray}
+where~$\VoltageParameter^{\text{min}}$,~$\VoltageParameter^{\text{max}}$,~$\VoltageParameter^{\text{thd}}$, and~$\VoltageParameter_{\Harmonic}^{\text{ihd}}$ denote the minimum and maximum root-mean-square voltage magnitude, total harmonic voltage distortion limit, and individual harmonic voltage distortion limit, respectively.
+\begin{IEEEeqnarray}{ 0 l }
+    \textsc{Edge Constraints} \nonumber \\
+    \text{Ohm's law --~} \forall \EdgeTuple \in \EdgeTupleSetFr, \Harmonic \in \HarmonicSet: \nonumber\\
+    \quad \RealVoltage_{\AltNode,\Harmonic} = \RealVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Edge,\Harmonic} \RealSeriesCurrent_{\EdgeTuple,\Harmonic} +
+    \SeriesReactance{\Edge,\Harmonic} \ImaginarySeriesCurrent_{\EdgeTuple,\Harmonic}, \label{eq:ol_real} \\
+    \quad \ImaginaryVoltage_{\AltNode,\Harmonic} = \ImaginaryVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Edge,\Harmonic} \ImaginarySeriesCurrent_{\EdgeTuple,\Harmonic} -
+    \SeriesReactance{\Edge,\Harmonic} \RealSeriesCurrent_{\EdgeTuple,\Harmonic}, \label{eq:ol_imag} \\
+    \text{branch total current --~} \forall \EdgeTuple \in \EdgeTupleSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    \quad \RealCurrent_{\EdgeTuple,\Harmonic} =
+    \ShuntConductance{\EdgeTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} - 
+    \ShuntSusceptance{\EdgeTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} +
+    \RealSeriesCurrent_{\EdgeTuple,\Harmonic}, \label{eq:btc_real} \\
+    \quad \ImaginaryCurrent_{\EdgeTuple,\Harmonic} =
+    \ShuntConductance{\EdgeTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + 
+    \ShuntSusceptance{\EdgeTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} +
+    \ImaginarySeriesCurrent_{\EdgeTuple,\Harmonic}, \label{eq:btc_imag} \\
+    \text{root mean square current --~} \forall \Edge\Node\AltNode \in \EdgeTupleSet: \nonumber \\
+    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealCurrent_{\Edge\Node\AltNode,\Harmonic})^{2} + (\ImaginaryCurrent_{\Edge\Node\AltNode,\Harmonic})^{2} \leq (\RatedCurrent_{\Edge})^{2},  \label{eq:nlp_rms_current}
+\end{IEEEeqnarray}
+where~$\SeriesResistance{\cdot,\Harmonic}$, $\SeriesReactance{\cdot,\Harmonic}$, $\ShuntConductance{\cdot,\Harmonic}$ and~$\ShuntSusceptance{\cdot,\Harmonic}$ denote the series resistance, series reactance, shunt conductance, and shunt susceptance for a given harmonic~$\Harmonic \in \HarmonicSet$, respectively. Additionally,~$\RatedCurrent_{\Edge}$ denotes the rated current limit of an edge~$\Edge \in \EdgeSet$.
+\begin{IEEEeqnarray}{ 0 l }
+    \textsc{Unit Constraints} \nonumber \\
+    \text{fundamental power limits --~}    \forall \UnitTuple \in \UnitTupleSet: \nonumber\\
+    \quad 
+    \MinimumRealPower_{\Unit} \leq 
+    \RealVoltage_{\Node,1} \RealCurrent_{\Unit,1} + 
+    \ImaginaryVoltage_{\Node,1} \ImaginaryCurrent_{\Unit,1} \leq
+    \MaximumRealPower_{\Unit}, \label{eq:fund_active_bounds} \\
+    \quad 
+    \MinimumImaginaryPower_{\Unit} \leq 
+    \ImaginaryVoltage_{\Node,1} \RealCurrent_{\Unit,1} - 
+    \RealVoltage_{\Node,1} \ImaginaryCurrent_{\Unit,1} \leq
+    \MaximumImaginaryPower_{\Unit}, \label{eq:fund_reactive_bounds} \\
+    \text{harmonic current injection --~} \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \quad \cos(\phi^{\text{ref}}_{\Unit,\Harmonic}) \, \Current^{\text{ihd}}_{\Unit,\Harmonic} = 
+    \RealCurrent_{\Unit,\Harmonic}, \label{eq:real_harmonic_unit_current} \\
+    \quad \sin(\phi^{\text{ref}}_{\Unit,\Harmonic}) \, \Current^{\text{ihd}}_{\Unit,\Harmonic} =
+    \ImaginaryCurrent_{\Unit,\Harmonic}. \label{eq:imag_harmonic_unit_current} \\
+% \end{IEEEeqnarray}
+% \begin{IEEEeqnarray}{ 0 l }
+    \text{absolute equality criterion --~} \forall \Unit, \upsilon \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \quad
+    \Current^{\text{ihd}}_{\Unit,\Harmonic} = \Current^{\text{ihd}}_{\upsilon,\Harmonic}, \label{eq:abs_equality}
+\end{IEEEeqnarray}
+where~$\MinimumRealPower_{\Unit}$,~$\MaximumRealPower_{\Unit}$,~$\MinimumImaginaryPower_{\Unit}$, and~$\MaximumImaginaryPower_{\Unit}$ denote the minimum and maximum, active and reactive power of a unit~$\Unit \in \UnitSet$, respectively. This comprises fixed power units by setting the minimum and maximum equal. Additionally,~$\phi^{\text{ref}}_{\Unit,\Harmonic}$ denotes the reference angle for harmonic current injection. The worst-case harmonic hosting capacity occurs when all harmonic current injection~$\ComplexCurrent_{\Unit,\Harmonic}$ are in phase. The absolute equality constraint in \eqref{eq:abs_equality} establishes a lower bound on the harmonic hosting capacity as each unit gets the harmonic budget, which is limited by the most constrained unit.
+
+Finally, the optimal harmonic hosting capacity in terms of individual harmonic current injections~$\Current^{\text{ihd}}_{\Unit,\Harmonic}$ is determined as,
+\begin{IEEEeqnarray}{ r C l }
+    \text{max}  && \sum_{\Unit \in \UnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}} \Current^{\text{ihd}}_{\Unit,\Harmonic},~\text{s.t.}~\eqref{eq_ref_bus_volt_source_a}-\eqref{eq:abs_equality}.
+\end{IEEEeqnarray}

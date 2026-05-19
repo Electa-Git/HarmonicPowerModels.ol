@@ -1,0 +1,18 @@
+\section{Load Model} 
+
+\begin{equation}
+    I = Y \cdot \Delta V + I^{\text{ref}},
+\end{equation}
+where:
+\begin{enumerate}
+    \item $I,~|I|=|\mathcal{H}| \times 1$ represents the current, 
+    \item $Y,~|Y|=|\mathcal{H}| \times |\mathcal{H}|$ represents the coupled admittance matrix, 
+    \item $\Delta V,~|\Delta V|=|\mathcal{H}| \times 1$ respresents the voltage deviation matrix, and 
+    \item $I^{\text{ref}},~|I^{\text{ref}}|=|\mathcal{H}| \times 1$  the reference current distortion matrix.
+\end{enumerate}
+All of which are complex numbers.
+
+The term~$I^{\text{ref}}$ is fixed and represents the distorted current drawn by the non-linear load when a reference voltage is applied, i.e., either a pure sinusoid or a voltage waveform with typical distortion. 
+
+The coupled admittance matrix~$Y$ allows for calculating the deviations of the harmonic current due to slight variations in supply voltage~$\Delta V$
+

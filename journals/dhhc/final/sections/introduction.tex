@@ -1,0 +1,130 @@
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Background and Motivation}
+\label{sec:background_and_motivation}
+% 29/03: TVA - reviewed
+
+\IEEEPARstart{R}{eaching} a net zero economy by 2050 requires a massive undertaking in electrification of the energy system. Over the last two decades, renewable power generation, i.e., wind and photovoltaic generation, has successively increased. This trend is expected to accelerate further towards 2050~\cite{international_energy_agency_world_2023}. Additionally, to achieve the decarbonisation goals, the demand also needs to be decarbonised, which requires the substitution of fossil fuel by electricity for transport, heating and industrial processes. In Europe, various studies show that the total electricity demand will triple by 2050~\cite{energyville_paths_2023, elia_belgian_2024}. 
+
+Renewable energy sources and new types of electrical loads are almost exclusively power electronic interfaced assets. This brings a number of challenges for the planning and operation of future power grids. Power electronic interfaced assets behave fundamentally different compared to classical electrical machines, or resistive and inductive loads. One of the major concerns is the increase in the harmonic distortion causing higher network losses and resonances as direct consequences. Indirect consequences include malfunctioning of protection systems and, over time, the additional heating of transformers and power cables causing accelerated aging. Furthermore, motors, inverters and other devices may be sensitive to the presence of voltage distortion.
+
+Sun~et~al. highlight that the traditional harmonic studies performed at the initial planning stage may no longer be appropriate~\cite{sun_distribution_2022}. Considering the transition to a heavily power electronic dominated system, a central question to be asked is: “what is the maximum harmonic distortion, e.g., number of large-scale converters, that can be reliably hosted in a given power system?”. In literature, this concept is referred to as the hosting capacity of a power system~\cite{bollen_hosting_2017,koirala_hosting_2022}. The hosting capacity can be determined in terms of a number of different performance limits, e.g., transformer overload, feeder ampacity, etc. Recently, harmonic distortion has gained attention in literature as a relevant performance limit. Nakhodchi~et~al. have shown that harmonic distortion as a performance limit is often more critical than the transformer rating \cite{nakhodchi_impact_2023}. There is an important gap in literature for a harmonic hosting capacity model that includes the following features: 
+\begin{enumerate}
+    \item [1)] \textit{network representation}, including:
+                \begin{enumerate*}
+                    \item [(a)] nodal or full network representation,
+                    \item [(b)] non-linear (network) impedance in the frequency domain,
+                    \item [(c)] phase-(un)balanced representation, and 
+                    \item [(d)] detailed treatment of power transformer.
+                \end{enumerate*}
+    \item [2)] \textit{unit representation}, including:
+                \begin{enumerate*}
+                    \item [(a)] generic unit, and
+                    \item [(b)] equitable distribution of the harmonic hosting capacity.
+                \end{enumerate*}
+    \item [3)] \textit{harmonic limits}, including on: total harmonic distortion, individual harmonic distortion, root-mean-square ampacity, power factor, and voltage unbalance.
+    \item [4)] \textit{stochastic representation}, including:
+                \begin{enumerate*}
+                    \item [(a)] unit harmonic injection,
+                    \item [(b)] background harmonic distortion,
+                    \item [(c)] network parameters,
+                    \item [(d)] network exploitation, and
+                    \item [(e)] harmonic limits.
+                \end{enumerate*}
+\end{enumerate}
+In the context of power system planning, this work aims to address the features in categories 1), 2) and 3) by exactly and tractably determining the lower bound for the harmonic hosting capacity, considering harmonic distortion throughout the entire network under different equitable distributions of the harmonic distortion budget.
+
+\subsection{Literature Review}
+\label{sec:literature_review}
+
+\begin{table*}[t!]
+    \centering
+    \caption{~~~~~ Literature review on harmonic hosting capacity, enumerating features with respect to the categories established in \S\,\ref{sec:background_and_motivation}. The last line of the table shows the features included in the presented paper.}
+    \label{tab:literature_review}
+    \begin{tabular}{ c | c | c | c c c c | c c | c c c c c | c c c c c | r r }
+        \multirow{2}{*}{ref.} & \multirow{2}{*}{class} & \multirow{2}{*}{method\footnotemark} & \multicolumn{4}{c |}{1) ntw. repr.} & \multicolumn{2}{c |}{2) unit repr.} & \multicolumn{5}{c |}{3) harm. lim.} & \multicolumn{5}{c |}{4) stoch. repr.} & \multicolumn{2}{c}{tract.\footnotemark}   \\ 
+                                            &       &       & (a)   & (b)   & (c)   & (d)   & (a)   & (b)   & thd   & ihd   & rms   & pf    & unb.   & (a)  & (b)   & (c)   & (d)   & (e)   & \#\,n & t[min] \\ \hline 
+        \cite{ieee_ieee_2022}        & std.  & s-ae  & nodal &\xmark & bal.  &\xmark &\cmark &\xmark &\cmark &\cmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark & -     & -     \\ 
+        \cite{energy_network_association_er-g5-5_2020}        & std.  & s-ae  & nodal &\xmark & bal.  &\xmark &\cmark &\xmark &\cmark &\cmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark & -     & -     \\ % ER G5/5 
+\cite{international_electrotechnical_commission_iec61000-3-6_2008}   & std.  & s-ae  & nodal &\xmark & bal.  &\xmark &\cmark &\xmark &\cmark &\cmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark & -     & -     \\ \arrayrulecolor{gray!20} \hline 
+        \cite{santos_considerations_2015}   & lit.  & s-ae  & nodal &\cmark & bal.  &\xmark &\cmark &\xmark &\xmark &\cmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark & 14    & -     \\
+        \cite{nakhodchi_impact_2023}        & lit.  & mc-ae & nodal &\cmark & bal.  &\xmark &\xmark &\xmark &\cmark &\cmark &\cmark &\xmark &\xmark &\cmark &\xmark &\xmark &\xmark &\cmark & 64    & -     \\ \arrayrulecolor{gray!20} \hline
+        \cite{carmelito_hosting_2023}       & lit.  & mc-pf & full  &\cmark & unb.  &\xmark &\xmark &\xmark &\cmark &\xmark &\cmark &\xmark &\cmark &\xmark &\xmark &\xmark &\xmark &\xmark & 8773  & 320   \\ 
+        \cite{sakar_integration_2018}       & lit.  & mc-pf & full  &\cmark & bal.  &\xmark &\xmark &\xmark &\cmark &\cmark &\cmark &\cmark &\xmark &\cmark &\cmark &\xmark &\xmark &\xmark & 3     & -     \\ \arrayrulecolor{gray!20} \hline
+        \cite{sun_distribution_2012}        & lit.  & nl    & full  &\cmark & bal.  &\xmark &\xmark &\xmark &\cmark &\cmark &\xmark &\xmark &\xmark &\cmark &\xmark &\xmark &\xmark &\xmark & 16    & -     \\ % Sun 2012-a
+        \cite{sun_incorporating_2012}       & lit.  & nl    & full  &\cmark & bal.  &\xmark &\xmark &\xmark &\cmark &\cmark &\xmark &\xmark &\xmark &\cmark &\xmark &\xmark &\xmark &\xmark & 5     & -     \\ % Sun 2012-b
+        \cite{sun_distribution_2022}        & lit.  & nl    & full  &\cmark & bal.  &\xmark &\xmark &\xmark &\cmark &\cmark &\xmark &\xmark &\xmark &\cmark &\xmark &\xmark &\xmark &\cmark & 16    & 30    \\ \arrayrulecolor{black} \hline
+        This work                           & lit.  & soc   & full  &\cmark & bal.  &\cmark &\cmark &\cmark &\cmark &\cmark &\cmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &\xmark &   1880    &  $<~6$     \\
+    \end{tabular}
+\end{table*}
+
+There are several standards (std.) and, more recently, limited academic literature (lit.) that present an approach to determine the harmonic hosting capacity of a power system. Table~\ref{tab:literature_review} enumerates their mathematical method and features with respect to the categories established in \S\,\ref{sec:background_and_motivation}. Furthermore, the last row of Table~\ref{tab:literature_review} shows the features included in the presented paper. The last two columns of Table~\ref{tab:literature_review} shows the tractability of the proposed methods in the literature. It can be seen that no tractable optimal method exists in literature which incorporates all features in categories 1), 2) and 3).
+
+\subsubsection{Network representation} 
+\label{sec:network_representation} 
+
+Two possible network representations are considered in different harmonic hosting capacity studies, i.e., nodal or full network representation. A nodal network representation omits the interaction between different sources of harmonic distortion, located at different nodes in the system \cite{van_acker_impact_2025}. For example, the nodal network representation uses a Thévenin or Norton equivalent of the entire network and cannot account for the combinatorial effects of multiple injections at different locations simultaneously. Furthermore, the nodal approach is unable to account for the effects of a series resonance, i.e., harmonic current injection into the considered node may not cause a local violation of the harmonic voltage limits, but causes an external violation somewhere further remote in the system. A numerical comparison of the nodal approach as utilized in the IEEE519-2022 and the IEC61000-3-6:2008 standards and a full network representation is provided in \cite{van_acker_impact_2025} clearly demonstrating the more accurate behavior of the full network approach in presence of network resonances.  All but one reference, i.e.,~\cite{carmelito_hosting_2023}, considers a phase-balanced network representation, even those studying distribution systems, but neglect to model power transformers in detail~\cite{geth_harmonic_2022}. In contrast to the standards which derive the harmonic network impedance on the local short-circuit impedance, recent literature considers the frequency-dependent of the impedance based on those of the individual components, reflecting the resonances in the network.
+
+\footnotetext[1]{The possible mathematical methods are abbreviated as: 
+\begin{enumerate*}
+    \item [(s-ae)] single analytical expression,
+    \item [(mc-ae)] monte-carlo analytical expression,
+    \item [(mc-pf)] monte-carlo power flow,
+    \item [(nl)] non-linear optimal power flow, and
+    \item [(soc)] second-order cone optimal power flow.
+\end{enumerate*}}
+
+\footnotetext[2]{The tractability of a method is expressed in terms of size of the network studied, i.e., number of nodes \#\,n, and the solve time~t given in minutes.}
+
+\subsubsection{Unit representation} 
+\label{sec:unit_representation}
+
+In contrast to the standards, most harmonic hosting capacity studies in the literature consider one specific application, e.g., hosting capacity of photovoltaic systems or electric vehicle charging stations, accounting for harmonic limits. However, from the perspective of the power system operator, such studies are limiting as power system operators have no knowledge of the specific (future) assets of its consumers. 
+
+Furthermore, in the European context, power system operators are regulated and have to treat their customers on a fair and equal basis. Consequently, in this context, the harmonic hosting capacity should be distributed among its consumers based on some fairness principle.
+
+Recent literature shows a growing focus on integrating equity and fairness criteria into power system analysis, addressing how costs, benefits, and risks are distributed among stakeholders. Fairness is generally framed in two ways: equality, where all users receive similar outcomes, and equity, where outcomes are adjusted based on needs, vulnerability, or contribution. These concepts are increasingly tied to energy-justice frameworks, emphasizing distributive justice, i.e., who gets what, procedural justice, i.e., who participates, and recognition justice, i.e., acknowledging marginalized groups~\cite{goforth_incorporating_2025}. Studies highlight a wide range of metrics for embedding fairness into power system optimization, including Gini coefficients~\cite{sun_gini_2020}, variance indices~\cite{heylen_fairness_2019}, max-min fairness, proportional fairness, and Shapley-value allocations~\cite{obrien_shapley_2015}. Each metric shapes decision-making differently, especially in balancing system efficiency with distributional outcomes. Several reviews emphasize the importance of carefully selecting fairness definitions aligned with policy goals and stakeholder priorities, including~\cite{goforth_incorporating_2025}.
+
+Applications of fairness criteria span multiple areas within power system analysis. In reliability planning, inequality indices are used to measure how outage risks or unserved energy are distributed, often revealing trade-offs between total system cost and equitable service~\cite{heylen_fairness_2019}. In economic dispatch and optimal power flow, fairness metrics constrain generation dispatch, renewable curtailment, or locational costs, directly influencing operational decisions~\cite{sun_gini_2020}. Local energy systems and community markets increasingly apply proportional and Shapley-based allocations to ensure fair cost and benefit sharing among participants~\cite{obrien_shapley_2015}, while system planning studies incorporate equity constraints when siting renewable generation to account for community impacts and environmental justice concerns~\cite{lohr_integration_2024}. Recent reviews stress that conclusions about fairness are highly sensitive to metric selection, grouping choices, and socio-spatial data quality, underscoring the need for transparent definitions and stakeholder engagement when integrating equity objectives into power system models~\cite{goforth_incorporating_2025}.
+
+Although, as shown above, the application of equity and fairness has a long tradition within power system analysis, it remains under-investigated in the context of harmonic hosting capacity~\cite{santos_considerations_2015}.
+
+\subsubsection{Harmonic limits}
+\label{sec:harmonic_limits}
+
+The main harmonic limits considered in harmonic hosting capacity studies are on total harmonic distortion (thd), individual harmonic distortion (ihd), and root-mean-square value (rms) of the nodal voltage or edge ampacity. Additionally, power factor limits are considered in~\cite{sakar_integration_2018}, and, given the phase-unbalanced network representation, voltage unbalance limits are considered in~\cite{carmelito_hosting_2023}.
+
+\subsubsection{Stochastic representation}
+\label{sec:stochastic_representation}
+
+Different sources of uncertainty may have an impact on the harmonic hosting capacity, including: 
+\begin{enumerate*}
+    \item [(a)] unit harmonic injection,
+    \item [(b)] background harmonic distortion,
+    \item [(c)] network parameters, and
+    \item [(d)] network exploitation, 
+\end{enumerate*}
+as they inherently impact the harmonic limits. Uncertainty on the unit harmonic injection and harmonic background are considered in~\cite{ sun_distribution_2022, nakhodchi_impact_2023, sakar_integration_2018, sun_distribution_2012, sun_incorporating_2012}. However, the impact of uncertainty on network parameters and exploitation remain under-investigated in the literature.
+
+\subsection{Contributions and Outline}
+\label{sec:contribution_and_outline}
+% 29/03: TVA - added and reviewed
+
+%\textcolor{red}{As the focus of the work is on meshed high voltage grids, voltage and current unbalanced is not considered. However, in \S IV.B. a potential approach to extend the developed model to unbalanced system is provided.}
+
+In this paper, a holistic one-shot methodology is presented to exactly and tractably determine the lower bound on the steady-state harmonic hosting capacity for an entire phase-balanced three-phase power system in a deterministic context. Note that in the context of this paper, the terms exact and lower-bound are not strictly related and pertain to different aspects of the presented model:
+\begin{itemize}
+    \item the term 'exact' is used to describe the equivalence between the non-linear and second-order cone formulations. In most applications in power system optimization, the related second-order cone model is a relaxation of the exact non-linear model. However, this paper shows that both models are equivalent for this particular application.
+    \item the term 'lower bound' is used to describe that the outcome of the model is the lowest possible steady-state harmonic hosting capacity for a given power system. This is due to the fact that the presented model does not consider uncertainty on the angle of the injected harmonic current, rather assumes a constant angle relative to the reference. This approach provides a device agnostic definition of the harmonic hosting capacity, as it is purely defined based on the value of the maximum allowable current injection under a worst-case.
+\end{itemize}
+The problem is formulated from the perspective of the power system operator, i.e., without knowledge of the (future) assets of its costumers. Consequently, the harmonic hosting capacity is determined in terms of harmonic current magnitude using a fairness principle. Two exact formulations of the problem in the rectangular current-voltage variable space are presented: non-linear and second-order cone, both incorporating: 
+\begin{itemize}
+    \item exact representation of the network impedance in the frequency domain based on the harmonic impedance of the individual grid components,
+    \item detailed treatment of transformers including the effects of their configuration,
+    \item enforcement of (harmonic) limits given in relevant standards on bus voltage and component ampacity, and
+    \item equitable distribution of the harmonic hosting capacity following a fairness principle. 
+\end{itemize}
+The models and numerical illustrations presented in the paper are made freely available as part of the \textsc{Julia}-package: \textsc{HarmonicPowerModels.jl}\footnote{Available at: \href{https://github.com/timmyfaraday/HarmonicPowerModels.jl}{https://github.com/timmyfaraday/HarmonicPowerModels.jl}}.
+
+The remainder of the paper is organized as follows: Section~\ref{sec:mathematical_framework} presents the mathematical formulation of the harmonic hosting capacity problem. Section~\ref{sec:numerical_illustration} shows numerical illustration results for a radial section of a real-world industrial power system and for a large-scale transmission system. Section~\ref{sec:future_work} discusses future work. Section~\ref{sec:conclusion} concludes the paper.

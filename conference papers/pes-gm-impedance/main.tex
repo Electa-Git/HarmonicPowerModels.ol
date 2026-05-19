@@ -1,0 +1,107 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+
+% pkgs
+\usepackage{hyperref}
+\usepackage{dblfloatfix}
+\usepackage{flushend}
+\usepackage{orcidlink}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{IEEEtrantools}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{circuitikz}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+% footnote
+\renewcommand{\thefootnote}{\arabic{footnote}}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\leftmargini}
+
+% addition for template 
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Assessment of Harmonic Network Impedance based on Transient Harmonic Signals measured at an Industrial Power System}
+
+\title{Assessment of Harmonic Network Impedance based on Transient Harmonic Signals measured at an Industrial Power System
+\thanks{This work is supported by the Energy Transition Fund by FOD Economy, Belgium, project HARMONIC. The General Board on Energy of the FOD Economy is not liable for any use of the presented work and subsequent results.}}
+
+\author{
+\IEEEauthorblockN{Tom Van Acker}
+\IEEEauthorblockA{\textit{Department of Tech. Expertise Power} \\
+\textit{BASF Antwerp}\\
+Antwerp, Belgium \\
+ORCID: \href{https://orcid.org/0000-0001-6283-1457}{0000-0001-6283-1457}}
+\and
+\IEEEauthorblockN{Hakan Ergun}
+\IEEEauthorblockA{\textit{Department of Elec. Eng.} \\
+\textit{KU Leuven}\\
+Leuven, Belgium \\
+ORCID: \href{https://orcid.org/0000-0001-5171-1986}{0000-0001-5171-1986}}
+\and
+\IEEEauthorblockN{Jos\'e A. de la O Serna}
+\IEEEauthorblockA{\textit{Faculty of Mech. and Elec. Eng.} \\
+\textit{Uni. Aut\'onoma de Nuevo Le\'on}\\
+San Nicolás de los Garza, N.L., Mexico \\
+ORCID: \href{https://orcid.org/0000-0002-0005-0062}{0000-0002-0005-0062}}
+}
+
+\maketitle
+
+
+\begin{abstract}
+Driven by electrification of industry, the amount of harmonic pollution is set to increase significantly over the next few decades. Consequently, it becomes increasingly important to align harmonic pollution with the harmonic network impedance, to minimize its effects and avoid resonances. This paper presents a transient invasive method to assess the harmonic network impedance using the Taylor-Fourier transform. The method uses the first-order derivative of the measured signals rather than the actual signals, as these provide a more `powerful' basis. The proposed method enables accurate assessment of the harmonic network impedance for higher harmonic numbers compared to other methods in literature, which require that the harmonic current amplitude is at least one percent of the fundamental. The method is demonstrated using signals measured during the inrush of a transformer at an industrial site.
+\end{abstract}
+\begin{IEEEkeywords}
+    Power harmonics, impedance measurement, Taylor-Fourier transform, industrial site.
+\end{IEEEkeywords}
+\maketitle
+
+% symbols
+\input{symbols.tex}
+
+% sections
+\input{sections/introduction.tex}
+\input{sections/mathematical_framework.tex}
+\input{sections/case_study.tex}
+\input{sections/conclusion.tex}
+
+% appendices
+% \appendix
+\input{appendix/appendix_a.tex}
+
+\section*{Acknowledgement}
+The authors would like to thank Maarten Laureys and Rudy Leppens for managing and setting up the measurement campaign, respectively. Furthermore, the authors would like to thank Kris De Wit for sparking the original idea and the countless useful discussions.
+
+\begin{thebibliography}{14}
+\bibitem{elia_2022} Elia, “Powering Industry Towards Net Zero,” 2022 (Online)
+\bibitem{robert_1997} A. Robert, “Guide for assessing the network harmonic impedance,” in 14th International Conference and Exhibition on Electricity Distribution (CIRED 1997 - Distributing Power for the Millennium), Birmingham, UK, 1997, vol. 1997, pp. 1-10.
+\bibitem{platas_garza_2011} M. A. Platas-Garza and J. A. de la O Serna, “Dynamic Harmonic Analysis Through Taylor–Fourier Transform,” IEEE Trans. Instrum. Meas., vol. 60, no. 3, pp. 804–813, 2011.
+\bibitem{xi_2002} W. Xu, E. E. Ahmet, X. Zhang and P. W. Daly, ”Measurement of network harmonic impedances: practical implementation issues and their solutions”, IEEE Trans. Power Delivery, vol. 17, no. 1, pp. 210-216, 2002.
+\bibitem{liguori_2004} C. Liguori, A. Paolillo, and A. Pignotti, “An intelligent FFT analyzer with harmonic interference effect correction and uncertainty evaluation,” IEEE Trans. Instrum. Meas., vol. 53, no. 4, pp. 1125–1131, 2004.
+\bibitem{gabor_1946} D. Gabor, “Theory of communication,” J. IEE, vol. 93, no. 26, pp. 429–457, 1946.
+\bibitem{kiymika_2005} M. K. Kiymika, I. Guler, A. Dizibuyuk, and M. Akin, “Comparison of STFT and wavelet transform methods in determining epileptic seizure activity in EEG signals for real-time application,” Comput. Biol. Med., vol. 35, no. 7, pp. 603–616, 2005.
+\bibitem{daubechies_1992} I. Daubechies, Ten Lectures on Wavelets. Philadelphia, PA: SIAM, 1992.
+\bibitem{vetterli_1995} M. Vetterli and J. Kovacevic,Wavelets and Subband Coding. Englewood Cliffs, NJ: Prentice-Hall, 1995.
+\bibitem{yang_2005} J.-Z. Yang, C.-S. Yu, and C.-W. Liu, “A new method for power system signal harmonic analysis,” IEEE Trans. Power Del., vol. 20, no. 2, pp. 1235–1239, 2005.
+\bibitem{tomic_2007} J. J. Tomic, M. D. Kusljevic, and V. V. Vukicic, “A new power system digital harmonic analyzer,” IEEE Trans. Power Del., vol. 22, no. 2, pp. 772–780, 2007.
+\bibitem{delaOSerna_2020} J.~A.~de la O Serna, "Dynamic harmonic analysis with FIR filters designed with O-splines", \emph{IEEE Trans. Circuits and Systems}, vol. 67, no. 12, pp. 5092-5100, 2020.
+\bibitem{stiegler_2015} R.~Stiegler, J.~Meyer, P.~Schegner, and D.~Chakravorty, "Measurement of network harmonic impedance in presence of electronic equipment", \emph{Applied Measurements for Power Systems (AMPS)}, in: IEEE International Workshop, Aachen, pp. 49-54, 2015.
+\bibitem{delaOserna_2018} J. A. de la O Serna, “Analyzing Power Oscillating Signals With the O-Splines of the Discrete Taylor–Fourier Transform,” IEEE Trans. Power Syst., vol. 33, no. 6, pp. 7087–7095, 2018.
+\end{thebibliography}
+
+\end{document}

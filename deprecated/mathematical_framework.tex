@@ -1,0 +1,125 @@
+\section{Mathematical Framework}
+\label{sec:mathematical_framework}
+
+\subsection{Certain Harmonic Hosting Capacity}
+\label{sec:certain_harmonic_hosting_capacity}
+
+This section describes the real-value feasible set for the certain harmonic hosting capacity in the rectangular current-voltage formulation of the harmonic optimal power flow problem. The following assumptions are made:
+\begin{enumerate}
+    \item a balanced three-phase power system is considered, i.e., the harmonics are classified into three types:
+    \begin{enumerate}
+        \item positive sequence~$\Harmonic \in \PositiveHarmonicSet \subset \HarmonicSet$:~$\Harmonic=1+3n$,
+        \item negative sequence~$\Harmonic \in \NegativeHarmonicSet \subset \HarmonicSet$:~$\Harmonic=2+3n$, and
+        \item zero sequence~$\Harmonic \in \ZeroHarmonicSet \subset \HarmonicSet$ :~$\Harmonic=3+3n$,
+    \end{enumerate}
+    where~$n \in \NaturalNumberSet_{0}$;
+    \item any edge in the system is either represented as a pi-section or a t-section, with certain parameters~$r$, $x$, $g$ and $b$;
+    \item any unit in the system is represented as a current source, more complex unit models can be added;
+    \item the fundamental voltage magnitude at any bus~$|U|_{i,1},~\forall i \in I$ is set to 1\,p.u.;
+    \item the rectangular non-fundamental harmonic voltage components of the reference bus(ses)~$U^{re}_{i,h},~U^{im}_{i,h},~\forall i \in I^{ref}, h \in H/\{1\}$ are set to 0\,p.u.
+\end{enumerate}
+
+{\allowdisplaybreaks 
+\begin{IEEEeqnarray}{ 0 l }
+    \text{objective function} \nonumber \\
+    max \sum_{\Unit \in \UnitSet}\sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} m_{\Unit, \Harmonic}  \\
+    \text{reference bus --~} \forall \Node \in \RefNodeSet: \nonumber\\
+    \quad \RealVoltage_{\Node,\Harmonic} = 0, \,\, \forall\Harmonic \in \HarmonicSet \backslash \{1\} \label{eq_ref_bus_volt_source_a}, \\ 
+    \quad \ImaginaryVoltage_{\Node,\Harmonic} = 0, \,\, \forall \Harmonic \in \HarmonicSet \backslash \{1\}, \label{eq_ref_bus_volt_source_b} \\
+    \text{Kirchhoff's current law --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \quad \sum_{\LineTuple \in \LineTupleSet} \mkern-6mu \RealCurrent_{\LineTuple,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \RealCurrent_{\UnitTuple,\Harmonic}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic} -\ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic}  = 0, \label{eq:kcl_node_real} \\
+    \quad \sum_{\LineTuple \in \LineTupleSet} \mkern-6mu \ImaginaryCurrent_{\LineTuple,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \ImaginaryCurrent_{\UnitTuple,\Harmonic} + \ShuntConductance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + \ShuntSusceptance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic}= 0, \label{eq:kcl_node_imag} \\
+    \text{Ohm's law --~} \forall \LineTuple \in \LineTupleSetFr, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber   \\
+    \quad \RealVoltage_{\AltNode,\Harmonic} = \RealVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic} +
+    \SeriesReactance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_real} \\ 
+    \quad \ImaginaryVoltage_{\AltNode,\Harmonic} = \ImaginaryVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic} -
+    \SeriesReactance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_imag} \\
+    \text{branch total current --~} \forall \LineTuple \in \LineTupleSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \quad \RealCurrent_{\LineTuple,\Harmonic} =
+    \ShuntConductance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} - 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} +
+    \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_real} \\
+    \quad \ImaginaryCurrent_{\LineTuple,\Harmonic} =
+    \ShuntConductance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} +
+    \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_imag} \\
+    \text{root mean square voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+    \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \mkern-7mu (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq
+    (\MaximumVoltage_{\Node})^{2} - |U_{1,h}|^2 \label{eq:rms} \\
+    \text{total harmonic distortion --~} \forall \Node \in \NodeSet: \nonumber \\
+    \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq |U_{i,1}|^2\,(\text{THD}_{\Node}^{\text{u}})^2,  \label{eq:thd} \\
+    \text{individual harmonic distortion --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq |U_{i,1}|^2\,(\text{IHD}_{\Node}^{\text{u}})^2 \label{eq:ihd} \\
+    \text{harmonic unit model} - \forall \Unit \in \UnitSet, \UnitTuple \in \UnitTupleSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \RealShuntCurrent_{\Unit, \Harmonic} = \RealCurrent_{\UnitTuple, \Harmonic} - \Conductance_{\Unit, \Harmonic} \RealVoltage_{\Node, \Harmonic} + \Susceptance_{\Unit, \Harmonic} \ImaginaryVoltage_{\Node, \Harmonic} \\
+    \ImaginaryShuntCurrent_{\Unit, \Harmonic} = \ImaginaryCurrent_{\UnitTuple, \Harmonic} - \Conductance_{\Unit, \Harmonic} \ImaginaryVoltage_{\Node, \Harmonic} - \Susceptance_{\Unit, \Harmonic} \RealVoltage_{\Node, \Harmonic} \\
+    \text{harmonic current injection bounds} - \forall \Unit \in \UnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    0 \leq \RealShuntCurrent_{\Unit, \Harmonic} \leq m_{\Unit, \Harmonic} \\ 
+    0 \leq \ImaginaryShuntCurrent_{\Unit, \Harmonic} \leq m_{\Unit, \Harmonic}\PowerFactor_{\Unit, \Harmonic}
+\end{IEEEeqnarray}}
+
+Note that for the root mean square voltage, the customary lower bound is omitted as it becomes redundant given assumption four. 
+
+\newpage
+
+\subsection{Robust Optimization Formulation for Harmonic Hosting Capacity}
+
+The following assumptions are made:
+\begin{enumerate}
+    \item The voltage magnitude of the fundamental harmonic, i.e., $\Harmonic = 1$, is treated as an uncertain variable~$\LiftedVoltage_{\Node,1}$. Consequently, the right hand side of \eqref{eq:thd} and \eqref{eq:ihd} is simplified.
+\end{enumerate}
+
+\newpage
+
+\subsection{Discussion on Rotated Second-Order Cone Reformulation}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[   axis lines=center,
+                        xlabel={\footnotesize crd/cmd [-]},
+                        x label style={at={(axis description cs:0.50,-0.125)},anchor=north},
+                        ylabel={\footnotesize cid/cmd [-]},
+                        y label style={at={(axis description cs:-0.125,0.5)},rotate=90,anchor=south},
+                        clip = true,
+                        legend pos=south west,
+                        legend cell align={left},
+                        height=60.0mm, width=60.0 mm,
+                        xmin = -0.1, xmax = 1.1,
+                        ymin = -0.1, ymax = 1.1,
+                        % ytick = {0.4, 0.5, 0.6, 0.7, 0.80, 0.888, 1.0},
+                        % yticklabels = { \footnotesize 40.0, \footnotesize 50.0, \footnotesize 60.0,
+                                        % \footnotesize 70.0, \footnotesize 80.0, \footnotesize 88.8, 
+                                        % \footnotesize 100.0},
+                        % xtick = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0},
+                        % xticklabels = { \footnotesize 0, \footnotesize 10, \footnotesize 20, 
+                                        % \footnotesize 30, \footnotesize 40, \footnotesize 50, 
+                                        % \footnotesize 60, \footnotesize 70, \footnotesize 80, 
+                                        % \footnotesize 90, \footnotesize 100},
+                        axis on top,
+                    ]
+            % Plots
+            \draw [dashed] (axis cs:0,0) circle [radius=100];
+            % \draw [dashed] (0.75,-0.10) -- (0.75,1.00);
+            % \addplot [line width = 1.00mm] table [x index = {0}, y index = {3}, col sep=comma]{GRA.csv};
+	        % \addlegendentry{\footnotesize fully reliable}
+            % \addplot [line width = 0.70mm, gray] table [x index = {0}, y index = {2}, col sep=comma]{GRA.csv};
+	        % \addlegendentry{\footnotesize incl. wind turbine rel.}
+            % \addplot [line width = 0.40mm, gray!50] table [y=GRA_W, col sep=comma]{GRA.csv};
+            % \addlegendentry{\footnotesize incl. wind turbine and cable system rel.}
+            % \addplot [dashed, gray!50] (0.747,0.40) -- (0.747,0.925) node [above, black] {*}; \draw [-latex, gray!50] (0.747,0.9125) -- (0.747+0.035,0.9125);
+            % \addplot [dashed, gray] (0.964,0.40) -- (0.964,0.925) node [above, black] {**}; \draw [-latex, gray] (0.964,0.9125) -- (0.964+0.035,0.9125);
+            %
+            \draw (0.04,1.0) -- (0.06,1.0);
+            % \draw [-latex] (0.05,1.0) -- node [right] {\footnotesize due to zero wind farm output} (0.05,0.89);
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Generation ratio availability for the Anholt wind farm. The \gls{grc} at which the impact of the collector system and wind turbine reliability starts is indicated using  * and **, respectively.}
+    \label{fig:generation_ratio_availability}
+\end{figure}
+
+

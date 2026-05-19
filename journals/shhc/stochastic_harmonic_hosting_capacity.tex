@@ -1,0 +1,149 @@
+\documentclass[journal]{IEEEtran}
+
+% packages
+\usepackage{lipsum}
+\usepackage{hyperref}
+\usepackage{flushend}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+\usepackage{cite}
+\usepackage{bm}
+\usepackage{orcidlink}
+
+\usepackage[x11names]{xcolor}
+% \usepackage{microtype,xparse,tcolorbox}
+
+%% footnote
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\makesavenoteenv{tabular*}
+\makesavenoteenv{table*}
+% \usepackage{tablefootnote}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{pgfplots}
+    \pgfplotsset{compat=1.15}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% checkmark packages 
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\hoffset}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% definition setup
+%\theoremstyle{definition}
+
+\newtheorem{defn}{Definition}[section]
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% document
+\begin{document}
+
+% title, authors and thanks
+\title{Stochastic Harmonic Hosting Capacity \\ Considering Harmonic Recombination}
+\author{Tom~Van~Acker~\orcidlink{0000-0001-6283-1457},%
+        Jinwen~Xiang~\orcidlink{0000-0003-2107-0238},%
+        and~Hakan~Ergun,~\IEEEmembership{Senior Member,~IEEE~\orcidlink{0000-0001-5171-1986}}%
+\thanks{Tom Van Acker is with the Scenarios, Markets and Adequacy Department, Elia Transmission Belgium, 1000 Brussels, Belgium (e-mail: tom.vanacker@elia.com).}%
+\thanks{Jinwen Xiang and Hakan Ergun are with the Research Group ELECTA, Department of Electrical Engineering, KU Leuven, 3000 Leuven, Belgium, and also with Etch-EnergyVille, 3600 Genk, Belgium (e-mail: jinwen.xiang@kuleuven.be, hakan.ergun@kuleuven.be).}
+\thanks{This work is supported by the Energy Transition Fund by FOD Economy, Belgium, project HARMONIC. The General Board on Energy of the FOD Economy is not liable for any use of the presented work and subsequent results.}
+\thanks{\textit{(Corresponding author: Tom~Van~Acker)}}}
+
+% paper headers
+\markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
+
+% make the title area
+\maketitle
+
+% abstract
+\begin{abstract}
+\lipsum[1-2]
+\end{abstract}
+
+% keywords
+\begin{IEEEkeywords}
+Harmonic distortion, fairness, hosting capacity, mathematical optimization.
+\end{IEEEkeywords}
+
+% peer-review title
+\IEEEpeerreviewmaketitle
+
+% sections
+\input{sections/introduction_new}
+
+% \newpage
+
+\input{journals/shhc/sections/angle_uncertainty_v2}
+
+\newpage
+~
+\newpage
+~
+\newpage
+
+\input{nomenclature}
+\input{journals/shhc/sections/mathematical_framework}
+
+\newpage
+
+\input{sections/numerical_illustration}
+
+\input{sections/conclusion}
+
+\newpage
+~
+\newpage
+
+% appendices
+\appendix
+\input{journals/shhc/appendix/appendix_a}
+
+\newpage
+
+\section*{Acknowledgement}
+The authors would like thank Kaan Yurtseven for the fruitful discussions.
+
+% bibliography
+\bibliographystyle{IEEEtran}
+\bibliography{journals/shhc/shhc_references}
+
+
+% biographies
+\begin{IEEEbiographynophoto}{Dr. Ir. Ing. Tom Van Acker} received the M.Eng., M.Sc. and Ph.D. degrees in Electrical Engineering from KU Leuven, Leuven, Belgium in 2012, 2014 and 2020, respectively. Currently, he is a Senior Expert and Team Lead at Elia Transmission Belgium. His main areas of research interest are optimization and uncertainty in a power system context, specifically applied in the context of availability, harmonics, optimal power flow, and state estimation. 
+\end{IEEEbiographynophoto}
+
+\begin{IEEEbiographynophoto}{Dr. Jinwen Xiang} received the B.S., M.Sc., and Ph.D. degrees in electrical engineering from Hunan University, China, and was a visiting Ph.D. student at the Technical University of Denmark. He was a control engineer at CRRC Zhuzhou Institute. Currently, he is a post-doctoral researcher with KU Leuven / EnergyVille, Belgium. His main areas of research interes are modeling and control of power electronics and their applications in transportation and power systems. 
+\end{IEEEbiographynophoto}
+
+\begin{IEEEbiographynophoto}{Dr. Dipl.-Ing. Hakan Ergun} has obtained his MSc in electrical engineering at the Graz University of Technology (TU Graz) and his PhD in electrical engineering at KU Leuven, respectively. In the past he has been a post – doctoral researcher, and a research expert at KU Leuven / EnergyVille. Currently he is an Associate Professor with KU Leuven and the Energy Transmission Competence Hub (Etch) within EnergyVille.
+His main research interest is to optimally develop and operate future energy networks for the renewable energy transition. He is the main developer of a number of open-source network modelling tools for optimal planning and operation of AC and DC grids, and stability and security constrained network operation. He is a senior member of IEEE and an active member of CIGRE. 
+
+\end{IEEEbiographynophoto}
+
+\end{document}

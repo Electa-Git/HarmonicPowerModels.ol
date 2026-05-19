@@ -1,0 +1,83 @@
+\documentclass[journal]{IEEEtran}
+
+% packages
+\usepackage{ulem}
+\usepackage{hyperref}
+% \usepackage{flushend}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\leftmargini}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% definition setup
+%\theoremstyle{definition}
+
+\newtheorem{defn}{Definition}[section]
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% nomenclature
+\input{nomenclature}
+
+% document
+\begin{document}
+
+\begin{figure}[b!]
+    \centering
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (0.00,0.00) to [short, -*, i=\footnotesize{$\CurrentPhasor{\LineTuple}$}] 
+                (1.00,0.00) to [short, i=\footnotesize{$\SeriesCurrentPhasor{\LineTuple,\Harmonic}$}]
+                (2.00,0.00) to [european resistor, /tikz/circuitikz/bipoles/length=0.75cm, l=\footnotesize{$\SeriesImpedance{\Line,\Harmonic}$}]
+                (3.00,0.00); 
+        \draw   (4.00,0.00) to [short, i_=\footnotesize{$\SeriesCurrentPhasor{\AltLineTuple,\Harmonic}$}]
+                (3.00,0.00);
+        \draw   (5.00,0.00) to [short, -*, i_=\footnotesize{$\CurrentPhasor{\AltLineTuple,\Harmonic}$}]
+                (4.00,0.00);
+        \draw   (1.00,0.00) to [short, i=\footnotesize{$\ShuntCurrentPhasor{\LineTuple,\Harmonic}$}]
+                (1.00,-0.70) to [european resistor, /tikz/circuitikz/bipoles/length=0.75cm,
+                l=\footnotesize{$\ShuntAdmittance{\LineTuple,\Harmonic}$}]
+                (1.00,-1.30) to [short]
+                (1.00,-1.50);
+        \draw   (4.00,0.00) to [short, i_=\footnotesize{$\ShuntCurrentPhasor{\AltLineTuple,\Harmonic}$}]
+                (4.00,-0.70) to [european resistor, /tikz/circuitikz/bipoles/length=0.75cm,
+                l_=\footnotesize{$\ShuntAdmittance{\AltLineTuple,\Harmonic}$}]
+                (4.00,-1.30) to [short]
+                (4.00,-1.50);
+        \draw   (0.00,-1.50) to [open, v=\footnotesize{$\VoltagePhasor{\Node,\Harmonic}$}]
+                (0.00,0.00);
+        \draw   (5.00,-1.50) to [open, v=\footnotesize{$\VoltagePhasor{\AltNode,\Harmonic}$}]
+                (5.00,0.00);
+        \draw   (0.00,-1.50) to [short, -*]
+                (1.00,-1.50) to [short]
+                (4.00,-1.50) to [short, *-]
+                (5.00,-1.50);
+    \end{circuitikz}
+    \caption{$\pi$-model of branch~$\LineTuple$, with series impedance~$\SeriesImpedance{\Line}$ and from- and to-side shunt admittances~$\ShuntAdmittance{\LineTuple}$ and~$\ShuntAdmittance{\AltLineTuple}$.}
+    \label{fig:line_model}
+\end{figure}
+
+\end{document}

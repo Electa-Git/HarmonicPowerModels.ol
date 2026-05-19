@@ -1,0 +1,51 @@
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Background and Motivation}
+\label{sec:background_and_motivation}
+
+\IEEEPARstart{R}{eaching} a net zero economy by 2050 requires a massive undertaking in electrification of the energy system. Over the last two decades, renewable power generation, i.e., wind and photovoltaic generation, has successively increased. This trend is expected to accelerate further towards 2050~\cite{international_energy_agency_world_2023}. Additionally, to achieve the decarbonisation goals, the demand also needs to be decarbonised, which requires the substitution of fossil fuel by electricity for transport, heating and industrial processes. In Europe, various studies show that the total electricity demand will triple by 2050~\cite{energyville_paths_2023}. 
+
+\subsection{Literature Review}
+\label{sec:literature_review}
+
+Harmonic hosting capacity quantifies the maximum harmonic-emitting generation or load that can be integrated into a power system without violating harmonic voltage or current limits. Traditional harmonic assessment methodologies, widely used in early planning studies, are primarily deterministic and do not adequately reflect the growing penetration of inverter-based resources (IBRs) and nonlinear loads \cite{sun2022distribution, bollen2017hosting}. A key limitation of these deterministic approaches is the treatment of harmonic injections---particularly the phase angle of harmonic currents---as fixed parameters, despite strong empirical evidence that harmonic current angles exhibit significant stochastic variation across devices and operating conditions. As highlighted in~\cite{vanacker2025impact}, this gap leads to overly conservative or unrealistic assessments of hosting capacity.
+
+\subsubsection{Deterministic Approaches to Harmonic Hosting Capacity}
+The earliest and most commonly adopted HHC frameworks are provided by standards such as IEEE~519-2022~\cite{ieee519}, ER~G5/5~\cite{erg55}, and IEC~61000-3-6~\cite{iec61000}. These employ nodal Thevenin equivalents and assume fixed or worst-case harmonic injections. While practical, such approaches do not reflect resonance phenomena or the combinatorial effects of multiple harmonic sources at diverse locations in the system.
+
+Subsequent academic contributions have introduced more sophisticated deterministic formulations based on harmonic power flow (HPF) and harmonic optimal power flow (HOPF). Sun et al.\ incorporated harmonic distortion limits directly into OPF frameworks \cite{sun2012distribution, sun2012incorporating}, while Santos et al.\ examined HHC for transmission and distribution networks under fixed harmonic injections \cite{santos2015considerations}. Nakhodchi and Bollen \cite{nakhodchi2023impact} further demonstrated that harmonic limits may dominate thermal constraints in determining hosting capacity. More detailed network modeling, including frequency-dependent line and transformer impedances, has been shown to significantly affect HHC outcomes \cite{vanacker2025impact, geth2022harmonic}.
+
+Despite such progress, deterministic studies overwhelmingly assume constant harmonic current angles, typically selected as worst-case to guarantee device-agnostic safety. While this yields a provable lower bound on HHC, it can severely underutilize available harmonic headroom.
+
+\subsubsection{Importance of Harmonic Current Phase Angle}
+Harmonic voltage distortion results from the phasor sum of harmonic currents contributed by multiple devices. Consequently, the \emph{relative phase angles} of these injections are central to the resulting distortion. Empirical studies~\cite{bollen2017hosting} and CIGRÉ reports show that harmonic angles vary widely across device types (e.g., PV inverters, EV chargers, industrial converters) and may fluctuate dynamically with loading or internal control actions. Nevertheless, no standardized probabilistic characterization of harmonic current angles exists, and most HHC studies simplify the problem by assuming fixed angles.
+
+As also emphasized in Section~I-B4 of~\cite{vanacker2025impact}, angle uncertainty remains one of the least explored and most impactful aspects of harmonic modeling. Failure to incorporate this uncertainty can lead either to conservative assessments (under worst-case alignment) or optimistic estimates (under arbitrary angle assumptions).
+
+\subsubsection{Stochastic and Probabilistic Approaches}
+Only a limited body of literature introduces stochasticity into harmonic studies, and typically through variations in harmonic \emph{magnitudes} or background distortion. Sun and Harrison \cite{sun2022distribution} used chance constraints to incorporate probabilistic harmonic voltage limits. Sakar et al.\ \cite{sakar2018integration} and Carmelito et al.\ \cite{carmelito2023hosting} applied Monte Carlo (MC) sampling to capture uncertainty in harmonic emissions of PV and EV installations, respectively. However, these studies generally retain fixed manufacturer-provided harmonic angles or adopt simplistic random-angle perturbations without grounding in device physics.
+
+Polynomial chaos expansion (PCE) has been used for uncertainty propagation in harmonic load flow \cite{pce_harmonics}, and robust optimization has been applied to uncertainty in voltage and reactive power studies \cite{bertsimas2004robust}. Yet, these methods have not been extended to explicitly represent stochastic harmonic current angle uncertainty in HHC assessments. Similarly, stochastic modeling of network-parameter uncertainty---including cable impedance dispersion, transformer leakage reactance variation, and switching or exploitation uncertainty---remains sparse despite their documented influence on HHC \cite{vanacker2025impact, geth2022harmonic}.
+
+\subsubsection{Fairness, Equity, and Stochastic Allocation of Harmonic Budgets}
+Recent research has explored fairness and energy-justice principles in broader power system optimization problems, including dispatch \cite{sun2020gini}, reliability allocation \cite{heylen2019fairness}, and cost sharing via Shapley values \cite{obrien2016shapley}. However, as noted by Van Acker and Ergun, fairness remains underdeveloped in the context of HHC, where harmonic budget allocation typically relies on deterministic assumptions and does not consider uncertainty in users' harmonic behavior. A framework combining fairness criteria with stochastic modeling of harmonic angles could enable more equitable and realistic harmonic budget allocation, yet no such methodology exists in current literature.
+
+\subsubsection{Summary and Research Gap}
+The literature has evolved toward increasingly sophisticated deterministic models for harmonic analysis and hosting capacity, but a major methodological gap persists: no existing tractable HHC formulation explicitly incorporates the \emph{stochasticity of harmonic current angles}, despite their dominant role in determining aggregate harmonic distortion. Incorporating angle uncertainty through Monte Carlo simulation, PCE, robust optimization, or chance constraints offers a promising path to more realistic and less conservative HHC assessments. As power systems transition toward high penetrations of IBRs and electronically interfaced loads, such stochastic models will become indispensable for accurate planning and fair allocation of harmonic emission budgets.
+
+
+
+\subsection{Contributions and Outline}
+\label{sec:contribution_and_outline}
+
+In this paper, a holistic one-shot methodology is presented to exactly and tractably determine the steady-state harmonic hosting capacity for an entire phase-balanced three-phase power system in a stochastic context. The presented method considers uncertainty on the angle of the injected harmonic current, and limits the resulting individual and total harmonic voltage distortion, as well as the root-mean-square voltages and current, using chance constraints. The problem is formulated from the perspective of the power system operator, i.e., without knowledge of the (future) assets of its costumers. Consequently, the harmonic hosting capacity is determined in terms of harmonic current magnitude using a fairness principle. The presented formulation using the rectangular current-voltage variable space is second-order conic, incorporating:
+\begin{itemize}
+    \item exact representation of the network impedance in the frequency domain based on the harmonic impedance of the individual grid components,
+    \item detailed treatment of transformers including the effects of their configuration,
+    \item enforcement of (harmonic) limits given in relevant standards on bus voltage and component ampacity, and
+    \item equitable distribution of the harmonic hosting capacity following a fairness principle. 
+\end{itemize}
+The models and numerical illustrations presented in the paper are made freely available as part of the \textsc{Julia}-package: \textsc{HarmonicPowerModels.jl}\footnote{Available at: \href{https://github.com/timmyfaraday/HarmonicPowerModels.jl}{https://github.com/timmyfaraday/HarmonicPowerModels.jl}}.
+
+The remainder of the paper is organized as follows: Section~\ref{sec:mathematical_framework} presents the mathematical formulation of the stochastic harmonic hosting capacity problem. Section~\ref{sec:numerical_illustration} shows numerical illustration results for a radial section of a real-world industrial power system and for a large-scale transmission system. Section~\ref{sec:conclusion} concludes the paper.

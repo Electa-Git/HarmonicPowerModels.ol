@@ -1,0 +1,134 @@
+\documentclass{IEEEtran4PSCC}
+
+% packages
+\usepackage{ulem}
+\usepackage{hyperref}
+% \usepackage{flushend}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+ \usepackage{float}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+\usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\leftmargini}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% hyphenation
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% nomenclature
+\input{nomenclature}
+
+% pscc footer
+\makeatletter
+\let\old@ps@headings\ps@headings
+\let\old@ps@IEEEtitlepagestyle\ps@IEEEtitlepagestyle
+\def\psccfooter#1{%
+    \def\ps@headings{%
+        \old@ps@headings%
+        \def\@oddfoot{\strut\hfill#1\hfill\strut}%
+        \def\@evenfoot{\strut\hfill#1\hfill\strut}%
+    }%
+    \def\ps@IEEEtitlepagestyle{%
+        \old@ps@IEEEtitlepagestyle%
+        \def\@oddfoot{\strut\hfill#1\hfill\strut}%
+        \def\@evenfoot{\strut\hfill#1\hfill\strut}%
+    }%
+    \ps@headings%
+}
+\makeatother
+\psccfooter{%
+        \parbox{\textwidth}{\hrulefill \\ \small{24th Power Systems Computation Conference} \hfill \begin{minipage}{0.2\textwidth}\centering \vspace*{4pt} \includegraphics[scale=0.06]{PSCC_logo.png}\\\small{PSCC 2026} \end{minipage} \hfill \small{Limassol, Cyprus --- June 8 -- June 12, 2026}}%
+}
+
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*{\refname}}{}{}{}
+
+\begin{document}
+
+\title{Stochastic Harmonic Hosting Capacity \\ Considering Harmonic Recombination}
+
+\author{
+\IEEEauthorblockN{
+Tom Van Acker\IEEEauthorrefmark{1}\IEEEauthorrefmark{2},
+Kaan Yurtseven\IEEEauthorrefmark{2}\IEEEauthorrefmark{3},
+Jinwen Xiang\IEEEauthorrefmark{2}\IEEEauthorrefmark{3}, and
+Hakan Ergun\IEEEauthorrefmark{2}\IEEEauthorrefmark{3}
+}
+\IEEEauthorblockA{\IEEEauthorrefmark{1} Scenario, Market \& Adequacy Analysis, Elia, Brussels, Belgium} 
+\IEEEauthorblockA{\IEEEauthorrefmark{2} Department of Electrical Engineering, KU Leuven, Leuven, Belgium}
+\IEEEauthorblockA{\IEEEauthorrefmark{2} ETCH}
+}
+
+\maketitle
+
+\begin{abstract}
+xxx
+\end{abstract}
+
+\begin{IEEEkeywords}
+Harmonic optimal power flow, transformer excitation, nonlinear programming, mathematical optimization.
+\end{IEEEkeywords}
+\thanksto{
+\noindent E-mails: \href{mailto:tom.vanacker@kuleuven.be}{tom.vanacker@kuleuven.be}.
+}
+%\thanksto{\noindent Submitted to the 24th Power Systems Computation Conference (PSCC 2026).}
+
+% necessary for package ulem
+\normalem
+
+\input{conference papers/pscc-angle-uncertainty/sections/introduction}
+
+\newpage
+~
+\newpage
+
+\input{conference papers/pscc-angle-uncertainty/sections/angle_uncertainty}
+
+\newpage
+~
+\newpage
+
+\input{conference papers/pscc-angle-uncertainty/sections/mathematical_framework}
+
+\newpage
+~
+\newpage
+
+\input{conference papers/pscc-angle-uncertainty/sections/numerical_illustration}
+
+\newpage
+~
+\newpage
+
+\input{sections/conclusion}
+
+\section*{Acknowledgement}
+xxxx
+
+\section*{References}
+
+\bibliographystyle{IEEEtran}
+\bibliography{library,library2} 
+
+\end{document}
+
+

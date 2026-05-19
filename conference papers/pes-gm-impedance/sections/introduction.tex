@@ -1,0 +1,34 @@
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Background and Motivation}
+\label{sec:background_and_motivation}
+
+Driven by electrification and increased hydrogen demand in industry, it is expected that the number of large-scale converters in the system will significantly increase~\cite{elia_2022}. It is well established that large-scale converters cause harmonic pollution, however, the corresponding harmonic frequencies depends on the chosen technology, e.g., a 24-pulse converter under balanced loading conditions mainly causes harmonic distortion at harmonic numbers: 23, 25, 47, 49, etc. The choice of converter should be aligned with the harmonic network impedance to minimize its impact. 
+
+A wide variety of methods exist to measure the harmonic impedance~\cite{robert_1997}. These methods can be categorized into two types: 1) invasive methods, where the harmonic network impedance is extracted from the variations of voltage and current caused by injecting harmonic current; and 2) non-invasive methods, where the harmonic network impedance is extracted from the natural variation of voltage and current. Additionally, these classes can be further divided into a) steady-state methods, and b) transient methods.
+
+The method presented in the paper falls in the transient invasive category, but can be used in both an invasive and non-invasive context. It aims at improving the accuracy of the harmonic network impedance assessment through the use of a novel technique called the Taylor-Fourier transform~\cite{platas_garza_2011}. Given the higher accuracy of the Taylor-Fourier transform in a transient context compared to classic discrete Fourier transform, it becomes possible to accurately assess the harmonic impedance for signals with a lower harmonic content. Typically, for the classic discrete Fourier transform, the relative amplitude of the harmonic current phasor~$\CurrentAmplitude{h}$ should be at least 1\,\% of the fundamental~$\CurrentAmplitude{1}$~\cite{xi_2002}. Through the Taylor-Fourier transform, this factor can be decreased by an order of magnitude, enabling accurate assessment of harmonic impedance at higher harmonic numbers.
+
+\subsection{Literature Review}
+\label{sec:literature_review}
+
+Generally, harmonic estimation techniques assume the considered signal to be periodic, implying a constant fundamental frequency and Fourier coefficients, i.e., amplitude and phase, over the entire observation window. The Fourier coefficients are estimated through the discrete Fourier transform, or its `fast' alternative: fast Fourier transform. In practice, signal rarely adhere to the periodic property. For non-periodic signals, the discrete Fourier transform can at best estimate the coefficients by the best average value over the whole observation window, truncating the fluctuation one actually wants to capture.
+
+Two of the main reasons for this are: 1) spectral leakage, i.e., errors produced when the fundamental frequency of the signal fluctuates; and 2) harmonic interference, i.e., errors due to the superposition of wide spectral harmonic components~\cite{liguori_2004}. Another well-known problem of the classic Fourier transform is its lack of time-frequency resolution. Short-time Fourier transform~\cite{gabor_1946,kiymika_2005} tried to solve it but it still presents a constant frequency and time resolution. 
+
+Wavelet theory~\cite{daubechies_1992,vetterli_1995} was proposed to improve resolution in the time-frequency plane, providing good signal compression. However, wavelet transform lacks physical meaning for its coefficients. Furthermore, in general, wavelet transform cannot guarantee a lower reconstruction error than that of the classic discrete Fourier transform. 
+
+Alternatively, harmonics are estimated using an algorithm using recursive approximations~\cite{yang_2005}. Additionally, \cite{tomic_2007} presents an adaptive filtering technique for extracting harmonic components by using a feedback frequency estimation to adapt the filter parameters. However, this method uses non-flat-frequency responses, which are not appropriate for estimating dynamic harmonics; it has delays between the stages; and is only valid for offline applications. 
+
+\subsection{Contributions and Outline}
+\label{sec:contributions_and_outline}
+
+The Taylor-Fourier transform relaxes the constant restriction imposed on the Fourier coefficients of the signal model. Each harmonic is modulated by a time function, which is given by a Taylor polynomial of a given order greater than zero. In this way, the coefficients of the Taylor-Fourier transform include, in addition to the instantaneous value of each harmonic fluctuation, its first-order derivatives as in a Taylor approximation. Concretely, the contributions of the paper include:
+\begin{enumerate}
+    \item a method based on the first-order derivative of the transient voltage and current signals to estimate the harmonic impedance using the Taylor-Fourier transform, and
+    \item a case study on transient signals measured during the inrush of a power transformer at an industrial power system, proving the effectiveness of the method.
+\end{enumerate}
+Furthermore, the Taylor-Fourier transform approach is implemented in Julia, and made available as an open-source package: \textsc{TaylorFourierTransform.jl}\footnote{Available at: \href{https://github.com/timmyfaraday/TaylorFourierTransform.jl}{https://github.com/timmyfaraday/TaylorFourierTransform.jl}}.
+
+The remainder of the paper is organized as follows: Section~\ref{sec:mathematical_framework} presents the mathematical framework, including theoretical background on the Taylor-Fourier Transform. Section~\ref{sec:case_study} shows numerical results for the case study on the transient signals measured during the inrush of a power transformer. Section~\ref{sec:conclusions} concludes the paper.

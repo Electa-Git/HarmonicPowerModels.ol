@@ -1,0 +1,55 @@
+\section{Initial Validation Steps}
+
+Necessary steps:
+\begin{enumerate}
+    \item validation of tractability of second order cone problems with simple interval uncertainty.
+\end{enumerate}
+
+Nice to have steps:
+\begin{enumerate}
+    \item find tractable harmonic unit model; and
+    \item find a number of metrics to model 'fair' distribution of hosting capacity amongst units.
+\end{enumerate}
+
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Background and Motivation}
+\label{sec:background_and_motivation}
+
+The underlying decision environment of robust optimization has the following characteristics:
+\begin{enumerate}
+    \item all decision variables represent "here-and-now" decisions;
+    \item the consequences of the decisions are valid when, and only when, the actual data is within the prespecified uncertainty set; and
+    \item the constraints are hard, i.e., no violation of constrains is tolerated.
+\end{enumerate}
+
+The robust optimal solution is simply "the best uncertainty-immunized" solution. The considered uncertainties are:
+\begin{enumerate}
+    \item edge impedances:~$\SeriesReactance{\Line,\Harmonic}$, $\SeriesResistance{\Line,\Harmonic}$, $\ShuntConductance{\LineTuple,\Harmonic}$ and $\ShuntSusceptance{\LineTuple,\Harmonic}$,
+    \item fundamental voltage magnitude, and
+    \item infinite source voltage.
+\end{enumerate}
+
+A distinction is made between two types of uncertainty:
+\begin{enumerate}
+    \item set inclusion uncertainty, i.e., where the uncertain parameters are only known to belong to some bounded uncertainty set, and
+    \item probabilistic uncertainty, i.e., where the uncertain parameters are random vectors belong to some set of probability distribution functions.
+\end{enumerate}
+
+% \IEEEPARstart{T}{HE}
+
+\subsection{Literature Review}
+\label{sec:literature_review}
+
+\begin{enumerate}
+    \item Considerations on hosting capacity for harmonic distortions on transmission and distribution systems, I.N.~Santos et al.
+    \item Harmonic Optimal Power Flow with Transformer Excitation, F.~Geth et al. 
+    \item Robust Power Flow and Three-Phase Power Flow Analyses, A.~Pandey et al.
+    \item A Guide to Formulating Equity and Fairness in an Optimization Model, Hooker et al.
+\end{enumerate}
+
+\subsection{Contributions and Outline}
+\label{sec:contributions_and_outline}
+
+\newpage

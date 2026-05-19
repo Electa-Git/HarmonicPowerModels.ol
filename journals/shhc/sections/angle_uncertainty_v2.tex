@@ -1,0 +1,198 @@
+\section{Angle Uncertainty related to Converters}
+\label{sec:uncertainty}
+
+This section addresses the uncertainty of harmonic current phasors, especially phase angles, related to the typical industrial load with a 6-pulse line-commutated converter (LCC) as shown in Fig. \ref{fig:topo_indust_LCC}. The modeling method integrates steady-state harmonic state-space (HSS) model into Monte Carlo simulation (MCS), which enables the assessment of uncertainty propagation from key circuit parameters to harmonic phase angle.
+
+First, a steady-state HSS model of LCC is established, which captures the mutual coupling among the harmonic phasors and their dependence on key passive parameters, namely the commutation inductance $L_{ac}$ on the AC side and the smoothing inductance $L_{dc}$ on the DC side. Then, the parameterized model is integrated into a stochastic assessment framework. The key parameters are modeled as random variables with realistic bounds. The MCS is applied to genetate probability distributions of harmonic phasors. Finally, the marginal probability density functions (PDFs) are fitted using the best-fit method, and the Gaussian copula correlation matrix of harmonic phase angles is obtained to indicate the inter-harmonic correlation.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.8\columnwidth]{figures/topo_indust_LCC.pdf}
+\caption{6-pulse line-commutated converter}
+\label{fig:topo_indust_LCC} 
+\end{figure}
+
+\subsection{Steady-State Harmonic Model} 
+Inherent frequency coupling is the key feature of converter-generated harmonics, which decide the recombination of harmonic phasors. Therefore, the accurate HSS model is built here to capture the nature commutation and harmonic coupling of LCC converter.
+
+The LCC converter operates periodically with sequential valve switching creating 12 switching states per fundamental cycle. Each state is governed by differential equations with time-varying coefficients representing circuit topology changes. The state equations for any switching state can be expressed using piecewise switching functions $S_{dc,ac}^{i}(t)$, $S_{dc}(t)$, and $S_{ac}^{i,j}(t)$ as:
+\begin{IEEEeqnarray}{l}
+    (S_{dc} L_{ac} + L_{dc}) \frac{di_{dc}}{dt} = \nonumber \\ S_{dc,ac}^{a} v_{ac}^a + S_{dc,ac}^{b} v_{ac}^b + S_{dc,ac}^{c} v_{ac}^c - R_{dc} i_{dc}, \label{eq:idc_t} \\
+    % L_{ac} \frac{di_{ac}^a}{dt} - S_{dc,ac}^{a} L_{ac} \frac{di_{dc}}{dt} = \nonumber \\ S_{ac}^{a,a} v_{ac}^a + S_{ac}^{a,b} v_{ac}^b + S_{ac}^{a,c} v_{ac}^c, \label{eq:iac_t} \\
+    L_{ac} \frac{di_{ac}^i}{dt} - S_{dc,ac}^{i} L_{ac} \frac{di_{dc}}{dt} = \nonumber \\ S_{ac}^{i,a} v_{ac}^a + S_{ac}^{i,b} v_{ac}^b + S_{ac}^{i,c} v_{ac}^c, \label{eq:iac_t}
+\end{IEEEeqnarray}
+where $v_{ac}^{i}$ and $i_{ac}^{i}$ denote AC-side voltage and current, the superscript $i \in \{a, b, c\}$ represents the three phases, $v_{dc}$ and $i_{dc}(t)$ are DC-side voltage and current. All these switching functions are parameterized by the commutation angle $\mu$ in steady state.
+
+The HSS model transforms these time-domain equations into frequency domain through three operations: (1) Fourier series expansion of state variables $x(t) = \sum_{h=-N_h}^{N_h} X_h e^{jh\omega_1 t}$, (2) frequency-domain differentiation $d\mathbf{X}/dt \leftrightarrow \mathbf{Z}_{\Omega}\mathbf{X}$ where $\mathbf{Z}_{\Omega} = j\omega_1 \cdot \text{diag}(h)$, and (3) Toeplitz convolution matrices representing time-domain multiplication: $y(t) = S(t)x(t) \Leftrightarrow \mathbf{Y} = \mathbf{S}_{conv}\mathbf{X}$. The resulting unified system relates current harmonics $\mathbf{I} = [\mathbf{I}_{ac}^a, \mathbf{I}_{ac}^b, \mathbf{I}_{ac}^c]^T$ to voltage harmonics $\mathbf{U} = [\mathbf{V}_{ac}^a, \mathbf{V}_{ac}^b, \mathbf{V}_{ac}^c]^T$ through:
+\begin{equation}
+\mathbf{A}\mathbf{I} = \mathbf{B}\mathbf{U},
+\label{eq:HSS}
+\end{equation}
+where matrices $\mathbf{A}$ and $\mathbf{B}$ contain Toeplitz convolution structures explicitly capturing frequency coupling. The model is parameterized by commutation overlap angle $\mu$, and circuit inductances ($L_{ac}$, $L_{dc}$), providing a foundation for subsequent MSC and uncertainty quantification.
+
+\subsection{Methodology for Uncertainty Quantification}
+At the planning stage, the uncertainty on key parameters comes from the limited knowledge about the future integrated device, as well as manufacturing tolerances and operational variances. To account for these parameter uncertainties, the inductances $L_{ac}$ and $L_{dc}$ are modeled as random variables, and the MCS is used for assessment of uncertainty propagation.
+
+\subsubsection{Realistic parameter uncertainty bounds}
+The uncertainties on $L_{ac}$ and $L_{dc}$ are modeled using truncated normal distributions:
+\begin{equation}
+L_{ac} \sim \mathcal{N}_{\text{trunc}}(\mu_{L_{ac}}, \sigma_{L_{ac}}^2, L_{ac,\min}, L_{ac,\max})
+\label{truncated_normal_lac}
+\end{equation}
+\begin{equation}
+L_{dc} \sim \mathcal{N}_{\text{trunc}}(\mu_{L_{dc}}, \sigma_{L_{dc}}^2, L_{dc,\min}, L_{dc,\max})
+\label{truncated_normal_ldc}
+\end{equation}
+which are constrained within physically realistic bounds determined by engineering trade-offs at the industrial load design stage:
+\begin{itemize}
+    \item \textit{AC-side inductance $L_{ac}$:} The upper bound $L_{ac,\max}$ is limited by acceptable commutation angle and voltage drop, while the lower bound $L_{ac,\min}$ ensures adequate harmonic suppression and safe short-circuit current.
+
+    \item \textit{DC-side inductance $L_{dc}$:} The upper bound $L_{dc,\max}$ is limited by required dynamic response, size, and cost, while the lower bound $L_{dc,\min}$ ensures DC ripple stays within specifications to prevent equipment aging and process quality degradation.
+\end{itemize}
+
+The truncated normal distribution enforces physical bounds while maintaining mathematical tractability for Monte Carlo propagation.
+
+\subsubsection{Monte Carlo simulation}
+MCS approach is adopted, by which a set of 5000 random sample pairs $(L_{ac}, L_{dc})$ is generated using rejection sampling to meet the defined constraints. For each of the parameter samples, a HSS model is built and solved. The iterative process involves:
+\begin{itemize}
+    \item Recalculating the commutation angle $\mathsf{\mu}$ based on the sampled pair of parameters.
+    \item Reconstructing time-periodic switching functions $S_{dc,ac}^{i}(t)$, $S_{dc}(t)$, and $S_{ac}^{i,j}(t)$ based on the updated commutation angle.
+    % \item Reconstructing time-periodic switching functions $\mathbf{S}_{dc,ac,conv}^{i}$, $\mathbf{S}_{dc,conv}$, and $\mathbf{S}_{ac,conv}^{i,j}$ based on the updated commutation angle.
+    \item Numerically solving the HSS equations to extract and store the magnitudes and phase angles of the AC-side harmonic currents of interest.
+\end{itemize}
+
+\subsection{Dependency Analysis and Probability Density Function Fitting}
+A case study is conducted based on a representative 6-pulse LCC unit, with nominal capacity of 1.25 MW and nominal line voltage of 380 V, which is connected to the 35 kV bus through a rectifier transformer with a ratio of 35 kV/400 V. 
+For the AC-side commutation inductance, the truncation bounds are $L_{ac,\min} = 0.01$ mH and $L_{ac,\max} = 0.03$ mH, corresponding to transformer short-circuit voltage percentages ranging from $U_k = 5\%$ to $15\%$. For the DC-side smoothing inductance, the truncation bounds are $L_{dc,\min} = 0.05$ mH and $L_{dc,\max} = 0.35$ mH.
+
+Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the harmonic phasor distribution of each characteristic harmonic, caused by parameter uncertainty. In each harmonic phasor distribution plot, the red one represents the phasor with mean magnitude and mean phase angle, while the blue ones represent the phasors within the 95\% confidence intervals (CI). The results indicate that: 1) the harmonic phasors at different frequencies exhibit mutual dependency; 2) higher orders of harmonics display progressively larger phaser angle variations and uncertainties. 
+
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/harmonic_phasors_CI_LacLdc.png}
+    \caption{Harmonic phasor distributions caused by parameter uncertainty}
+    \label{fig:harmonic_phasors_CI_LacLdc}
+\end{figure*}
+
+\subsubsection{Inter-Harmonic Dependency Analysis}
+An important feature of the harmonics generated by LCC is the inter-harmonic dependency due to frequency coupling as indicated by the HHS model in Equations~\eqref{eq:HSS}. To assess this dependency from the probabilistic distributions obtained via MCS, the correlation structure between different harmonic components is investigated. Correlation matrices, with Kendall's Tau correlation coefficients, are used to characterize the dependencies.
+
+As shown in Fig.~\ref{fig:Correlation_Matrix_Copula}, the phase angle correlation matrix $\mathbf{R}_{\text{phase}}$ exhibits very strong correlations with the Gaussian copula parameters $\rho_{ij}^{Gauss} \geq 0.97$, indicating distinct characteristics in the inter-harmonic dependency structure for phase angles.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\columnwidth]{figures/Correlation_Matrix_Copula.png}
+    \caption{Gaussian copula correlation matrices for harmonic magnitudes and harmonic phase angles.}
+    \label{fig:Correlation_Matrix_Copula}
+\end{figure}
+
+\subsubsection{Marginal Distribution Fitting}
+The marginal distributions of each harmonic component are modeled independently. The best-fit PDF for each harmonic magnitude and phase angle is fitted to the data obtained from MCS. The candidate distributions considered include Normal, Lognormal, Beta, Logistic and Exponential distributions.
+
+For each harmonic $h$, the marginal distribution $F_h(x_h)$ is estimated by fitting multiple parametric distributions and selecting the best-fit  distribution based on minimizing the Root Mean Squared Error (RMSE) between the cumulative distribution functions simulated and fitted. The best-fit results are illustrated in Fig.\ref{fig:Bestfit_PDF}, showing the histograms and the fitted PDFs of harmonic magnitudes and phase angles.
+
+Tables~\ref{tab:bestfit_phase} summarize the best-fit distributions and their estimated parameters for harmonic phase angles.
+\begin{table}[h] 
+\centering
+\caption{Best-Fit Distributions for Harmonic Phase Angles}
+\label{tab:bestfit_phase}
+\begin{tabular}{l l l l}
+\hline
+Order & PDF & RMSE & Parameters \\
+\hline
+1st  & Beta    & $9.30 e^{-3}$ & $[ 10.8052, 20.2376, -107.9443, 13.0245]$ \\
+5th  & Beta    & $1.97 e^{-3}$ & $[11.8144, 23.6725, -2.6825, 70.8689]$ \\
+7th  & Beta    & $1.54 e^{-3}$ & $[ 9.7918, 18.8775, -29.9737, 88.2789]$ \\
+11th & Beta    & $7.41 e^{-4}$ & $[ 12.4463, 22.1493, 59.5585, 164.3101]$ \\
+13th & Beta    & $6.84 e^{-4}$ & $[ 10.4088, 17.2887, 29.4667, 172.4882]$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The parameters of the Beta distribution are given as $[\alpha, \beta, \ell, \theta]$, where $\alpha$ and $\beta$ are the shape parameters, and $\ell$ and $\theta$ are the location and scale parameters, respectively.
+
+% The parameters of the Gamma distribution are given as $[k, \ell, \theta]$, where $k$ is the shape parameter, $\ell$ is the location parameter, and $\theta$ is the scale parameter.
+% The PDF of Gamma Distribution, with shape = $k$, location = $\ell$, scale = $\theta$, is given by:
+% \[
+% f_{\Gamma}(x; k,\theta,\ell) =
+% \frac{(x-\ell)^{k-1} e^{-(x-\ell)/\theta}}{\Gamma(k)\,\theta^{k}}, \quad x>\ell.
+% ]
+
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/Bestfit_PDF.png}
+    \caption{Harmonic phasor distributions with corresponding best-fit probability density functions.}
+    \label{fig:Bestfit_PDF} 
+\end{figure*}
+
+\subsubsection{Shared Beta Distribution for Phase Angles}
+Since strong inter-harmonic dependencies are proved for phase angles, a shared Beta distribution is used to model the phase angle distributions of all harmonic jointly. In this way, only two shape parameters need to be estimated for all harmonics, while each harmonic retains its own location and scale parameters to capture the specific range of phase angles.
+
+Firstly, a normalization procedure is applied to each harmonic's unwrepped phase angle data to map them onto the unit interval $[0,1]$. Let $\phi_h = \{\phi_{h,i}\}_{i=1}^{N}$ denote the unwrapped phase samples in degrees for harmonic $h \in \{1, 5, 7, 11, 13\}$, where unwrapping is performed to avoid discontinuities at $\pm 180^\circ$. For each harmonic, the observed min–max values are represented as:
+\begin{equation}
+v_{\min,h} = \min(\phi_h), \qquad v_{\max,h} = \max(\phi_h).
+\end{equation}
+The sampled data of each harmonic phase angle is then normalized to the unit interval via the min-max transformation:
+\begin{equation}
+u_{h,i} = \frac{\phi_{h,i} - v_{\min,h}}{v_{\max,h} - v_{\min,h}} \in (0,1).
+\end{equation}
+% with optional clipping by a small tolerance $\varepsilon = 10^{-6}$ to avoid numerical issues at the boundaries $\{0, 1\}$.
+
+Secondly, all normalized samples from the five harmonics are pooled into a single dataset:
+\begin{equation}
+\mathcal{U} = \bigcup_{h \in \{1,5,7,11,13\}} \{u_{h,i}\}_{i=1}^{N}.
+\end{equation}
+
+A single Beta distribution with estimated shape parameters $\hat{\alpha}$ and $\hat{\beta}$ is fitted to $\mathcal{U}$ via maximum likelihood estimation, with location and scale fixed to the standard interval $[0,1]$:
+\begin{equation}
+u \sim \mathrm{Beta}(\hat{\alpha}, \hat{\beta}).
+\end{equation}
+
+The result of the fitted parameters are $\hat{\alpha} = 4.0414$, $\hat{\beta} = 4.7762$.
+
+The Beta probability density function is given by:
+\begin{equation}
+f_{\mathrm{Beta}}(u; \hat{\alpha}, \hat{\beta}) = \frac{u^{\hat{\alpha}-1}(1-u)^{\hat{\beta}-1}}{\int_0^1 t^{\hat{\alpha}-1}(1-t)^{\hat{\beta}-1}\,dt}, \quad u \in (0,1).
+\end{equation}
+
+Thirdly, the fitted shared Beta distribution is transformed back to each harmonic's sampled phase angle scale to assess the goodness-of-fit. For each harmonic $h$, the denormalization is performed as:
+\begin{equation}
+\label{eq:beta_denorm}
+f_{\phi_h}(\phi) = \frac{1}{v_{\max,h} - v_{\min,h}} \, f_{\mathrm{Beta}}\!\left(\frac{\phi - v_{\min,h}}{v_{\max,h} - v_{\min,h}}; \hat{\alpha}, \hat{\beta}\right),
+\end{equation}
+where $\phi\in [v_{\min,h}, v_{\max,h}]$ is the original phase angle range for harmonic $h$.
+
+Table~\ref{tab:beta_phase_params} lists the denormalized parameters (location $v_{\min,h}$ and scale $v_{\max,h} - v_{\min,h}$) for each harmonic. These parameters define the linear mapping from the standard $[0,1]$ interval back to the sampled phase ranges. The shared shape parameters $\hat{\alpha}$ and $\hat{\beta}$ remain constant across all harmonics. 
+
+The goodness-of-fit of the shared Beta distribution model is evaluated for each harmonic phase angle by comparing the denormalized Beta PDF against the empirical histograms from MCS. Root Mean Squared Error (RMSE) is computed between the empirical histogram and the denormalized Beta PDF, with the results summarized in last column of Table~\ref{tab:beta_phase_params}.
+
+\begin{table*}[ht!]
+\centering
+\caption{Shared Beta distribution parameters and fit quality for harmonic phase angles}
+\label{tab:beta_phase_params}
+\begin{tabular}{lccccccc}
+\hline
+Harmonic & $\hat{\alpha}$ & $\hat{\beta}$ & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max} - v_{\min}$ [deg] & RMSE \\
+\hline
+1st  & 4.041 & 4.776 & $-106.70$ & $-99.43$   & 7.27   & 0.0226 \\
+5th  & 4.041 & 4.776 & 4.75      & 40.05      & 35.30  & 0.0037 \\
+7th  & 4.041 & 4.776 & $-22.77$  & 27.51      & 50.28  & 0.0029 \\
+11th & 4.041 & 4.776 & 79.69     & 164.01     & 84.32  & 0.0014 \\
+13th & 4.041 & 4.776 & 49.38     & 147.67     & 98.29  & 0.0011 \\
+\hline
+\multicolumn{7}{l}{\footnotesize Note: All harmonics share the same shape parameters ($\hat{\alpha} = 4.041$, $\hat{\beta} = 4.776$).} \\
+\multicolumn{7}{l}{\footnotesize Location parameter $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific.} \\
+\end{tabular}
+\end{table*}
+
+The comparison plots between the empirical histograms and the denormalized shared Beta PDFs for each harmonic phase angle are shown in Fig.~\ref{fig:Shared_Beta_Fit}. Both the visual comparison and the low RMSE values indicate a good fit of the shared Beta distribution to the phase angle data across all harmonics.
+
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/Shared_Beta_Fit.png}
+    \caption{Empirical histograms and denormalized shared Beta PDFs for harmonic phase angles.}
+    \label{fig:Shared_Beta_Fit} 
+\end{figure*}
+
+
+

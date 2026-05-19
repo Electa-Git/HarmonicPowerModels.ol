@@ -1,0 +1,159 @@
+\documentclass[journal]{IEEEtran}
+
+% packages
+\usepackage{ulem}
+\usepackage{hyperref}
+% \usepackage{flushend}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\leftmargini}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% definition setup
+%\theoremstyle{definition}
+
+\newtheorem{defn}{Definition}[section]
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% nomenclature
+\input{nomenclature}
+
+% document
+\begin{document}
+
+\begin{figure}[b!]
+    \centering
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (0.00,0.00) to [short, -*, i=\footnotesize{$\CurrentPhasor{\Winding,\Harmonic}$}] 
+                (0.75,0.00) to [resistor, /tikz/circuitikz/bipoles/length=0.75cm, l=\footnotesize{$r_{\Winding,\Harmonic}$}]
+                (2.50,0.00) to [short]
+                (3.25,0.00) to [short, *-, i=\footnotesize{$\SeriesCurrentPhasor{\Winding,\Harmonic}$}]
+                (4.00,0.00);
+        \draw   (2.50,0.00) to [C, /tikz/circuitikz/bipoles/length=0.7cm, l_=\footnotesize{$C_{\Winding,h}$}]
+                (2.50,-1.00);
+        \draw   (0.75,-1.00) to [open, v^=\footnotesize{$\VoltagePhasor{\Node,\Harmonic}$}]
+                (0.75,0.00);
+        \draw   (3.25,-0.89) to [open, v=\footnotesize{$\AltVoltagePhasor{\Winding,\Harmonic}$}]
+                (3.25,0.00);
+        \draw   (0.00,-1.00) to [short, -*]
+                (0.75,-1.00) to [short]
+                (3.25,-1.00) to [short, *-]
+                (4.00,-1.00);
+        \draw   [dashed] (1.5,-0.75) rectangle (2.90,-0.25);
+        \draw   (1.65,-0.75) node [left] {\footnotesize $\ShuntAdmittance{\Winding,\Harmonic}$};
+    \end{circuitikz}
+    \caption{Equivalent single-phase circuit diagram of a winding~$\Winding \in \WindingSet_{\Xfmr}$ of a two-winding three-phase transformer for a given positive or negative sequence harmonic~$\Harmonic \in \PositiveHarmonicSet \cup \NegativeHarmonicSet$.} 
+    \label{fig:pos_and_neg_sequence_winding}
+\end{figure}
+
+\begin{figure}[b!]
+    \centering
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (0.00,0.00) to [short, -*, i=\footnotesize{$\CurrentPhasor{\Winding,\Harmonic}$}] 
+                (0.75,0.00) to [european resistor, /tikz/circuitikz/bipoles/length=0.75cm, l=\footnotesize{$3z^{\text{0}}_{\Winding,\Harmonic}$}]
+                (2.00,0.00) to [resistor, /tikz/circuitikz/bipoles/length=0.75cm, l=\footnotesize{$r_{\Winding,\Harmonic}$}]
+                (3.50,0.00) to [short]
+                (4.00,0.00) to [short, *-, i=\footnotesize{$\SeriesCurrentPhasor{\Winding,\Harmonic}$}]
+                (4.75,0.00);
+        \draw   (3.50,0.00) to [C, /tikz/circuitikz/bipoles/length=0.7cm, l_=\footnotesize{$C_{\Winding,\Harmonic}$}]
+                (3.50,-1.00);
+        \draw   (0.75,0-1.00) to [open, v^=\footnotesize{$\VoltagePhasor{\Node,\Harmonic}$}]
+                (0.75,0.00);
+        \draw   (4.00,-0.89) to [open, v=\footnotesize{$\AltVoltagePhasor{\Winding,\Harmonic}$}]
+                (4.00,0.00);
+        \draw   (0.00,-1.00) to [short, -*]
+                (0.75,-1.00) to [short]
+                (4.00,-1.00) to [short, *-]
+                (4.75,-1.00);
+        \draw   [dashed] (2.4,-0.75) rectangle (3.80,-0.25);
+        \draw   (2.55,-0.75) node [left] {\footnotesize $\ShuntAdmittance{\Winding,\Harmonic}$};
+    \end{circuitikz}
+    \caption{earthed winding~$\Winding \in \WindingSet^{\text{e}}_{\Xfmr}$.} 
+    \label{fig:earthed_winding}
+\end{figure}
+
+\begin{figure}[b!]
+    \centering
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (0.00,0.00) to [short, -*, i=\footnotesize{$\CurrentPhasor{\Winding,\Harmonic}$}] 
+                (0.75,0.00) to [short]
+                (1.15,0.00) to [open]
+                (2.00,0.00) to [resistor, /tikz/circuitikz/bipoles/length=0.75cm, l=\footnotesize{$r_{\Winding,\Harmonic}$}]
+                (3.50,0.00) to [short]
+                (4.00,0.00) to [short, *-, i=\footnotesize{$\SeriesCurrentPhasor{\Winding,\Harmonic}$}]
+                (4.75,0.00);
+        \draw   (3.50,0.00) to [C, /tikz/circuitikz/bipoles/length=0.7cm, l_=\footnotesize{$C_{\Winding,\Harmonic}$}]
+                (3.50,-1.00);
+        \draw   (0.75,-1.00) to [open, v^=\footnotesize{$\VoltagePhasor{\Node,\Harmonic}$}]
+                (0.75,0.00);
+        \draw   (4.00,-0.89) to [open, v=\footnotesize{$\AltVoltagePhasor{\Winding,\Harmonic}$}]
+                (4.00,0.00);
+        \draw   (0.00,-1.00) to [short, -*]
+                (0.75,-1.00) to [short]
+                (4.00,-1.00) to [short, *-]
+                (4.75,-1.00);
+        \draw   [dashed] (2.4,-0.75) rectangle (3.80,-0.25);
+        \draw   (2.55,-0.75) node [left] {\footnotesize $\ShuntAdmittance{\Winding,\Harmonic}$};
+    \end{circuitikz}
+    \caption{non-earthed winding~$\Winding \in \WindingSet^{\text{ne}}$ } 
+    \label{fig:non_earthed_winding}
+\end{figure}
+
+\begin{figure}[b!]
+    \centering
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (0.00,0.00) to [short, -*, i=\footnotesize{$\CurrentPhasor{\Harmonic,\Winding}$}] 
+                (0.75,0.00) to [short]
+                (1.15,0.00) to [open]
+                (2.00,0.00) to [resistor, /tikz/circuitikz/bipoles/length=0.75cm, l=\footnotesize{$r_{\Winding,\Harmonic}$}]
+                (3.50,0.00) to [short]
+                (4.00,0.00) to [short, *-, i=\footnotesize{$\SeriesCurrentPhasor{\Harmonic,\Winding}$}]
+                (4.75,0.00);
+        \draw   (3.50,0.00) to [C, /tikz/circuitikz/bipoles/length=0.7cm, l_=\footnotesize{$C_{\Winding,\Harmonic}$}]
+                (3.50,-1.00);
+        \draw   (0.75,-1.00) to [open, v^=\footnotesize{$\VoltagePhasor{\Node,\Harmonic}$}]
+                (0.75,0.00);
+        \draw   (4.00,-0.89) to [open, v=\footnotesize{$\AltVoltagePhasor{\Harmonic,\Winding}$}]
+                (4.00,0.00);
+        \draw   (0.00,-1.00) to [short, -*]
+                (0.75,-1.00) to [short]
+                (4.00,-1.00) to [short, *-]
+                (4.75,-1.00);
+        \draw   (2.00,0.00) to [short]
+                (2.00,-1.00);
+        \draw   [dashed] (1.8,-0.75) rectangle (3.80,0.50);
+        \draw   (1.95,-0.75) node [left] {\footnotesize $\ShuntAdmittance{\Winding,\Harmonic}$};
+    \end{circuitikz}
+    \caption{delta winding~$\Winding \in \WindingSet^{\text{d}}$} 
+    \label{fig:delta_winding}
+\end{figure}
+
+\end{document}

@@ -1,0 +1,46 @@
+\appendices
+
+\section{Background on O-Splines}
+\label{sec:background_on_osplines}
+
+\textit{O-splines}~\cite{delaOSerna_2020} are a novel class of splines, i.e., a function piecewise defined by polynomials, introduced to implement the \textit{Taylor-Fourier transform} filter bank. An O-spline is the lowpass filter impulse response of a Taylor-Fourier transform filter bank, and its $D$th derivative performs as a lowpass differentiator of order~$D$. Their modulation at a particular harmonic frequency performs as bandpass differentiators. Together, they define the Taylor-Fourier transform filter bank, used to estimate amplitude and phase, and their corresponding derivatives of the harmonic complex envelopes. In consequence, the O-spline and its derivatives extract with high precision the Taylor coefficients, e.g., position, velocity, acceleration, etc., of oscillating harmonics. In consequence, O-splines enhance the analysis and reconstruction of oscillatory harmonics, as compared with the poor single rectangular pulse used in the Fourier analysis. The advantages of O-splines are:
+\begin{itemize}
+\item \textbf{Computational Efficiency:} Simplifies the Taylor-Fourier transform framework while maintaining high accuracy;
+\item \textbf{Versatility:} Applicable to both low-frequency and high-frequency oscillatory signals;
+\item \textbf{High Accuracy:} O-splines Converge to ideal lowpass filters and differentiators when $K \rightarrow \infty$, and
+% \item By increasing the order, O-splines define a ladder of spaces, providing higher resolution for time-frequency analysis.
+\item \textbf{Improved Harmonic Analysis:} Reduces spectral leakage and interharmonic interference.
+\end{itemize}
+
+% Taylor-Fourier transform~\cite{platas_garza_2011} is an advanced extension of the fast Fourier transform aimed at addressing its limitations in estimating time-varying harmonics. By incorporating the Taylor series expansion of the complex envelope of each harmonic, the Taylor-Fourier transform enhances the dynamic harmonic estimation.
+
+% \section*{Key Features}
+% \begin{enumerate}
+% \item \textbf{Dynamic Harmonic Estimation:}
+% \begin{itemize}
+% \item Handles time-varying harmonics within the observation window.
+% \item Produces cleaner estimates under dynamic conditions compared to FFT.
+% \end{itemize}
+
+% \item \textbf{Taylor Series Expansion:}
+% \begin{itemize}
+% \item Models each harmonic's complex envelope as a Taylor polynomial.
+% \item Captures instantaneous changes and derivatives of the complex envelope at each harmonic in the signal within its higher-order coefficients.
+% \item Improves the approximation of dynamic signals, reducing error rates relative to FFT.
+% \end{itemize}
+
+% \item \textbf{Maximally Flat Filters:}
+% \begin{itemize}
+% \item Implements a bank of Finite Impulse Response (FIR) filters at each harmonic.
+% \item Ensures ideal differentiator responses around harmonic frequencies and minimizes interharmonic interference with a zero-flat rejection band centered at each neighbor harmonic frequency.
+% \end{itemize}
+
+% \item \textbf{Instantaneous Estimates:}
+% \begin{itemize}
+% \item Provides amplitude, and phase derivative estimates of the complex envelope at each harmonic frequency.
+% \item Enables practical applications in monitoring and control systems.
+% \end{itemize}
+% \end{enumerate}
+
+% \section{Advantages of O-Splines}
+

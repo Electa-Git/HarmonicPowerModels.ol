@@ -1,0 +1,260 @@
+% % Math Operators
+% \DeclareMathOperator{\rank}{rank}
+% \DeclareMathOperator{\diag}{diag}
+% \DeclareMathOperator{\diagm}{diagm}
+% \DeclareMathOperator{\real}{Re}
+% \DeclareMathOperator{\imag}{Im}
+% \DeclareMathOperator{\trace}{tr}
+% \DeclareMathOperator{\sign}{sign}
+% \DeclareMathOperator{\subjectto}{s.t.}
+% \DeclareMathOperator{\matr}{mat}
+% \DeclareMathOperator{\vecr}{vec}
+% \DeclareMathOperator{\atantwo}{atan2}
+% \DeclareMathOperator{\postproc}{post}
+% \DeclareMathOperator{\preproc}{pre}
+% \DeclareMathOperator{\vars}{var}
+
+% Time
+\newcommand{\Time}{t}
+\newcommand{\Period}{T}
+
+% Numbers
+\newcommand{\NaturalNumberSet}{\mathbb{N}}
+\newcommand{\RealNumberSet}{\mathbb{R}}
+\newcommand{\ComplexNumberSet}{\mathbb{C}}
+
+% Vector
+\newcommand{\im}{j}
+
+% Random Variables and Moments
+\newcommand{\RVX}{\mathsf{x}}
+\newcommand{\RVY}{\mathsf{y}}
+\newcommand{\RVZ}{\mathsf{z}}
+\newcommand{\ApproxRVX}{\hat{\RVX}}
+\newcommand{\ApproxRVY}{\hat{\RVY}}
+\newcommand{\ApproxRVZ}{\hat{\RVZ}}
+\newcommand{\Probability}{\mathbb{P}}
+\newcommand{\Expectation}{\mathbb{E}}
+\newcommand{\Variance}{\mathbb{V}}
+\newcommand{\Skewness}{\mathbb{S}}
+\newcommand{\Kurtosis}{\mathbb{K}}
+
+% Sets and Indices
+\newcommand{\Node}{i}
+\newcommand{\AltNode}{j}
+\newcommand{\NodeSet}{\mathcal{I}}
+\newcommand{\RefNodeSet}{\NodeSet^{\text{ref}}}
+\newcommand{\Edge}{e}
+\newcommand{\EdgeSet}{\mathcal{E}}
+\newcommand{\Line}{b}
+\newcommand{\LineSet}{\mathcal{B}}
+\newcommand{\Unit}{u}
+\newcommand{\UnitSet}{\mathcal{U}}
+\newcommand{\PCEIndex}{k}
+\newcommand{\PCESet}{\mathcal{K}}
+\newcommand{\FixedUnitSet}{\UnitSet^{\text{f}}}
+\newcommand{\HarmonicUnitSet}{\UnitSet^{\text{h}}}
+\newcommand{\DispatchableUnitSet}{\UnitSet^{\text{d}}}
+\newcommand{\Harmonic}{h}
+\newcommand{\HarmonicSet}{\mathcal{H}}
+\newcommand{\PositiveHarmonicSet}{\HarmonicSet^{\texttt{+}}}
+\newcommand{\NegativeHarmonicSet}{\HarmonicSet^{\texttt{-}}}
+\newcommand{\ZeroHarmonicSet}{\HarmonicSet^{\texttt{0}}}
+\newcommand{\Winding}{w}
+\newcommand{\WindingSet}{\mathcal{W}}
+\newcommand{\Xfmr}{x}
+\newcommand{\XfmrSet}{\mathcal{X}}
+
+
+% Union Sets and Indices
+\newcommand{\TupleSet}{\mathcal{T}}
+\newcommand{\LineTuple}{\Line\Node\AltNode}
+\newcommand{\AltLineTuple}{\Line\AltNode\Node}
+\newcommand{\EdgeTuple}{\Edge\Node\AltNode}
+\newcommand{\AltEdgeTuple}{\Edge\AltNode\Node}
+\newcommand{\EdgeTupleSet}{\TupleSet^{\text{\Edge}}}
+\newcommand{\EdgeTupleSetFr}{\TupleSet^{\text{\Edge}\Arrow{.15cm}}}
+\newcommand{\EdgeTupleSetTo}{\TupleSet^{\text{\Edge}\Arrowright{.15cm}}}
+\newcommand{\LineTupleSet}{\TupleSet^{\text{\Line}}}
+\newcommand{\LineTupleSetFr}{\TupleSet^{\text{\Line}\Arrow{.15cm}}}
+\newcommand{\LineTupleSetTo}{\TupleSet^{\text{\Line}\Arrowright{.15cm}}}
+\newcommand{\XfmrTupleSet}{\TupleSet^{\text{\Xfmr}}}
+\newcommand{\XfmrTupleSetFr}{\TupleSet^{\text{\Xfmr}\Arrow{.15cm}}}
+\newcommand{\XfmrTupleSetTo}{\TupleSet^{\text{\Xfmr}\Arrowright{.15cm}}}
+\newcommand{\UnitTuple}{\Unit\Node}
+\newcommand{\UnitTupleSet}{\TupleSet^{\text{\Unit}}}
+\newcommand{\FixedUnitTupleSet}{\TupleSet^{\text{\Unit,f}}}
+\newcommand{\HarmonicUnitTupleSet}{\TupleSet^{\text{\Unit,h}}}
+\newcommand{\DispatchableUnitTupleSet}{\TupleSet^{\text{\Unit,d}}}
+
+\newcommand{\Arrow}[1]{%
+\parbox{#1}{\tikz{\draw[->](0,0)--(#1,0);}}
+}
+\newcommand{\Arrowright}[1]{%
+\parbox{#1}{\tikz{\draw[<-](0,0)--(#1,0);}}
+}
+
+% Electrical Variables
+%% Current
+\newcommand{\Current}{\mathsf{I}}
+\newcommand{\ComplexCurrent}{\mathsf{\bar{I}}}
+\newcommand{\CurrentMagnitude}{\Current^{\text{mag}}}
+\newcommand{\RealCurrent}{\Current^{\text{re}}}
+\newcommand{\ImaginaryCurrent}{\Current^{\text{im}}}
+\newcommand{\SeriesCurrent}{\Current^{\text{s}}}
+\newcommand{\ComplexSeriesCurrent}{\ComplexCurrent^{\text{s}}}
+\newcommand{\RealSeriesCurrent}{\Current^{\text{s,re}}}
+\newcommand{\RealSeriesCurrentFrom}{\Current^{\text{s,re,fr}}}
+\newcommand{\RealSeriesCurrentTo}{\Current^{\text{s,re,to}}}
+\newcommand{\ImaginarySeriesCurrent}{\Current^{\text{s,im}}}
+\newcommand{\ImaginarySeriesCurrentFrom}{\Current^{\text{s,im,fr}}}
+\newcommand{\ImaginarySeriesCurrentTo}{\Current^{\text{s,im,to}}}
+\newcommand{\ShuntCurrent}{\Current^{\text{sh}}}
+\newcommand{\ComplexShuntCurrent}{\ComplexCurrent^{\text{sh}}}
+\newcommand{\RealShuntCurrent}{\Current^{\text{sh,re}}}
+\newcommand{\ImaginaryShuntCurrent}{\Current^{\text{sh,im}}}
+\newcommand{\RealMagnetizingCurrent}{\Current^{\text{m,re}}}
+\newcommand{\ImaginaryMagnetizingCurrent}{\Current^{\text{m,im}}}
+\newcommand{\RealExcitationCurrent}{\Current^{\text{e,re}}}
+\newcommand{\ImaginaryExcitationCurrent}{\Current^{\text{e,im}}}
+
+\newcommand{\CurrentWave}[1]{i_{#1}(\Time)}
+%% Voltage
+\newcommand{\Voltage}{\mathsf{U}}
+\newcommand{\ComplexVoltage}{\mathsf{\bar{U}}}
+\newcommand{\RealVoltage}{\Voltage^{\text{re}}}
+\newcommand{\ImaginaryVoltage}{\Voltage^{\text{im}}}
+\newcommand{\ReferenceVoltage}{\Voltage^{\text{ref}}}
+
+\newcommand{\AltVoltageVariable}{\mathsf{V}}
+\newcommand{\ComplexAltVoltage}{\mathsf{\bar{V}}}
+\newcommand{\RealAltVoltage}{\AltVoltageVariable^{\text{re}}}
+\newcommand{\ImaginaryAltVoltage}{\AltVoltageVariable^{\text{im}}}
+
+\newcommand{\LiftedCurrentVariable}{\mathsf{J}}
+\newcommand{\LiftedCurrent}{\LiftedCurrentVariable}
+\newcommand{\LiftedVoltageVariable}{\mathsf{W}}
+\newcommand{\LiftedVoltage}{\LiftedVoltageVariable}
+
+\newcommand{\VoltageWave}[1]{u_{#1}(\Time)}
+
+%% Excitation Voltage
+\newcommand{\ExcitationVoltageVariable}{\mathsf{E}}
+\newcommand{\ComplexExcitationVoltage}{\mathsf{\bar{E}}}
+\newcommand{\RealExcitationVoltage}{\ExcitationVoltageVariable^{\text{re}}}
+\newcommand{\ImaginaryExcitationVoltage}{\ExcitationVoltageVariable^{\text{im}}}
+\newcommand{\RealExcitationVoltageVector}{\overline{\ExcitationVoltageVariable}^{\text{re}}}
+\newcommand{\ImaginaryExcitationVoltageVector}{\overline{\ExcitationVoltageVariable}^{\text{im}}}
+
+%% Power 
+\newcommand{\Power}{\mathsf{S}}
+\newcommand{\RealPower}{\mathsf{P}}
+\newcommand{\ImaginaryPower}{\mathsf{Q}}
+
+% Electrical Parameters
+%% Frequency
+\newcommand{\Frequency}{f}
+\newcommand{\FundamentalFrequency}{\Frequency^{\text{fund}}}
+\newcommand{\AngularFrequency}{\omega}
+\newcommand{\FundamentalAngularFrequency}{\AngularFrequency^{\text{fund}}}
+%% Current
+\newcommand{\CurrentParameter}{I}
+\newcommand{\CurrentPhasor}[1]{\CurrentParameter_{#1}}
+\newcommand{\SeriesCurrentPhasor}[1]{\CurrentPhasor{#1}^{\text{s}}}
+\newcommand{\ShuntCurrentPhasor}[1]{\CurrentPhasor{#1}^{\text{sh}}}
+\newcommand{\ExcitationCurrentPhasor}[1]{\CurrentParameter_{#1}^{\text{e}}}
+\newcommand{\MagnetizingCurrentPhasor}[1]{\CurrentParameter_{#1}^{\text{m}}}
+\newcommand{\CurrentMagnitude}[1]{\CurrentParameter_{#1}^{\text{mag}}}
+\newcommand{\RatedCurrent}{\CurrentParameter^{\text{rated}}}
+\newcommand{\FundamentalCurrentMagnitude}[1]{\CurrentParameter_{#1}^{\text{mag,fund}}}
+
+\newcommand{\CurrentAngleParameter}{\varphi}
+\newcommand{\CurrentAngle}[1]{\CurrentAngleParameter_{#1}}
+
+%% Voltage
+\newcommand{\VoltageParameter}{U}
+\newcommand{\MinimumVoltage}{\VoltageParameter^{\text{min}}}
+\newcommand{\MaximumVoltage}{\VoltageParameter^{\text{max}}}
+\newcommand{\ExtremeVoltage}{\hat{\VoltageParameter}^{\text{max}}}
+\newcommand{\VoltageMagnitude}[1]{\VoltageParameter_{#1}^{\text{mag}}}
+\newcommand{\FundamentalVoltageMagnitude}[1]{\VoltageParameter_{#1}^{\text{mag,fund}}}
+\newcommand{\RealRefVoltage}{\VoltageParameter^{\text{ref,re}}}
+\newcommand{\ImaginaryRefVoltage}{\VoltageParameter^{\text{ref,im}}}
+
+\newcommand{\AltVoltageParameter}{V}
+
+\newcommand{\ExcitationVoltageParameter}{E}
+\newcommand{\ExcitationVoltageVector}{\overline{\ExcitationVoltageParameter}}
+\newcommand{\ExcitationVoltagePhasor}[1]{\ExcitationVoltageParameter_{#1}}
+
+\newcommand{\VoltageAngleParameter}{\theta}
+\newcommand{\VoltageAngle}[1]{\VoltageAngleParameter_{#1}}
+
+\newcommand{\VoltagePhasor}[1]{\VoltageParameter_{#1}}
+\newcommand{\AltVoltagePhasor}[1]{\AltVoltageParameter_{#1}}
+%% Power
+\newcommand{\ApparentPowerParameter}{S}
+\newcommand{\ApparentPowerPhasor}[1]{\ApparentPowerParameter_{#1}}
+
+\newcommand{\RealPowerParameter}{P}
+\newcommand{\MinimumRealPower}{P^{\text{min}}}
+\newcommand{\MaximumRealPower}{P^{\text{max}}}
+\newcommand{\ReferenceRealPower}{P^{\text{ref}}}
+\newcommand{\ImaginaryPowerParameter}{Q}
+\newcommand{\MinimumImaginaryPower}{Q^{\text{min}}}
+\newcommand{\MaximumImaginaryPower}{Q^{\text{max}}}
+\newcommand{\ReferenceImaginaryPower}{Q^{\text{ref}}}
+\newcommand{\PowerFactor}{\theta}
+
+%% Impedance
+\newcommand{\Impedance}{\bar{z}}
+\newcommand{\SeriesImpedance}[1]{\Impedance_{#1}^{\text{s}}}
+\newcommand{\Resistance}{r}
+\newcommand{\SeriesResistance}[1]{\Resistance_{#1}^{\text{s}}}
+\newcommand{\ShuntResistance}[1]{\Resistance_{#1}^{\text{sh}}}
+\newcommand{\Capacitance}{C}
+\newcommand{\SeriesCapacitance}[1]{\Capacitance_{#1}^{\text{s}}}
+\newcommand{\Inductance}{L}
+\newcommand{\SeriesInductance}[1]{\Inductance_{#1}^{\text{s}}}
+\newcommand{\Reactance}{x}
+\newcommand{\SeriesReactance}[1]{\Reactance_{#1}^{\text{s}}}
+\newcommand{\Admittance}{\bar{y}}
+\newcommand{\ShuntAdmittance}[1]{\Admittance_{#1}^{\text{sh}}}
+\newcommand{\Conductance}{g}
+\newcommand{\ShuntConductance}[1]{\Conductance_{#1}^{\text{sh}}}
+%\newcommand{\ShuntConductance}{\Conductance^{\text{sh}}}
+\newcommand{\Susceptance}{b}
+\newcommand{\ShuntSusceptance}[1]{\Susceptance_{#1}^{\text{sh}}}
+%\newcommand{\ShuntSusceptance}{\Susceptance^{\text{sh}}}
+
+%% Transformation
+\newcommand{\Transform}{t}
+\newcommand{\RealTransform}{\Transform^{\text{re}}}
+\newcommand{\ImaginaryTransform}{\Transform^{\text{im}}}
+\newcommand{\VectorGroupTransform}{\Transform^{\text{vg}}}
+\newcommand{\RealVectorGroupTransform}{\Transform^{\text{vg,re}}}
+\newcommand{\ImaginaryVectorGroupTransform}{\Transform^{\text{vg,im}}}
+
+%% Harmonic injection limits
+\newcommand{\Hlimit}{m}
+\newcommand{\RealHlimit}{m^{\text{re}}}
+\newcommand{\ImaginaryHlimit}{m^{\text{im}}}
+%% wye
+\newcommand{\wye}{\mathbin{\tikz[x=1ex,y=1ex]{\draw[line width=.1ex] (0,0)--(45:1)--++(-45:1) (45:1)--++(0,1);}}}
+
+% Polynomial Chaos Expansion
+\newcommand{\CoefficientX}{x}
+\newcommand{\CoefficientY}{y}
+\newcommand{\CoefficientZ}{z}
+\newcommand{\Polynoom}{\psi}
+
+%# Inner product
+\newcommand{\SecondIP}{\langle \Polynoom_{\Node}, \Polynoom_{\Node} \rangle}
+\newcommand{\ThirdIP}{\langle \Polynoom_{\Node_{1}}, \Polynoom_{\Node_{2}}, \Polynoom_{\Node} \rangle}
+
+\newcommand{\psione}{ \Polynoom_{\Node_{1}}}
+\newcommand{\psitwo}{ \Polynoom_{\Node_{2}}}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand*{\gp}{\stackrel{\text{gp}}{\to}}
+\newcommand*{\downgp}{\downarrow\text{\footnotesize gp}}

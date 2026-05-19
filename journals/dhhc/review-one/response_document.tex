@@ -1,0 +1,385 @@
+\documentclass[10pt]{article}
+
+% Packages
+\usepackage{subfig}
+\usepackage[x11names]{xcolor}
+\usepackage{capt-of}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[inline]{enumitem}
+\usepackage{microtype,xparse,tcolorbox}
+\usepackage{amssymb}
+\usepackage{nomencl}
+\makenomenclature
+\usepackage{etoolbox}
+\newcommand{\revt}[1]{\textcolor{red}{#1}}
+\newcommand{\revo}[1]{\textcolor{blue}{#1}}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{tabu}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage{anyfontsize}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{capt-of}
+\usepackage{multirow}
+\usepackage{arydshln}
+
+% MATH PACKAGES
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{bm}
+\usepackage{physics}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{IEEEtrantools}
+\usepackage{circuitikz}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage[]{cite}
+\usepackage[nonumberlist,nopostdot,style=super, notree, nogroupskip, sanitize={name=false, description=true, symbol=false}]{glossaries}
+% \input symbols.tex
+\usepackage{hyperref}
+\newcommand{\tens}[1]{%
+  \mathbin{\mathop{\otimes}\displaylimits_{#1}}%
+}
+
+%\instructionsintroduction
+%\tableofcontents
+
+%%%
+
+
+% % ieee
+% \IEEEeqnarraydefcolsep{0}{\leftmargini}
+
+% Environments and Commands
+\newenvironment{reviewer-comment }{}{}
+\tcbuselibrary{skins}
+\tcolorboxenvironment{reviewer-commen }{empty,
+  left = 1em, top = 1ex, bottom = 1ex,
+  borderline west = {2pt} {0pt} {black!20}, } \ExplSyntaxOn \NewDocumentEnvironment {response} { +m O{black!20} } {
+  \IfValueT {#1} {
+    \begin{reviewer-comment~}
+      \setlength\parindent{2em}
+      \noindent
+      \ttfamily #1
+    \end{reviewer-comment~}
+  }
+  \par\noindent\ignorespaces
+} { \bigskip\par }
+\NewDocumentCommand \Reviewer { m } {
+  \section*{Comments~by~Reviewer~#1}
+}
+\ExplSyntaxOff
+\AtBeginDocument{\maketitle\thispagestyle{empty}\noindent}
+\newcommand\meta[1]{$\langle\hbox{#1}\rangle$}
+\newcommand\PaperTitle[1]{``\textit{#1}''}
+
+\NewDocumentCommand \SeniorEditor { m } {
+  \section*{Comments~by~Senior Editor}
+}
+
+\NewDocumentCommand \Editor { m } {
+  \section*{Comments~by~Editor}
+}
+
+\title{Statement on the Revision of TPWRD-00371-2025\\ Based on the Manuscript Evaluation} \author{Tom Van Acker \and Hakan Ergun}
+\date{}
+\begin{document}
+This statement concerns the revision of our paper entitled ``\textit{Exact Lower Bound for Equitable Harmonic Hosting Capacity}'', based on the reviewer's report.
+
+\section*{Summarized Response for the Editor}
+First of all, we want to thank you and all reviewers for the valuable comments, which we believe have helped ton improve the quality of the manuscript significantly. Reviewers have pointed out several aspects of the paper that need improvement. The following is a brief summary of the proposed changes that address the reviewers' questions classified by themes. Different colors are used to address the comments of the reviewers. The major themes raised by the reviewers were of four kinds:
+\begin{enumerate}
+    \item \textcolor{red}{R1/C3 + R1/C4 + R3/C8} -- Several reviewers have raised questions on the voltage and current unbalance and asked for a discussion of modeling unbalance in the paper. 
+    \item \textcolor{orange}{R1/C1 + R3/C4} -- Two reviewers have asked for enhanced discussion on stochastic representation within the context of harmonic hosting capacity. In this light, the discussion in \S IV.A is added on future work in terms of stochastic representation. 
+    \item \textcolor{blue}{R2/C1 + R3/C6 + R3/C7} -- Two reviewers have asked for enhanced discussion on the use of the terms exact and lower-bound with respect to the presented methodology. 
+    \item \textcolor{green}{R1/C5 + R3/C2 + R3/C3} -- Two reviewers have asked for enhanced discussion on the use of equity and fairness criteria in other areas of power system analysis, highlighting their potentials and limitations. In this light, the discussion in \S I.B.2 is extended. Furthermore, an explanation of the differences between the nodal approach as utilized in power quality standards and the full network representation approach is  provided in \S I.B.
+\end{enumerate}
+
+\noindent
+Kind regards,\newline
+
+\noindent
+dr. Tom Van Acker and prof. Hakan Ergun
+
+\newpage
+
+\SeniorEditor{}
+
+\textbf{The contents of the paper can be regarded as "Optimal Harmonic Power Flow" type of research. The lower bound of the harmonic hosting capacity at each bus is determined by the deterministic nonlinear programming problem. Since many excellent works of Harmonic Studies, such as Harmonic Power Flow Analysis, Component Harmonic Modeling, as well as Harmonic Voltage and Current limits, have been published in prestigious IEEE journals. The authors are suggested to perform a thorough review of these works and include the review in the revised paper.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+Dear Editor, in line with the comments of the reviewers we have included further references with respect to harmonic studies, and have further discussed them in the introduction section of the paper.
+\end{tcolorbox}
+
+
+\newpage
+
+\Editor{}
+
+\textbf{The paper should go for a further revision round to include some clarifications asked by the reviewers. It is important to explain what is meant with the term exact lower bound for the harmonic hosting capacity. Exact is too strong. The authors should include some discussion regarding the unbalanced response of low voltage systems.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+
+We fully acknowledge this comment, and have clarified the meaning of the exact lower bound in \S I.C. (contributions and outline)in line with the comments of the reviewers posing this question. Essentially the exactness comes from the choice of the power flow formulation, whereas the lower bound refers to the "worst case" assumption on the alignment between the harmonic current angle and the voltage reference in the grid.
+\end{tcolorbox}
+
+
+\newpage
+
+\Reviewer{1}
+
+\textbf{Reviewer's General Comment:} \newline \textit{The article addresses a relevant topic in the context of hosting capacity. The proposal focuses on the proposition, modeling, and computational performance evaluation of an analysis strategy for allocating generation and consumption units in electrical installations, considering the established limits for supply standards regarding harmonic distortions. The content of the article proves to be relevant and consistent for defining guidelines to establish limits for connecting distributed consumption and/or generation units, with recognized impactful effects on harmonic distortions manifested in electrical systems. The fundamentals of the proposed procedure are based on probabilistic principles, adaptive control, and temporal analyses, indicating robustness regarding equity criteria in the distribution of harmonic injection. The employed approach is suitable for planning studies and represents advancements compared to traditional metrics. This is evident when observing the complete representation of the connection network, based on models developed in the frequency domain, in the representation of network components, and also, by the use of different distributive justice criteria, aspects not commonly found in the literature. The inclusion of equity and absolute equality criteria are also relevant points. Coupled with the construction of a deterministic model (with non-linear and SOC variants), representing the impacts of harmonic current flows on distortions manifested in the network, the effectiveness of the methodology is proven through 2 test systems, one of which consists of 1888 buses. Finally, the proposal, in its central context, proves to be relevant and meritorious.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+We thank the reviewer for the assessment made and the encouraging comment with respect to the relevancy and the merit of the work.  We have to the best of our abilities tried to incorporate your comments as listed in the following paragraphs.
+\end{tcolorbox}
+
+\textbf{First Comment (R1/C1): Since the analysis methodology is based on a deterministic model, the static and pre-known behavior of harmonic injection sources and the network itself can significantly affect the proposed analysis process. In fact, real situations manifested in electrical networks and harmonic generating units are subject to influencing factors that significantly alter the assumptions postulated by the analysis process regarding the topological, parametric, and operational constancy of the connection network and the units responsible for generating the harmonic components. Although such operational properties have been mentioned at different points in the article, and given that the assertiveness of the results of the proposed process can be significantly affected, this reviewer believes that the issue should be treated with greater prominence, especially in the conclusions. This includes commenting on improvement requirements arising from the use of probabilistic/stochastic techniques.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+\textcolor{orange}{The changes in the paper answering this question are highlighted in orange.} \newline 
+
+Two reviewers, i.e., Reviewer 3 and yourself, have asked for enhanced discussion on  stochastic representation in the context of harmonic hosting capacity. In this light, the discussion in \S~IV.A is added on future work in terms of stochastic representation. \newline
+
+The primary contribution of this paper is a deterministic harmonic hosting capacity model that remains tractable for large-scale problems. As highlighted in \S~I.B.4 and the accompanying Table~I, different sources of uncertainty have an impact on harmonic hosting capacity. Future work will include these different sources of uncertainty in the presented tractable harmonic hosting capacity model to provide an even more accurate harmonic hosting capacity. As such, in what follows, for the different sources of uncertainty, a high-level strategy is discussed to include these uncertainty sources in the harmonic hosting capacity model presented in this paper.
+\begin{enumerate}
+    \item [a)] Unit harmonic injection -- uncertainty on the angle of the injected harmonic current can be taken into account through polynomial chaos expansion~\cite{sullivan_introduction_2015}, allowing representation of the angle as a probability density function, e.g., normal distribution.
+    \item [b)] Background harmonic distortion -- uncertainty on background harmonic distortion can also be taken into account through polynomial chaos expansion.
+    \item [c)] Network parameters -- uncertainty on network parameters, e.g., line impedance, can be taken into account using robust programming~\cite{nemirovski_robust_2019}.
+    \item [d)] Network exploitation -- uncertainty on network exploitation is best taken into account through a scenario-based approach, given the discrete nature of this uncertainty source.
+    \item [e)] Harmonic limits -- stochastic bounds on harmonic limits as in the different standards, e.g., EN50160: within a week, 95\,\% of the time, the total harmonic distortion needs to be below 8\,\%, are best enforced using chance constraints~\cite{birge_introduction_2011}.
+\end{enumerate}
+
+\end{tcolorbox}
+ 
+\textbf{Second Comment (R1/C2): Still in the context of defining injected harmonic current sources, it is known that the use of values certified by manufacturers or measurements carried out with ideal supply conditions often differ from the actual values obtained in the field. In fact, the interactive operation of distinct harmonic generating units, and also with the connection network, may produce significant variations in the magnitudes and phase angles of the harmonic currents produced. This should be highlighted.}
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+The developed approach solely focusing on the maximum amount of current that can be injected by any harmonic unit, provides a device agnostic definition of the harmonic hosting capacity problem. We fully agree with the reviewer that there can be significant differences between different measurement conditions with respect to magnitude and angle of injections. Exactly for this reason, we consider a perfectly aligned phase angle between the grid voltage and the harmonic current injection, to obtain a lower bound for the hosting capacity. This has been clarified \S~I.C.
+
+\end{tcolorbox}
+
+\textbf{Third Comment (R1/C3): Given the practical situations associated with the connection of units producing unbalanced harmonic currents, and considering the assumptions employed for the proposal, which is based on a balanced network, how does the proposed method perform under such operational conditions?}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+
+\textcolor{red}{The changes in the paper answering this question are highlighted in red.} \newline
+
+The lower bound approach as highlighted in the previous comment, e.g., the phase angle of the harmonic currrent fully aligning with the voltage reference, also poses the worst case situation for unbalanced harmonic injections, if the reference voltage itself is balanced. As such the determined harmonic hosting capacity lower bound will be representative in balanced high voltage grids, which is the scope of the paper. However, we acknowledge that system unbalance needs to be considered in medium and low voltage networks as also pointed out by the other reviewers. We have clarified the scope of the work in the introduction section, and have elaborated on how the developed approach can further be extended to consider system unbalance in the newly created discussion section (\S IV.). In this section we have discussion which modeling approach would be most suitable, and what potential computational implications of considering unbalance would entail. 
+
+First and of foremost, the second order cone representation of the harmonic hosting capacity model employs the formulation of the harmonic power flow equations in the rectangular voltage-current (IVR) variable space. This approach is particularly suitable for unbalanced systems with the explicit representation of a neutral conductor, as this approach behaves numerically much more stable than power-voltage based formulations of the problem. In cases where the neutral voltage is close to zero, the power voltage based formulations cannot properly represent the current flow through the neutral as $U \approx 0$ also results in $P \approx 0 $. Explicit representation of the current avoids this issue as demonstrated in the literature in different contexts \cite{claeys_applications_2021, jat_hybrid_2024}.
+
+With respect to the computational efficiency and convergence of the model, one of the points of attention will be the exactness of the relaxed power flow model. In unbalanced systems the positive semi-definite (PSD) relaxation can be applied, which is exact for radial systems \cite{geth_pitfalls_2023} . In the case of medium voltage and low voltage networks, which often are operated as radials or open-rings this assumption could hold. However, current open-source and commercial solvers able to handle PSD constraint are not as performant as their second-order cone counterparts. This could hinder the applicability of the unbalanced model to very large distribution systems. Yet again, for radial distribution systems consisting of single MV feeders and connected underlying LV networks, an iterative and distributed optimization approach, e.g., by separately modeling LV feeders in parallel, and re-joining the harmonic injections on the MV level can be chosen to jointly determine the harmonic hosting capacity of the whole distribution grid in a reasonable time frame.
+
+
+\end{tcolorbox}
+
+ 
+\textbf{Fifth Comment (R1/C4): Regarding the transformer model, as pointed out, the type of connection and the circulation of zero-sequence harmonic currents are of great relevance. This was considered through the representative switches for delta or isolated star arrangements. Based on an unbalanced generation situation of a given harmonic component in a three-phase network, it may have positive, negative, and zero components. How would the representation of the transformers consider them from the perspective of harmonic flow?}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+
+\textcolor{red}{The changes in the paper answering this question have been highlighted in red in section \S IV.B.} \newline
+
+We agree that the representation of unbalance might pose a potential challenge with respect to correctly modeling harmonic orders of $3n$~associated with the homopolar current / voltages. However, as the current model already incorporates the behavior of $\Delta - Y$ transformers in this respect, the authors believe this should not pose a significant challenge. For more complex transformer designs, e.g., n-winding transformers, or zig-zag transformers, the approach utilized in \cite{claeys_decomposition_2020} can be employed for an accurate representation.
+
+\end{tcolorbox}
+
+\textbf{Sixth Comment (R1/C5): Regarding the metrics employed for hosting capacity studies in the article, although it is possible to identify mentions in the text about their use for studies associated with operation and planning, greater emphasis on the topic is requested to clarify potentials and limitations.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+\textcolor{green}{The changes in the paper answering this question are highlighted in green.} \newline 
+
+Two reviewers, i.e., Reviewer 3 and yourself, have asked for enhanced discussion on the use of equity and fairness criteria in other areas of power system analysis, highlighting their potentials and limitations. In this light, the discussion in \S I.B.2 is extended with the following. \newline
+
+Furthermore, in the European context, power system operators are regulated and have to treat their customers on a fair and equal basis. Consequently, in this context, the harmonic hosting capacity should be distributed among its consumers based on some fairness principle. \newline
+
+Recent literature shows a growing focus on integrating equity and fairness criteria into power system analysis, addressing how costs, benefits, and risks are distributed among stakeholders. Fairness is generally framed in two ways: equality, where all users receive similar outcomes, and equity, where outcomes are adjusted based on needs, vulnerability, or contribution. These concepts are increasingly tied to energy-justice frameworks, emphasizing distributive justice, i.e., who gets what, procedural justice, i.e., who participates, and recognition justice, i.e., acknowledging marginalized groups~\cite{goforth_incorporating_2025}. Studies highlight a wide range of metrics for embedding fairness into power system optimization, including Gini coefficients~\cite{sun_gini_2020}, variance indices~\cite{heylen_fairness_2019}, max-min fairness, proportional fairness, and Shapley-value allocations~\cite{obrien_shapley_2015}. Each metric shapes decision-making differently, especially in balancing system efficiency with distributional outcomes. Several reviews emphasize the importance of carefully selecting fairness definitions aligned with policy goals and stakeholder priorities, including~\cite{goforth_incorporating_2025}. \newline
+
+Applications of fairness criteria span multiple areas within power system analysis. In reliability planning, inequality indices are used to measure how outage risks or unserved energy are distributed, often revealing trade-offs between total system cost and equitable service~\cite{heylen_fairness_2019}. In economic dispatch and optimal power flow, fairness metrics constrain generation dispatch, renewable curtailment, or locational costs, directly influencing operational decisions~\cite{sun_gini_2020}. Local energy systems and community markets increasingly apply proportional and Shapley-based allocations to ensure fair cost and benefit sharing among participants~\cite{obrien_shapley_2015}, while system planning studies incorporate equity constraints when siting renewable generation to account for community impacts and environmental justice concerns~\cite{lohr_integration_2024}. Recent reviews stress that conclusions about fairness are highly sensitive to metric selection, grouping choices, and socio-spatial data quality, underscoring the need for transparent definitions and stakeholder engagement when integrating equity objectives into power system models~\cite{goforth_incorporating_2025}. \newline
+
+Although, as shown above, the application of equity and fairness has a long tradition within power system analysis, it remains under-investigated in the context of harmonic hosting capacity~\cite{santos_considerations_2015}.
+
+\end{tcolorbox}
+
+\textbf{Seventh Comment (R1/C6): Add complementary comments aiming to correlate the proposal with those pointed out by EPRI, NREL, and others deemed relevant.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+The technical brief published by EPRI on impact factors on hosting capacity \cite{epri_impact_2018} acknowledges harmonics, however does not list them as an important factor. This is mainly due to the fact that the hosting capacity definition looks mainly at PV on the distribution level and harmonics are identified as a low issue due to ungrounded isolation transformers in their connections \cite{epri_distribution_2015}. As EPRI's point of view is mainly on distribution systems we have decided to exclude this discussion considering that the scope of this paper is on high voltage grids.
+
+\end{tcolorbox}
+
+\textbf{Eighth Comment (R1/C7): In relation to the data information required by the proposed methodology, do the authors foresee difficulties in obtaining parametric information for the representation of real systems, in accordance with the requirements established by the proposed methodology?}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+The authors agree that obtaining exact parametric information is often impossible. Most likely, due to lack of detailed harmonic data, fundamental data is extrapolated for the considered harmonic in the harmonic hosting capacity analysis. As highlighted in \S~IV.A, future work includes implementation of a robust reformulation of the deterministic hosting capacity that considers uncertainty on network parameters. The choice for a robust programming approach is because in this paradigm the resulting harmonic hosting capacity is 'safe' for any realization of the parameter uncertainty. Furthermore, as a robust approach inherently results in a lower harmonic hosting capacity compared to a model with exact parametric information, future users of the tool will be able to highlight the impact of improved parametric information.
+
+\end{tcolorbox}
+
+\newpage
+
+\Reviewer{2}
+
+\textbf{Reviewer's General Comment:} \newline \textit{The paper presents an optimization-based method to find a lower bound (LB) for the harmonic hosting capacity. A non-linear model and a second-order cone programming model are presented and compared. The paper is well-written and easy-to-follow, and the topic is very relevant to the scope of this journal. This reviewer has the following minor comments.} 
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+We thank the reviewer for the encouraging comment with respect to the relevancy of the work. We have to the best of our abilities tried to incorporate your comments as listed in the following paragraphs.
+\end{tcolorbox}
+
+\textbf{First Comment (R2/C1): It is claimed that the proposed method can find the exact LB in a tractable way. What is an exact LB? It might be misleading for the readers who are familiar with the exact and approximate models of the optimization problem. I recommend using the term valid LB or clarifying the term exact for the obtained LB.}
+
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+
+\textcolor{blue}{The changes in the paper answering this question are highlighted in blue.} \newline 
+
+Two reviewers, i.e., Reviewer 3 and yourself, have asked for enhanced discussion on the use of the terms exact and lower-bound with respect to the presented methodology. \newline
+
+In this light, the discussion in \S I.C is extended with the following. \newline
+
+Note that in the context of this paper, the terms exact and lower-bound are not strictly related and pertain to different aspects of the presented model:
+\begin{itemize}
+    \item the term 'exact' is used to describe the equivalence between the non-linear and second-order cone formulations. In most applications in power system optimization, the related second-order cone model is a relaxation of the exact non-linear model. However, this paper shows that both models are equivalent for this particular application.
+    \item the term 'lower bound' is used to describe that the outcome of the model is the lowest possible steady-state harmonic hosting capacity for a given power system. This is due to the fact that the presented model does not consider uncertainty on the angle of the injected harmonic current, rather assumes a constant angle relative to the reference.
+\end{itemize}
+
+\end{tcolorbox}
+
+\textbf{Second Comment (R2/C2): IPOPT V1.6.2 is employed to find the solution of the non-linear and second-order cone models. Since Ipopt is a local solver, it should be discussed how the solution obtained by Ipopt is still a valid LB for the harmonic hosting capacity problem presented in this paper.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+
+IPOPT v1.6.2 was used solely to demonstrate the equivalence between the non-linear and second-order cone models, not to determine the final solution quality. Although IPOPT is a local solver, the results from the second-order cone model were independently verified using the global solver Gurobi. Therefore, the lower bound (LB) obtained remains valid for the harmonic hosting capacity problem.
+
+\end{tcolorbox}
+
+\newpage
+
+\Reviewer{3}
+
+\textbf{Reviewer's General Comment:} \newline \textit{This paper introduces an optimization method to determine the lower bound on the harmonic hosting capacity in power systems. The topic of this article was very interesting. However, the reviewer thinks that the contribution of this paper should be highlighted. In order to enhance the quality of this paper, please consider the comments as below.} 
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+We thank the reviewer for the assessment made and the detailed suggestions.  In this revised version we tried to highlight the contributions of the paper with respect to existing academic literature on harmonic optimal power flow modeling, incorporation of fairness criteria in hosting capacity determination, as well as the existing power quality standards for harmonic injections.  We have to the best of our abilities tried to incorporate your comments as listed in the following paragraphs.
+\end{tcolorbox}
+
+\textbf{First Comment (R3/C1): There are many abbreviations appearing in Tabe I. Although some abbreviations have been defined in this paper, however, many abbreviations are still not defined very clearly, such as std. and lit. Please provide all definitions for all used abbreviations in this paper.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+The abbreviations in the paper, and especially in Table 1 have been carefully revised.
+
+\end{tcolorbox}
+
+\textbf{Second Comment (R3/C2): In this paper, two possible network representations were considered in different harmonic hosting capacity studies, i.e., nodal or full network representation. What is the major difference between nodal and full network representations from the aspect of mathematical modelling?}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+For a thorough discussion between both models we refer to our recent publication \cite{tom_van_acker_impact_2025}. The main difference between nodal and full the network presentation is that in the nodal approach, the network itself is reduced to a simple impedance model, e.g., a Thevenin, or Norton equivalent, and analyses harmonic injections at a single given location, whereas the full network representation can consider injections at multiple locations simultaneously. This has been further clarified in \S I.B.
+
+\end{tcolorbox}
+
+\textbf{Third Comment (R3/C3): The harmonic hosting capacity should be distributed among the consumers based on some fairness principle. Please provide some literature reviews about the potential fairness principle already used in other studies.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+\textcolor{green}{The changes in the paper answering this question are highlighted in green.} \newline 
+
+Two reviewers, i.e., Reviewer 1 and yourself, have asked for enhanced discussion on the use of equity and fairness criteria in other areas of power system analysis, highlighting their potentials and limitations. In this light, the discussion in \S I.B.2 is extended with the following. \newline
+
+Furthermore, in the European context, power system operators are regulated and have to treat their customers on a fair and equal basis. Consequently, in this context, the harmonic hosting capacity should be distributed among its consumers based on some fairness principle. \newline
+
+Recent literature shows a growing focus on integrating equity and fairness criteria into power system analysis, addressing how costs, benefits, and risks are distributed among stakeholders. Fairness is generally framed in two ways: equality, where all users receive similar outcomes, and equity, where outcomes are adjusted based on needs, vulnerability, or contribution. These concepts are increasingly tied to energy-justice frameworks, emphasizing distributive justice, i.e., who gets what, procedural justice, i.e., who participates, and recognition justice, i.e., acknowledging marginalized groups~\cite{goforth_incorporating_2025}. Studies highlight a wide range of metrics for embedding fairness into power system optimization, including Gini coefficients~\cite{sun_gini_2020}, variance indices~\cite{heylen_fairness_2019}, max-min fairness, proportional fairness, and Shapley-value allocations~\cite{obrien_shapley_2015}. Each metric shapes decision-making differently, especially in balancing system efficiency with distributional outcomes. Several reviews emphasize the importance of carefully selecting fairness definitions aligned with policy goals and stakeholder priorities, including~\cite{goforth_incorporating_2025}.\newline
+
+Applications of fairness criteria span multiple areas within power system analysis. In reliability planning, inequality indices are used to measure how outage risks or unserved energy are distributed, often revealing trade-offs between total system cost and equitable service~\cite{heylen_fairness_2019}. In economic dispatch and optimal power flow, fairness metrics constrain generation dispatch, renewable curtailment, or locational costs, directly influencing operational decisions~\cite{sun_gini_2020}. Local energy systems and community markets increasingly apply proportional and Shapley-based allocations to ensure fair cost and benefit sharing among participants~\cite{obrien_shapley_2015}, while system planning studies incorporate equity constraints when siting renewable generation to account for community impacts and environmental justice concerns~\cite{lohr_integration_2024}. Recent reviews stress that conclusions about fairness are highly sensitive to metric selection, grouping choices, and socio-spatial data quality, underscoring the need for transparent definitions and stakeholder engagement when integrating equity objectives into power system models~\cite{goforth_incorporating_2025}. \newline
+
+Although, as shown above, the application of equity and fairness has a long tradition within power system analysis, it remains under-investigated in the context of harmonic hosting capacity~\cite{santos_considerations_2015}.
+
+\end{tcolorbox}
+
+\textbf{Fourth Comment (R3/C4): Different sources of uncertainty might have the impacts on the harmonic hosting capacity, including unit harmonic injection and background harmonic distortion. Please explain more about where the background harmonic distortion comes from.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+
+Specifically, background harmonic distortion is the harmonic voltage distortion associated with the voltage source of the Thévenin equivalent that represents an external network, i.e., part of the power system not directly included in the analysis. \newline 
+
+\textcolor{orange}{The changes in the paper answering this question are highlighted in orange.} \newline 
+
+Two reviewers, i.e., Reviewer 1 and yourself, have asked for enhanced discussion on  stochastic representation in the context of harmonic hosting capacity. In this light, the discussion in \S IV.A is added on future work in terms of stochastic representation. \newline
+
+The primary contribution of this paper is a deterministic harmonic hosting capacity model that remains tractable for large-scale problems. As highlighted in \S~I.B.4 and the accompanying Table~I, different sources of uncertainty have an impact on harmonic hosting capacity. Future work will include these different sources of uncertainty in the presented tractable harmonic hosting capacity model to provide an even more accurate harmonic hosting capacity. As such, in what follows, for the different sources of uncertainty, a high-level strategy is discussed to include these uncertainty sources in the harmonic hosting capacity model presented in this paper.
+\begin{enumerate}
+    \item [a)] Unit harmonic injection -- uncertainty on the angle of the injected harmonic current can be taken into account through polynomial chaos expansion~\cite{sullivan_introduction_2015}, allowing representation of the angle as a probability density function, e.g., normal distribution.
+    \item [b)] Background harmonic distortion -- uncertainty on background harmonic distortion can also be taken into account through polynomial chaos expansion.
+    \item [c)] Network parameters -- uncertainty on network parameters, e.g., line impedance, can be taken into account using robust programming~\cite{nemirovski_2019}.
+    \item [d)] Network exploitation -- uncertainty on network exploitation is best taken into account through a scenario-based approach, given the discrete nature of this uncertainty source.
+    \item [e)] Harmonic limits -- stochastic bounds on harmonic limits as in the different standards, e.g., EN50160: within a week, 95\,\% of the time, the total harmonic distortion needs to be below 8\,\%, are best enforced using chance constraints~\cite{birge_introduction_2011}.
+\end{enumerate}
+
+\end{tcolorbox}
+
+\textbf{Fifth Comment (R3/C5): In this paper, the harmonic hosting capacity was determined in terms of harmonic current magnitude using a fairness principle. Are there any other terms rather than current magnitude in evaluating the harmonic hosting capacity?}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+The reason for choosing the current magnitude in this work is to guarantee a technology agnostic approach in the determination of the harmonic hosting capacity as also highlighted in \S I.C. If the harmonic injection behavior of different devices is fully described, the hosting capacity can also be determined in terms of the installed power rating for individual components or combinations of different technologies. However, such an analysis would also need to consider the economics of the different device types. As an example thyristor based rectifiers are less costlier than their IGBT based counterparts, and the negligence of CAPEX and OPEX in the hosting capacity maximization would inherently cause the optimizer to maximize the more advantageous technology w.r.t. the harmonic injections, installing IGBT based devices instead of thyristor based devices. 
+
+\end{tcolorbox}
+
+\textbf{Sixth Comment (R3/C6): A critical concern is about the term “exact lower bound”? Please explain more about how to measure the degree of exactness for lower bound of Equitable Harmonic Hosting Capacity.}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+
+Please see the response to the next comment for this remark.
+
+\end{tcolorbox}
+
+\textbf{Seventh Comment (R3/C7): Lower bound is the relaxed solution and there is a gap between the lower bound and exact solution. How about such gap and What is the meaning of learning such gap for power system operators?}
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+
+\textcolor{blue}{The changes in the paper answering this question are highlighted in blue.} \newline 
+
+Two reviewers, i.e., Reviewer 2 and yourself, have asked for enhanced discussion on the use of the terms exact and lower-bound with respect to the presented methodology. \newline
+
+In this light, the discussion in \S I.C is extended with the following. \newline
+
+Note that in the context of this paper, the terms exact and lower-bound are not strictly related and pertain to different aspects of the presented model:
+\begin{itemize}
+    \item the term 'exact' is used to describe the equivalence between the non-linear and second-order cone formulations. In most applications in power system optimization, the related second-order cone model is a relaxation of the exact non-linear model. However, this paper shows that both models are equivalent for this particular application.
+    \item the term 'lower bound' is used to describe that the outcome of the model is the lowest possible steady-state harmonic hosting capacity for a given power system. This is due to the fact that the presented model does not consider uncertainty on the angle of the injected harmonic current, rather assumes a constant angle relative to the reference.
+\end{itemize}
+
+\end{tcolorbox}
+
+\textbf{Eighth Comment (R3/C8): Distributions systems are usually unbalanced in three phased. Thus, how does the proposed harmonic hosting capacity evaluation method deal with such unbalanced system? }
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black]
+
+\textcolor{red}{The changes in the paper answering this question are highlighted in red.} \newline
+
+We believe that for the current work, where the focus is to determine the harmonic hosting capacity for high voltage networks, a balanced consideration of the system is acceptable. However, we acknowledge that system unbalance needs to be considered in medium and low voltage networks as also pointed out by the other reviewers. We have clarified the scope of the work in the introduction section, and have elaborated on how the developed approach can further be extended to consider system unbalance in the newly created discussion section (\S IV.). In this section we have discussion which modeling approach would be most suitable, and what potential computational implications of considering unbalance would entail. 
+
+First and of foremost, the second order cone representation of the harmonic hosting capacity model employs the formulation of the harmonic power flow equations in the rectangular voltage-current (IVR) variable space. This approach is particularly suitable for unbalanced systems with the explicit representation of a neutral conductor, as this approach behaves numerically much more stable than power-voltage based formulations of the problem. In cases where the neutral voltage is close to zero, the power voltage based formulations cannot properly represent the current flow through the neutral as $U \approx 0$ also results in $P \approx 0 $. Explicit representation of the current avoids this issue as demonstrated in the literature in different contexts \cite{claeys_applications_2021, jat_hybrid_2024}.
+
+A potential challenge to represent unbalanced networks is to correctly model harmonic order of $3n$associated with the homopolar current / voltages. However, as the current model already incorporates the behavior of $\Delta - Y$ transformers in this respect, the authors believe this should not pose a significant challenge. For more complex transformer designs, e.g., n-winding transformers, or zig-zag transformers, the approach utilized in \cite{claeys_decomposition_2020} can be employed for an accurate representation.
+
+With respect to the computational efficiency and convergence of the model, one of the points of attention will be the exactness of the relaxed power flow model. In unbalanced systems the positive semi-definite (PSD) relaxation can be applied, which is exact for radial systems \cite{geth_pitfalls_2023} . In the case of medium voltage and low voltage networks, which often are operated as radials or open-rings this assumption could hold. However, current open-source and commercial solvers able to handle PSD constraint are not as performant as their second-order cone counterparts. This could hinder the applicability of the unbalanced model to very large distribution systems. Yet again, for radial distribution systems consisting of single MV feeders and connected underlying LV networks, an iterative and distributed optimization approach, e.g., by separately modeling LV feeders in parallel, and re-joining the harmonic injections on the MV level can be chosen to jointly determine the harmonic hosting capacity of the whole distribution grid in a reasonable time frame.
+
+
+\end{tcolorbox}
+
+\newpage
+
+\bibliographystyle{IEEEtran}
+\bibliography{journals/dhhc/review-one/harmonic_references.bib}
+
+\end{document}

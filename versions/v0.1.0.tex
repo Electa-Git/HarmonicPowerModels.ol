@@ -1,0 +1,155 @@
+\documentclass[journal]{IEEEtran}
+
+% packages
+\usepackage{ulem}
+\usepackage{hyperref}
+% \usepackage{flushend}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\leftmargini}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% definition setup
+%\theoremstyle{definition}
+
+\newtheorem{defn}{Definition}[section]
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% nomenclature
+\input{nomenclature}
+
+% document
+\begin{document}
+
+
+\section{Mathematical Framework}
+\label{sec:mathematical_framework}
+
+\subsection{Certain Harmonic Hosting Capacity}
+\label{sec:certain_harmonic_hosting_capacity}
+
+This section describes the real-value feasible set for the certain harmonic hosting capacity in the rectangular current-voltage formulation of the harmonic optimal power flow problem. The following assumptions are made:
+\begin{enumerate}
+    \item a balanced three-phase power system is considered, i.e., the harmonics are classified into three types:
+    \begin{enumerate}
+        \item positive sequence~$\Harmonic \in \PositiveHarmonicSet \subset \HarmonicSet$:~$\Harmonic=1+3n$,
+        \item negative sequence~$\Harmonic \in \NegativeHarmonicSet \subset \HarmonicSet$:~$\Harmonic=2+3n$, and
+        \item zero sequence~$\Harmonic \in \ZeroHarmonicSet \subset \HarmonicSet$ :~$\Harmonic=3+3n$,
+    \end{enumerate}
+    where~$n \in \NaturalNumberSet_{0}$;
+    \item any edge in the system is either represented as a pi-section or a t-section, with certain parameters~$r$, $x$, $g$ and $b$;
+    \item any unit in the system is represented as a current source, more complex unit models can be added;
+    \item the fundamental voltage magnitude at any bus~$|U|_{i,1},~\forall i \in I$ is set to 1\,p.u.;
+    \item the rectangular non-fundamental harmonic voltage components of the reference bus(ses)~$U^{re}_{i,h},~U^{im}_{i,h},~\forall i \in I^{ref}, h \in H/\{1\}$ are set to 0\,p.u.
+\end{enumerate}
+
+{\allowdisplaybreaks 
+\begin{IEEEeqnarray}{ 0 l }
+    \text{objective function} \nonumber \\
+    max \sum_{\Unit \in \UnitSet}\sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} m_{\Unit, \Harmonic} \\
+    \text{reference bus --~} \forall \Node \in \RefNodeSet: \nonumber\\
+    \quad \RealVoltage_{\Node,\Harmonic} = 0, \,\, \forall\Harmonic \in \HarmonicSet \backslash \{1\} \label{eq_ref_bus_volt_source_a}, \\ 
+    \quad \ImaginaryVoltage_{\Node,\Harmonic} = 0, \,\, \forall \Harmonic \in \HarmonicSet \backslash \{1\}, \label{eq_ref_bus_volt_source_b} \\
+    \text{Kirchhoff's current law --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \quad \sum_{\LineTuple \in \LineTupleSet} \mkern-6mu \RealCurrent_{\LineTuple,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \RealCurrent_{\UnitTuple,\Harmonic}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic} -\ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic}  = 0, \label{eq:kcl_node_real} \\
+    \quad \sum_{\LineTuple \in \LineTupleSet} \mkern-6mu \ImaginaryCurrent_{\LineTuple,\Harmonic} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \ImaginaryCurrent_{\UnitTuple,\Harmonic} + \ShuntConductance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + \ShuntSusceptance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic}= 0, \label{eq:kcl_node_imag} \\
+    \text{Ohm's law --~} \forall \LineTuple \in \LineTupleSetFr, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber   \\
+    \quad \RealVoltage_{\AltNode,\Harmonic} = \RealVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic} +
+    \SeriesReactance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_real} \\ 
+    \quad \ImaginaryVoltage_{\AltNode,\Harmonic} = \ImaginaryVoltage_{\Node,\Harmonic} - 
+    \SeriesResistance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic} -
+    \SeriesReactance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_imag} \\
+    \text{branch total current --~} \forall \LineTuple \in \LineTupleSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \quad \RealCurrent_{\LineTuple,\Harmonic} =
+    \ShuntConductance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} - 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} +
+    \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_real} \\
+    \quad \ImaginaryCurrent_{\LineTuple,\Harmonic} =
+    \ShuntConductance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} +
+    \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_imag} \\
+    %%%%%%%%
+    \text{transformer constraints --~} \forall \Xfmr \in \XfmrSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \RealExcitationCurrent_{\Xfmr, \Harmonic} = 0 \\
+    \ImaginaryExcitationCurrent_{\Xfmr, \Harmonic} = 0 \\
+    \RealVoltage_{\Xfmr, \Harmonic} = \RealExcitationVoltage_{\Xfmr, \Harmonic} - \Reactance^{\text{s}}_{\Xfmr, \Harmonic} \ImaginarySeriesCurrent_{\Xfmr, \Harmonic} \\
+    \ImaginaryVoltage_{\Xfmr, \Harmonic} = \ImaginaryExcitationVoltage_{\Xfmr, \Harmonic} - \Reactance^{\text{s}}_{\Xfmr, \Harmonic} \RealSeriesCurrent_{\Xfmr, \Harmonic} \\
+    \RealVoltage_{\Xfmr, \Harmonic} = \RealTransform \RealExcitationVoltage_{\Xfmr, \Harmonic} - \ImaginaryTransform \ImaginaryExcitationVoltage_{\Xfmr, \Harmonic} \\
+    \ImaginaryVoltage_{\Xfmr, \Harmonic} = \RealTransform \ImaginaryExcitationVoltage_{\Xfmr, \Harmonic} + \ImaginaryTransform \RealExcitationVoltage_{\Xfmr, \Harmonic} \\
+    \RealSeriesCurrentFrom_{\Xfmr, \Harmonic} + \RealTransform \RealSeriesCurrentTo_{\Xfmr, \Harmonic} + \ImaginaryTransform \ImaginarySeriesCurrentTo_{\Xfmr, \Harmonic} = \RealExcitationCurrent_{\Xfmr, \Harmonic} + \ShuntConductance_{\Xfmr, \Harmonic}\RealExcitationVoltage_{\Xfmr, \Harmonic} \\
+    \ImaginarySeriesCurrentFrom_{\Xfmr, \Harmonic} + \RealTransform \ImaginarySeriesCurrentTo_{\Xfmr, \Harmonic} - \ImaginaryTransform \RealSeriesCurrentTo_{\Xfmr, \Harmonic} = \ImaginaryExcitationCurrent_{\Xfmr, \Harmonic} + \ShuntConductance_{\Xfmr, \Harmonic}\ImaginaryExcitationVoltage_{\Xfmr, \Harmonic} \\
+    \RealVoltage_{\Xfmr, \Harmonic} = \RealVoltage_{\Node\Xfmr,\Harmonic} - \Resistance_{\Xfmr, \Harmonic} \RealCurrent_{\Xfmr, \Harmonic}\\
+    \ImaginaryVoltage_{\Xfmr, \Harmonic} = \ImaginaryVoltage_{\Node\Xfmr,\Harmonic} - \Resistance_{\Xfmr, \Harmonic} \ImaginaryCurrent_{\Xfmr, \Harmonic}\\
+     \forall \Xfmr \in \XfmrSet, \Harmonic \in \HarmonicSet^{0} \text{~if~gnd = 1} \nonumber \\  
+    \RealVoltage_{\Xfmr, \Harmonic} = \RealVoltage_{\Node\Xfmr,\Harmonic} - (\Resistance_{\Xfmr, \Harmonic} + 3 \Resistance^{0}_{\Xfmr, \Harmonic}) \RealCurrent_{\Xfmr, \Harmonic} + 3\Reactance^{0}_{\Xfmr, \Harmonic}\ImaginaryCurrent_{\Xfmr, \Harmonic}\\
+    \ImaginaryVoltage_{\Xfmr, \Harmonic} = \ImaginaryVoltage_{\Node\Xfmr,\Harmonic} - (\Resistance_{\Xfmr, \Harmonic} + 3 \Resistance^{0}_{\Xfmr, \Harmonic}) \ImaginaryCurrent_{\Xfmr, \Harmonic} - 3\Reactance^{0}_{\Xfmr, \Harmonic}\RealCurrent_{\Xfmr, \Harmonic}\\
+     \forall \Xfmr \in \XfmrSet, \Harmonic \in \HarmonicSet^{0} \text{~if~gnd = 0} \nonumber \\ 
+    \RealCurrent_{\Xfmr, \Harmonic} = 0\\
+    \ImaginaryCurrent_{\Xfmr, \Harmonic} = 0 \\
+    \forall \Xfmr \in \XfmrSet, \Harmonic \in \HarmonicSet \backslash \{1\} \text{~if~zero sequence = 1} \nonumber \\
+    \RealCurrent_{\Xfmr, \Harmonic} = \RealSeriesCurrent_{\Xfmr, \Harmonic} - \ShuntConductance_{\Xfmr, \Harmonic} \RealVoltage_{\Node\Xfmr,\Harmonic} + \ShuntSusceptance_{\Xfmr, \Harmonic} \ImaginaryVoltage_{\Node\Xfmr,\Harmonic} \\
+    \ImaginaryCurrent_{\Xfmr, \Harmonic} = \ImaginarySeriesCurrent_{\Xfmr, \Harmonic} - \ShuntConductance_{\Xfmr, \Harmonic} \ImaginaryVoltage_{\Node\Xfmr,\Harmonic} - \ShuntSusceptance_{\Xfmr, \Harmonic} \RealVoltage_{\Node\Xfmr,\Harmonic} \\
+    \forall \Xfmr \in \XfmrSet, \Harmonic^{0} \text{~if~zero sequence = 1}, \wye  \lor z  \nonumber \\
+    \RealCurrent_{\Xfmr, \Harmonic} = \RealSeriesCurrent_{\Xfmr, \Harmonic} - \ShuntConductance_{\Xfmr, \Harmonic} \RealVoltage_{\Node\Xfmr,\Harmonic} + \ShuntSusceptance_{\Xfmr, \Harmonic} \ImaginaryVoltage_{\Node\Xfmr,\Harmonic} \\
+    \ImaginaryCurrent_{\Xfmr, \Harmonic} = \ImaginarySeriesCurrent_{\Xfmr, \Harmonic} - \ShuntConductance_{\Xfmr, \Harmonic} \ImaginaryVoltage_{\Node\Xfmr,\Harmonic} - \ShuntSusceptance_{\Xfmr, \Harmonic} \RealVoltage_{\Node\Xfmr,\Harmonic} \\
+    \forall \Xfmr \in \XfmrSet, \Harmonic^{0} \text{~if~zero sequence = 1}, \Delta = \text{true}, z = \text{true}, \Resistance \ne 0 \nonumber \\
+    \RealCurrent_{\Xfmr, \Harmonic} = \RealSeriesCurrent_{\Xfmr, \Harmonic} - \ShuntConductance_{\Xfmr, \Harmonic} \RealVoltage_{\Node\Xfmr,\Harmonic} + \ShuntSusceptance_{\Xfmr, \Harmonic} \ImaginaryVoltage_{\Node\Xfmr,\Harmonic} - \frac{\RealVoltage_{\Node\Xfmr,\Harmonic}}{\Resistance_{\Xfmr, \Harmonic}} \\
+    \ImaginaryCurrent_{\Xfmr, \Harmonic} = \ImaginarySeriesCurrent_{\Xfmr, \Harmonic} - \ShuntConductance_{\Xfmr, \Harmonic} \ImaginaryVoltage_{\Node\Xfmr,\Harmonic} - \ShuntSusceptance_{\Xfmr, \Harmonic} \RealVoltage_{\Node\Xfmr,\Harmonic} - \frac{\ImaginaryVoltage_{\Node\Xfmr,\Harmonic}}{\Resistance_{\Xfmr, \Harmonic}}\\
+    %%%%%%%%%%
+    \text{root mean square voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+    \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \mkern-7mu (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq
+    (\MaximumVoltage_{\Node})^{2} - |U_{1,h}|^2 \label{eq:rms} \\
+    \text{total harmonic distortion --~} \forall \Node \in \NodeSet: \nonumber \\
+    \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq |U_{i,1}|^2\,(\text{THD}_{\Node}^{\text{u}})^2,  \label{eq:thd} \\
+    \text{individual harmonic distortion --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq |U_{i,1}|^2\,(\text{IHD}_{\Node}^{\text{u}})^2 \label{eq:ihd} \\
+    \text{harmonic unit model} - \forall \Unit \in \UnitSet, \UnitTuple \in \UnitTupleSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    \RealShuntCurrent_{\Unit, \Harmonic} = \RealCurrent_{\UnitTuple, \Harmonic} - \Conductance_{\Unit, \Harmonic} \RealVoltage_{\Node, \Harmonic} + \Susceptance_{\Unit, \Harmonic} \ImaginaryVoltage_{\Node, \Harmonic} \\
+    \ImaginaryShuntCurrent_{\Unit, \Harmonic} = \ImaginaryCurrent_{\UnitTuple, \Harmonic} - \Conductance_{\Unit, \Harmonic} \ImaginaryVoltage_{\Node, \Harmonic} - \Susceptance_{\Unit, \Harmonic} \RealVoltage_{\Node, \Harmonic} \\
+    \text{harmonic current injection bounds} - \forall \Unit \in \UnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+    0 \leq \RealShuntCurrent_{\Unit, \Harmonic} \leq \RealHlimit_{\Unit, \Harmonic} \\ 
+    \ImaginaryShuntCurrent_{\Unit, \Harmonic} tan\theta^{\text{min}}_{\Unit, \Harmonic} \leq \RealShuntCurrent_{\Unit, \Harmonic} \leq \ImaginaryShuntCurrent_{\Unit, \Harmonic} tan\theta^{\text{max}}_{\Unit, \Harmonic} \\
+    m^{2}_{\Unit, \Harmonic} \leq (\RealShuntCurrent_{\Unit, \Harmonic})^{2} + (\ImaginaryShuntCurrent_{\Unit, \Harmonic})^{2}
+\end{IEEEeqnarray}}
+
+Note that for the root mean square voltage, the customary lower bound is omitted as it becomes redundant given assumption four. 
+
+\newpage
+
+\subsection{Robust Optimization Formulation for Harmonic Hosting Capacity}
+
+The following assumptions are made:
+\begin{enumerate}
+    \item The voltage magnitude of the fundamental harmonic, i.e., $\Harmonic = 1$, is treated as an uncertain variable~$\LiftedVoltage_{\Node,1}$. Consequently, the right hand side of \eqref{eq:thd} and \eqref{eq:ihd} is simplified.
+\end{enumerate}
+
+\end{document}
+
+

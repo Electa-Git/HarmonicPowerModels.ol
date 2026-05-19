@@ -1,0 +1,113 @@
+\newcommand{\SignalPhasor}[1]{\bar{S}_{#1}}
+\newcommand{\SignalDynamicPhasor}[1]{\SignalPhasor{#1}(\Time)}
+
+\newcommand{\NaturalNumbers}{\mathbb{N}_{0}}
+
+\newcommand{\HilbertSpace}{L_{2}(\mathcal{R})}
+
+\newcommand{\Harmonic}{h}
+\newcommand{\HarmonicSet}{\mathcal{H}}
+
+\newcommand{\AmplitudeTimeSeries}[1]{a_{#1}(\Time)}
+\newcommand{\AntiRotatingPhaseTimeSeries}[1]{\varphi_{#1}(\Time)}
+
+\newcommand{\CurrentDynamicPhasor}[1]{\CurrentPhasor{#1}(\Time)}
+
+\newcommand{\VoltageDynamicPhasor}[1]{\VoltagePhasor{#1}(\Time)}
+
+\section{Mathematical Framework}
+\label{sec:mathematical_framework}
+
+The equivalent harmonic impedance~$\ImpedancePhasor{\Harmonic}^{\text{ntw}}$ of an electric network is given by a relationship between voltage~$\VoltagePhasor{\Harmonic}$ and current~$\CurrentPhasor{\Harmonic}$, where~$\Harmonic$ denotes the considered harmonic. However, generally, the voltage and current are measured as time-series signals, i.e.,~$\VoltageTimeSeries$ and~$\CurrentTimeSeries$, and subsequently decomposed through a discrete Fourier transform in their respective harmonic components, i.e.,~$\VoltagePhasor{\Harmonic}$ and~$\CurrentPhasor{\Harmonic}$. However, the Fourier series only holds exactly for periodic signals, and is therefore not ideally suited for transient signals. The Taylor-Fourier transform, was introduced to decompose transient time-series signals into harmonic dynamic phasors, approximating the transient behavior through a Taylor polynomial. 
+
+\subsection{Taylor-Fourier Transform}
+\label{sec:taylor_fourier_transform}
+
+Any non-periodic signal~$\SignalTimeSeries \in \HilbertSpace$ in the presence of harmonics~$\Harmonic \in \HarmonicSet \subset \NaturalNumbers$ can be represented as,
+\begin{IEEEeqnarray}{ r C l }
+    \SignalTimeSeries &=& \sum_{\Harmonic \in \HarmonicSet} \AmplitudeTimeSeries{\Harmonic} \cos(2 \pi \Harmonic \Frequency \Time + \AntiRotatingPhaseTimeSeries{\Harmonic}),
+\end{IEEEeqnarray}
+where~$\HilbertSpace$ is a Hilbert space, $\Frequency$ denotes the fundamental frequency, and~$\AmplitudeTimeSeries{\Harmonic}$ and~$\AntiRotatingPhaseTimeSeries{\Harmonic}$ denotes the (dynamic) amplitude and anti-rotating phase of harmonic~$\Harmonic$, respectively~\cite{platas_garza_2011}. Equivalently, the signal~$\SignalTimeSeries$ can be represented as,
+\begin{IEEEeqnarray}{ r C l }
+    \SignalTimeSeries   &=& \mkern-12mu \sum_{\Harmonic \in \text{-}\HarmonicSet\cup\text{+}\HarmonicSet} \mkern-12mu \AmplitudeTimeSeries{\Harmonic} e^{j \AntiRotatingPhaseTimeSeries{\Harmonic}} e^{j 2 \pi \Harmonic \Frequency \Time} = \mkern-12mu \sum_{\Harmonic \in \text{-}\HarmonicSet\cup\text{+}\HarmonicSet} \mkern-12mu \SignalDynamicPhasor{\Harmonic} e^{j 2 \pi \Harmonic \Frequency \Time},
+    \label{eq:dynamic_phasor_signal}
+\end{IEEEeqnarray}
+where~$\SignalDynamicPhasor{\Harmonic}$ denotes the corresponding harmonic dynamic phasor\footnote{Synonym: complex envelope}. It is assumed that the harmonic dynamic phasor~$\SignalDynamicPhasor{\Harmonic}$ is band limited by a constant~$\varepsilon$, where~$\varepsilon \ll \Frequency$. Note that the Taylor-Fourier transform reduces back to the classical Fourier transform if~$\varepsilon \to 0$, i.e., if the signal~$\SignalTimeSeries$ becomes periodic.
+
+The harmonic dynamic phasor~$\SignalDynamicPhasor{\Harmonic}$ is best approximated by a Taylor polynomial~$\overline{S}^{\text{(K)}}_{h}(t)$ of degree~$K$: 
+\begin{IEEEeqnarray}{ r C l }
+    \SignalDynamicPhasor{\Harmonic} &\approx& \SignalPhasor{\Harmonic}^{\text{(K)}}(\Time) = \sum_{k=0}^{K}{\frac{\SignalPhasor{\Harmonic}^{(k)}(\Time_{0})}{k!}}(\Time-\Time_{0})^{k}, 
+    \label{eq:taylor_polynomial}
+\end{IEEEeqnarray}
+where~$\SignalPhasor{\Harmonic}^{(k)}(\Time_{0})$ denotes the $k$th derivative of~$\SignalDynamicPhasor{\Harmonic}$ at a time~$\Time_{0}$. 
+
+For a given harmonic~$\Harmonic$ and equidistantly sampled signal~$\SignalTimeSeries$, the corresponding harmonic dynamic phasor is determined as,
+\begin{IEEEeqnarray}{ r C l }
+    \SignalPhasor{\Harmonic}^{(0)}(\Time) &=& \frac{1}{N} \cdot \SignalTimeSeries * \big( \Phi^{(0)}_{K}(\tau) \, e^{j 2 \pi \Harmonic \tau} \big),
+    \label{eq:harmonic_dynamic_phasor}
+\end{IEEEeqnarray}
+where~$N$ denotes the number of signal samples per fundamental cycle,~$\tau$ denotes a vector~$[0,\mathrm{d}\tau,...,K\texttt{+}1\texttt{-}\mathrm{d}\tau]$, with~$\mathrm{d}\tau = 1/N$ and~$K$ denotes the degree of the corresponding O-spline filter~$\Phi^{(0)}_{K}$. 
+
+Moreover, \eqref{eq:harmonic_dynamic_phasor} can be generalized to find the Dth-derivative of the harmonic dynamic phasor as,
+\begin{IEEEeqnarray}{ r C l }
+    \SignalPhasor{\Harmonic}^{(D)}(\Time) &=& \frac{1}{N} \cdot \SignalTimeSeries * \big( \Frequency^{D} \, \Phi^{(D)}_{K}(\tau) \, e^{j 2 \pi \Harmonic \tau} \big), \label{eq:general_harmonic_dynamic_phasor}
+\end{IEEEeqnarray}
+where~$\Phi^{(D)}_{K}$ denotes the Dth-derivative of the Kth-degree O-spline and~$f$ the fundamental frequency. For more background on O-splines, the interested reader is referred to~\cite{delaOSerna_2020}. After determining the Dth-derivative of the harmonic dynamic phasor, its amplitude and anti-rotating phase are found as,
+\begin{IEEEeqnarray}{ r C l }
+    a_{\Harmonic}^{(D)}(\Time)          &=& | 2 \cdot \SignalPhasor{\Harmonic}^{(D)}(\Time) |, \\
+    \varphi_{\Harmonic}^{(D)}(\Time)    &=& \angle [ \SignalPhasor{\Harmonic}^{(D)}(\Time) ].
+\end{IEEEeqnarray}
+
+\subsection{Transient Invasive Application}
+
+Consider the Th\'evenin equivalent of a power system for a given node, into which a transient harmonic current~$\CurrentTimeSeries$ is injected (Fig.~\ref{fig:thevenin_equivalent}). Throughout the transient event, the following is assumed with respect to the Th\'evenin equivalent:
+\begin{enumerate}
+    \item the harmonic network impedance~$\ImpedancePhasor{\Harmonic}^{\text{ntw}}$ is constant; and
+    \item the equivalent voltage source~$e(t)$ is static, all transient effects are captured by~$u(t)$.
+\end{enumerate}
+It should be noted that the original definition of impedance is applied to linear networks; therefore, all nonlinear loads should be disconnected from the system. However, for low frequencies, the interaction between linear and nonlinear loads can be neglected due to the low impedance value at the source side. When the frequency increases above 3\,kHz, this interaction cannot be neglected and it has to be taken into account~\cite{stiegler_2015}.
+
+\begin{figure}[b!]
+    \centering
+    \begin{circuitikz}
+        \ctikzset{voltage/bump b/.initial=.0}
+        \draw   (3.0,0.0) 
+                to[short, -*] (2.0,0.0) 
+                to[short] (0.0,0.0)
+                to[sV, l=$e(t)$] (0.0,2.0)    
+                to[generic, -*, l=$\ImpedancePhasor{}^{\text{ntw}}$] (2.0,2.0)
+                to[short] (3.0,2.0);
+        \draw   (3.0,0.0)
+                to[american current source, l_=$\CurrentTimeSeries$] (3.0,2.0);
+        \draw   (2.0,0.0) to [open, v^=$\VoltageTimeSeries$]
+                (2.0,2.0);
+    \end{circuitikz}
+    \caption{Thévenin equivalent of the network at a given node, into which a transient harmonic current~$\CurrentTimeSeries$ is injected.}
+    \label{fig:thevenin_equivalent}
+\end{figure}
+
+Using the Taylor-Fourier transform, harmonic dynamic phasors are determined for the measured current~$\CurrentTimeSeries$ and voltage signals~$\VoltageTimeSeries$, for every phase. After which, their positive, negative and zero-sequence components are determined through the Fortescue transform, resulting in~$\VoltageDynamicPhasor{\Harmonic,\sigma}$ and~$\CurrentDynamicPhasor{\Harmonic,\sigma},~\forall \Harmonic \in \HarmonicSet,~\sigma \in \{0,\texttt{+},\texttt{-}\}$.
+
+For two points in time~$\Time_{1}$ and~$\Time_{2}$ describing an interval~$\Delta \Time$ during the transient event, the superposition principle, accounting for assumptions 1. and 2., gives,
+\begin{IEEEeqnarray}{ r C l }
+    \VoltagePhasor{}(\Time_{2}) - \VoltagePhasor{}(\Time_{1}) 
+        &=& 
+    \ImpedancePhasor{}^{\text{ntw}} (\CurrentPhasor{}(\Time_{2}) - \CurrentPhasor{}(\Time_{1})). 
+\end{IEEEeqnarray}
+Consequently, extending and simplifying this equation for each harmonic~$\Harmonic$ and sequence~$\sigma$ gives,
+\begin{IEEEeqnarray}{ r C l }
+    \Delta \VoltageDynamicPhasor{\Harmonic,\sigma} &=& \ImpedancePhasor{\Harmonic,\sigma}^{\text{ntw}} \, \Delta \CurrentDynamicPhasor{\Harmonic,\sigma}. 
+\end{IEEEeqnarray}
+Lastly, reintroducing the time interval and taking its limit to zero on both sides, gives,
+\begin{IEEEeqnarray}{ r C l }
+    \lim_{\Delta \Time \to 0} \frac{\Delta\VoltageDynamicPhasor{\Harmonic,\sigma}}{\Delta \Time} &=& \ImpedancePhasor{\Harmonic,\sigma}^{\text{ntw}} \lim_{\Delta \Time \to 0} \frac{\Delta\CurrentDynamicPhasor{\Harmonic,\sigma}}{\Delta \Time}, 
+\end{IEEEeqnarray}
+ultimately, resulting in,
+\begin{IEEEeqnarray}{ r C l }
+    \VoltagePhasor{\Harmonic,\sigma}^{(1)}(\Time)
+        &=& 
+    \ImpedancePhasor{\Harmonic,\sigma}^{\text{ntw}} \, \CurrentPhasor{\Harmonic,\sigma}^{(1)}(\Time). \label{eq:harmonic_network_impedance}
+\end{IEEEeqnarray}
+The first-order derivative of the dynamic harmonic voltage and current phasor is easily obtained through~\eqref{eq:general_harmonic_dynamic_phasor}. The assumption is that using the derivative of the current and voltage dynamic harmonic phasor provides a finer impedance estimate filtering out slower dynamics on the voltage~$\VoltageTimeSeries$, e.g., load changes, throughout the transient event.
+
+In practice, the obtained harmonic impedance~$\ImpedancePhasor{\Harmonic,\sigma}^{\text{ntw}}$ will not be constant, due to noise, external effect, etc., consequently, the most-likely harmonic impedance should be determined based on the obtained harmonic impedance~$\ImpedancePhasor{\Harmonic,\sigma}^{\text{ntw}}(\Time)$. 

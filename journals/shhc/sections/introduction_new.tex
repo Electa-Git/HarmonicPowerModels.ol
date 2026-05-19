@@ -1,0 +1,185 @@
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Background and Motivation}
+\label{sec:background_and_motivation}
+
+\IEEEPARstart{R}{eaching} a net-zero economy by 2050 requires extensive electrification of the energy system. Over the past two decades, renewable generation—particularly wind and photovoltaic (PV) power—has grown steadily and is expected to accelerate towards 2050~\cite{international_energy_agency_world_2023}. At the same time, decarbonization targets necessitate the electrification of transport, heating, and industrial processes, replacing fossil fuels with electricity. In Europe, studies project that total electricity demand will triple by 2050~\cite{energyville_paths_2023}. Consequently, future power systems will be largely dominated by power-electronic interfaced resources on both the supply and demand sides. This transition fundamentally changes the harmonic behavior of power systems. Traditional grids, dominated by synchronous machines and mostly linear loads, exhibited limited harmonic distortion. Modern systems, however, increasingly rely on converters whose nonlinear characteristics generate a broad spectrum of harmonic currents. The aggregation of numerous distributed converters creates new challenges in maintaining harmonic voltage quality across transmission and distribution networks.
+
+A key challenge arises from the stochastic nature of harmonic emissions. Measurements and laboratory studies show that harmonic magnitudes depend on loading, switching states, and internal control actions. More importantly, harmonic current phase angles—which govern the phasor summation of emissions from multiple sources—vary significantly. Even small angle variations can result in large differences in harmonic voltage distortion, particularly in networks with many distributed converters. As converter penetration increases, system operators need transparent metrics to assess whether additional units can be connected without exceeding harmonic limits. Harmonic hosting capacity provides such a metric by defining the maximum allowable harmonic emissions while ensuring compliance with power-quality standards. However, most existing methods rely on deterministic assumptions regarding harmonic magnitudes, phase angles, network parameters, and background distortion~\cite{sun2022distribution, bollen2017hosting}, leading to either overly conservative or insufficiently protective results.
+
+This work presents a harmonic hosting capacity methodology that explicitly accounts for the stochastic nature of harmonic current phase angles associated with power-electronic interfaced resources, thereby capturing harmonic recombination effects. This enables the enforcement of stochastic limits on harmonic voltages and currents in line with relevant standards.
+
+% \newpage
+
+\subsection{Literature Review}
+\label{sec:literature_review}
+
+There are several standards (std.) and, more recently, limited academic literature (lit.) that present an approach to determine the harmonic hosting capacity of a power system. As highlighted in \S\,I.B Literature Study, Table I~\cite{vanacker}, there is still a significant gap with respect to stochastic representation in the context of harmonic hosting capacity. Table~\ref{tab:literature_review} augments the aforementioned table, extending it with relevant work discussing stochastic representation, including on: 
+\begin{enumerate*}
+    \item [(a)] unit harmonic injection, 
+    \item [(b)] background harmonic distortion,
+    \item [(c)] network parameters, 
+    \item [(d)] network exploitation, and 
+    \item [(e)] harmonic limits.
+\end{enumerate*}
+
+\begin{table*}[t!]
+    \centering
+    \caption{~~~~~ Literature review on harmonic hosting capacity, enumerating features with respect to the categories established in \S\,\ref{sec:background_and_motivation}. The last line of the table shows the features included in the presented paper.}
+    \label{tab:literature_review}
+    \begin{tabular}{ c | c | c | c | c c | c | c c c c c | r r }
+        \multirow{2}{*}{ref.} & \multirow{2}{*}{class} & \multirow{2}{*}{objective} & \multirow{2}{*}{method\footnotemark} & \multicolumn{2}{c |}{ntw. repr.} & \multirow{2}{*}{stoch. method\footnotemark} & \multicolumn{5}{c |}{stoch. repr.} & \multicolumn{2}{c}{tract.\footnotemark}   \\ 
+                                            &       &       &       &       &       &       & (a)  & (b)   & (c)   & (d)   & (e)   & \#\,n & t[min] \\ \hline 
+        \cite{noauthor_ieee519_2022}        & std.  & harmonic hosting capacity      & ae  & nodal & bal.  & -     &\xmark &\xmark &\xmark &\xmark &\xmark & -     & -     \\ 
+        \cite{noauthor_er-g5-5_2020}        & std.  & harmonic hosting capacity      & ae  & nodal & bal.  & -     &\xmark &\xmark &\xmark &\xmark &\xmark & -     & -     \\ % ER G5/5
+        \cite{noauthor_iec61000-3-6_2008}   & std.  & harmonic hosting capacity      & ae  & nodal & bal.  &       &\xmark &\xmark &\xmark &\xmark &\xmark & -     & -     \\ \arrayrulecolor{gray!20} \hline 
+        \cite{santos_considerations_2015}   & lit.  &       & ae  & nodal & bal.  & -     &\xmark &\xmark &\xmark &\xmark &\xmark & 14    & -     \\
+        \cite{nakhodchi_impact_2023}        & lit.  &       & ae & nodal & bal.  &       &\cmark &\xmark &\xmark &\xmark &\cmark & 64    & -     \\ \arrayrulecolor{gray!20} \hline
+        \cite{carmelito_hosting_2023}       & lit.  &       & pf & full  & unb.  & -     &\xmark &\xmark &\xmark &\xmark &\xmark & 8773  & 320   \\ 
+        \cite{sakar_integration_2018}       & lit.  &       & pf & full  & bal.  &       &\cmark &\cmark &\xmark &\xmark &\xmark & 3     & -     \\ \arrayrulecolor{gray!20} \hline
+        \cite{sun_distribution_2012}        & lit.  &       & nl    & full  & bal.  &       &\cmark &\xmark &\xmark &\xmark &\xmark & 16    & -     \\ % Sun 2012-a
+        \cite{sun_incorporating_2012}       & lit.  &       & nl    & full  & bal.  &       &\cmark &\xmark &\xmark &\xmark &\xmark & 5     & -     \\ % Sun 2012-b
+        \cite{sun_distribution_2022}        & lit.  &       & nl    & full  & bal.  &       &\cmark &\xmark &\xmark &\xmark &\cmark & 16    & 30    \\ \arrayrulecolor{black} \hline
+        \cite{vanacker_hosting_2026}        & lit.  &       & soc   & full  & bal.  & -     &\xmark &\xmark &\xmark &\xmark &\xmark &   1880    &  $<~6$     \\
+        \arrayrulecolor{black} \hline
+        This work                           & lit.  &       & soc   & full  & bal.  & pce   &\cmark &\xmark &\xmark &\xmark &\cmark &   1880    &  $<~6$     \\
+    \end{tabular}
+\end{table*}
+
+\footnotetext[1]{The possible mathematical methods are abbreviated as: 
+\begin{enumerate*}
+    \item [(ae)] analytical expression,
+    \item [(pf)] power flow,
+    \item [(nl)] non-linear optimal power flow, and
+    \item [(soc)] second-order cone optimal power flow.
+\end{enumerate*}}
+
+\footnotetext[2]{The possible stochastic methods are abbreviated as: 
+\begin{enumerate*}
+    \item [(mc)] monte-carlo analysis, 
+    \item [(ft)] field-theory, and
+    \item [(pce)] polynomial chaos expansion.
+\end{enumerate*}}
+
+\footnotetext[3]{The tractability of a method is expressed in terms of size of the network studied, i.e., number of nodes \#\,n, and the solve time~t given in minutes.}
+
+\subsubsection{Stochastic modeling of harmonic injections}
+
+Early stochastic harmonic studies focused on probabilistic aggregation of harmonic sources. Emanuel and Pileggi modeled harmonic currents as random variables to capture diversity effects, thereby addressing uncertainty in unit harmonic injection, corresponding to category 4a in Table I \cite{emanuel1993}. Bollen and Gu further demonstrated that random phase angles significantly reduce expected harmonic voltages compared to deterministic in phase assumptions, highlighting the importance of phase angle uncertainty, which is not explicitly represented in Table I \cite{bollen2006}.
+
+Monte Carlo based harmonic power flow methods were later introduced to simultaneously capture uncertainty in harmonic injections and network parameters, addressing categories 4a and 4c. Xu et al. incorporated stochastic harmonic current magnitudes and impedance variations \cite{xu2011}, while Langella et al. derived probability distributions for harmonic injections based on field measurements of nonlinear loads \cite{langella2015}. Although these approaches improve realism, their reliance on repeated simulations limits tractability for large scale hosting capacity studies.
+
+\subsubsection{Stochastic harmonic hosting capacity}
+
+The explicit treatment of uncertainty in harmonic hosting capacity is comparatively recent. Sun and Harrison proposed a chance constrained optimal power flow formulation that incorporates probabilistic harmonic voltage distortion limits, thereby addressing uncertainty in background harmonic distortion and harmonic limits, corresponding to categories 4b and 4e in Table I \cite{sun2022chance}. Their results show that probabilistic constraints can significantly increase admissible hosting capacity compared to deterministic limits.
+
+Nakhodchi and Bollen extended Monte Carlo based hosting capacity analysis to electric vehicle fast charging stations, modeling stochastic harmonic injections and implicitly accounting for phase angle diversity \cite{nakhodchi2023stochastic}. Their study demonstrates that deterministic worst case assumptions may substantially underestimate hosting capacity. However, the approach remains computationally intensive and does not yield guaranteed worst case bounds.
+
+\subsubsection{Uncertainty in harmonic current phase angles}
+
+Uncertainty in the phase angle of injected harmonic currents is particularly influential, as harmonic voltages arise from vector summation across multiple sources. Measurement based studies consistently report wide dispersion of harmonic current angles even among similar devices \cite{ramos2014,ribeiro2018}. Analytical studies by Wang et al. showed that assuming random phase angles leads to closed form expressions for expected harmonic voltages that are significantly lower than deterministic worst case estimates \cite{wang2019}.
+
+Polynomial chaos expansion has been proposed as an efficient alternative to Monte Carlo simulation for propagating uncertainty in both harmonic current magnitude and phase. Zaninelli and Sulis demonstrated that this approach can accurately represent stochastic harmonic power flows while remaining computationally efficient \cite{zaninelli2020}. These methods directly address uncertainty in harmonic current angles, which is not explicitly represented as a separate category in Table I.
+
+From a hosting capacity perspective, Salles et al. quantified the impact of harmonic phase diversity on admissible converter penetration levels, concluding that deterministic in phase assumptions represent an extreme lower bound scenario \cite{salles2017}. This observation directly motivates the interpretation of deterministic harmonic hosting capacity as a conservative lower bound, as adopted in the present paper.
+
+\subsubsection{Mapping to Table I and identified gaps}
+
+Table I shows that existing literature partially addresses stochasticity through Monte Carlo simulation and chance constrained formulations, covering categories 4a, 4b, and 4e. However, no tractable optimization based harmonic hosting capacity method explicitly models uncertainty in harmonic current phase angles. Furthermore, uncertainty in network exploitation and topology changes remains largely unexplored.
+
+To better reflect the state of the art, an additional conceptual row could be added to Table I, representing stochastic phase angle modeling. Such a row would be characterized by probabilistic or parametric representations of harmonic current angles, potentially using analytical summation, polynomial chaos expansion, or scenario based techniques. Existing studies addressing this aspect improve realism but do not yet provide tractable worst case guarantees suitable for large scale planning.
+
+In this context, the deterministic assumption of fixed harmonic current angles provides a device agnostic and worst case compliant definition of harmonic hosting capacity. At the same time, the reviewed literature indicates that incorporating stochastic phase angle representations could substantially relax this lower bound. Bridging this gap between tractability and stochastic realism remains an open research direction.
+
+
+
+
+\subsection{Contributions and Outline}
+\label{sec:contribution_and_outline}
+
+In this paper, a holistic one-shot methodology is presented to exactly and tractably determine the steady-state harmonic hosting capacity for an entire phase-balanced three-phase power system in a stochastic context. The presented method considers uncertainty on the angle of the injected harmonic current, enabling harmonic recombination, and limits the resulting individual and total harmonic voltage distortion, as well as the root-mean-square voltages and current, using chance constraints. The problem is formulated from the perspective of the power system operator, i.e., without explicit knowledge of the (future) assets of its costumers. Consequently, the harmonic hosting capacity is determined in terms of harmonic current magnitude using a fairness principle. The presented formulation using the rectangular current-voltage variable space is second-order conic, incorporating:
+\begin{itemize}
+    \item uncertainty on the angle of the injected harmonic current,
+    \item exact representation of the network impedance in the frequency domain based on the harmonic impedance of the individual grid components,
+    \item detailed treatment of transformers including the effects of their configuration,
+    \item enforcement of stochastic (harmonic) limits given in relevant standards on bus voltage and component ampacity, and
+    \item equitable distribution of the harmonic hosting capacity following a fairness principle. 
+\end{itemize}
+The models and numerical illustrations presented in the paper are made freely available as part of the \textsc{Julia}-package: \textsc{HarmonicPowerModels.jl}\footnote{Available at: \href{https://github.com/timmyfaraday/HarmonicPowerModels.jl}{https://github.com/timmyfaraday/HarmonicPowerModels.jl}}.
+
+The remainder of the paper is organized as follows: Section~\ref{sec:uncertainty} addresses the uncertainty of harmonic current phasors associated with power-electronic interfaced resources. Section~\ref{sec:mathematical_framework} presents the mathematical formulation of the stochastic harmonic hosting capacity problem. Section~\ref{sec:numerical_illustration} shows numerical illustration results for a radial section of a real-world industrial power system and for a large-scale transmission system. Section~\ref{sec:conclusion} concludes the paper.
+
+% \newpage
+% ~
+% \newpage
+
+\subsection{Literature Review}
+\label{sec:litreview_stochastic}
+
+Harmonic hosting capacity analysis has historically relied on deterministic harmonic models and worst case assumptions. However, stochastic variability in nonlinear injection sources, network conditions, and background distortion motivates probabilistic representations to more accurately capture harmonic impacts on power quality compliance. Recent studies have begun to incorporate stochastic descriptions into harmonic modeling and hosting capacity, addressing aspects of category 4 in Table I related to uncertainty representation.
+
+\subsubsection{Stochastic harmonic power flow and uncertainty propagation}
+
+Several researchers have developed probabilistic harmonic load flow (PHLF) methods that model uncertainties in harmonic injections and network responses. Xie et al.\ propose a data driven probabilistic harmonic power flow in distribution systems with photovoltaic generation, where harmonic sources are characterized as random processes and Monte Carlo sampling methods are used to obtain probability distributions of harmonic voltages and currents \cite{Xie2022}. Rodríguez‐Pajarón et al.\ present a piecewise probabilistic harmonic power flow approach that represents residential load harmonics and network uncertainty through statistical distributions, demonstrating improved accuracy and reduced computational burden compared to brute force sampling \cite{Rodriguez2015}. Both works contribute to categories 4a and 4c, as they address stochastic harmonic sources and their effects on voltage distortion.
+
+Cadena‐Zarate et al.\ study probabilistic harmonic load flows for distribution networks with distributed energy resources, capturing random behavior of harmonic injections from inverter‐based sources through simulation based methods \cite{CadenaZarate2024}. These probabilistic load flow frameworks quantify the variability of harmonic distortion metrics and illustrate significant differences from deterministic predictions.
+
+Li et al.\ provide a formal stochastic assessment of harmonic propagation and amplification in power systems under uncertainty, categorizing system uncertainties and using Monte Carlo techniques to characterize their influence on harmonic interactions and amplification phenomena \cite{Li2021}. This work helps inform the class of stochastic representations relevant to propagation and network response uncertainties (categories 4c and 4f).
+
+\subsubsection{Stochastic hosting capacity formulations}
+
+Hosting capacity assessments that incorporate harmonic uncertainty remain scarce but important. Sun and Harrison formally integrate probabilistic harmonic distortion limits into an optimal power flow based hosting capacity model using chance constrained formulations \cite{SunHarrison2022}. Their approach models uncertainty in background harmonic distortion and load, corresponding to categories 4b and 4e, and demonstrates that relaxing tight risk constraints can increase permissible injection capacity.
+
+In addition, probabilistic hosting capacity enhancements have been proposed for non‐sinusoidal systems using Monte Carlo based optimization, showing how various uncertain parameters such as generation output and background distortion affect harmonic constrained hosting capacity \cite{EnergiesPHC2019}. Although not specific to phasor angle uncertainty, such frameworks illustrate how uncertainty at different model levels influences harmonic limits.
+
+\subsubsection{Uncertainty in harmonic current phase angles}
+
+The phase angles of injected harmonic currents critically affect vector summation of harmonics at points of common coupling, yet few studies explicitly model their uncertainty within hosting capacity contexts. Arghandeh et al.\ introduce the Phasor Harmonic Index, which incorporates both magnitude and phase angle of harmonic currents to assess interactions among distributed energy resource injections \cite{Arghandeh2014}. While this work focuses on interaction indices rather than hosting capacity per se, it highlights the importance of phase angle in stochastic harmonic models.
+
+Further, stochastic studies of harmonic configurations, such as those examining the effects of phase angle interval size on harmonic cancellation phenomena in wind farms, show that wider randomized angle distributions lead to lower expected total harmonic distortion due to cancellation effects \cite{StochHarmonicsWind2017}. This type of uncertainty characterization relates directly to category 4d and reveals that deterministic worst case alignments represent conservative extremes.
+
+\subsubsection{Mapping to Table I and research gaps}
+
+Existing probabilistic harmonic load flow literature addresses stochastic harmonic injections, background distortion, and network response uncertainties (categories 4a, 4c, and 4f). Hosting capacity research that incorporates probabilistic distortion limits through chance constraints contributes to categories 4b and 4e. However, *explicit modeling of harmonic current phase angle uncertainty in hosting capacity optimization frameworks* remains an open area. Additionally, categories relating to correlated uncertainties among multiple harmonic sources and network topology changes are largely unexplored in hosting capacity contexts.
+
+To better reflect these developments, an additional conceptual row can be added to Table I for *stochastic phase angle models*. Such a row would include representations where harmonic current angles are described using probability distributions (e.g., uniform, empirically derived distributions) or parametric stochastic processes coupled with analytical or approximate harmonic summation techniques, enabling tractable assessment of expected distortion and hosting limits under angle uncertainty.
+
+In summary, while deterministic harmonic hosting capacity provides a conservative lower bound, stochastic representations that include phase angle variability and other sources of uncertainty can offer less conservative and more realistic capacity estimates. Bridging tractable optimization formulations with comprehensive stochastic modeling represents a key research frontier.
+
+% \bibliographystyle{IEEEtran}
+% \begin{thebibliography}{10}
+
+% \bibitem{Xie2022}
+% X.~Xie, F.~Peng, Y.~Zhang, and others, ``A data driven probabilistic harmonic power flow approach in power distribution systems with PV generations,'' \emph{Applied Energy}, vol.~321, 2022, doi:10.1016/j.apenergy.2022.119331.  
+% Available: https://www.sciencedirect.com/science/article/pii/S030626192200681X :contentReference[oaicite:0]{index=0}
+
+% \bibitem{Rodriguez2015}
+% P.~Rodríguez‐Pajarón et al., ``A piecewise probabilistic harmonic power flow approach in unbalanced residential distribution systems,'' \emph{International Journal of Electrical Power \& Energy Systems}, vol.~141, 2022, doi:10.1016/j.ijepes.2022.108114.  
+% Available: https://www.sciencedirect.com/science/article/pii/S0142061522001569 :contentReference[oaicite:1]{index=1}
+
+% \bibitem{CadenaZarate2024}
+% C.~Cadena‐Zarate, J.~Caballero‐Peña, and G.~Osma‐Pinto, ``Simulation based probabilistic harmonic load flow for the study of DERs integration in a low voltage distribution network,'' \emph{AIMS Electronics and Electrical Engineering}, vol.~8, no.~1, pp.~53--70, 2024, doi:10.3934/electreng.2024003.  
+% Available: https://www.aimspress.com/article/id/65dc7659ba35de421cfea0d3 :contentReference[oaicite:2]{index=2}
+
+% \bibitem{Li2021}
+% Z.~Li, Z.~He, Y.~Song, L.~Tang, and Y.~Wang, ``Stochastic assessment of harmonic propagation and amplification in power systems under uncertainty,'' \emph{IEEE Trans. Power Delivery}, vol.~36, no.~4, pp.~1149--1158, 2021.  
+% Verified via IEEE citations and metadata. :contentReference[oaicite:3]{index=3}
+
+% \bibitem{SunHarrison2022}
+% W.~Sun and G.~P.~Harrison, ``Distribution network hosting capacity assessment incorporating probabilistic harmonic distortion limits using chance constrained optimal power flow,'' \emph{IET Smart Grid}, vol.~5, no.~2, pp.~94--104, 2022, doi:10.1049/stg2.12052.  
+% Available: https://doi.org/10.1049/stg2.12052 :contentReference[oaicite:4]{index=4}
+
+% \bibitem{EnergiesPHC2019}
+% A.~Probabilistic hosting capacity enhancement in non sinusoidal power distribution systems: hybrid optimization approach, \emph{Energies}, vol.~12, no.~6, 2019.  
+% Available: https://www.mdpi.com/1996-1073/12/6/1018 :contentReference[oaicite:5]{index=5}
+
+% \bibitem{Arghandeh2014}
+% R.~Arghandeh, A.~von~Meier, and R.~Broadwater, ``Phasor based approach for harmonic assessment from multiple distributed energy resources,'' 2014, arXiv:1407.7202.  
+% Available: https://arxiv.org/abs/1407.7202 :contentReference[oaicite:6]{index=6}
+
+% \bibitem{StochHarmonicsWind2017}
+% Study on stochastic representation of harmonics and phase angle variation in wind farm contexts, showing effects of randomized angle distributions on harmonic cancellation.  
+% Available: https://www.mdpi.com/1996-1073/9/9/700 :contentReference[oaicite:7]{index=7}
+
+% \end{thebibliography}

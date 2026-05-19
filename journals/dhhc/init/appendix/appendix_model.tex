@@ -1,0 +1,74 @@
+\appendices
+
+\section{Optimization Model}
+\label{sec:optimization_model}
+
+{\allowdisplaybreaks
+\begin{IEEEeqnarray}{ l C l }
+    \max            &~& \sum_{\Unit \in \HarmonicUnitSet} \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \CurrentMagnitude_{\Unit,\Harmonic}, \text{~or}            \\
+                    &~& \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \CurrentMagnitude_{\Harmonic}, \text{~or}                                                    \\
+                    &~& \sum_{\Harmonic \in \HarmonicSet \backslash \{1\}} \mathsf{f}_{\Harmonic},                                                                      \\
+    \text{s.t.}     &~& \textsc{Fairness Objective Constraints (OPT.)}                                                                                      \nonumber   \\
+                    &~& \text{absolute equality constraints --~} \forall \Unit, \upsilon \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber   \\
+                    &~& \quad \CurrentMagnitude_{\Unit,\Harmonic} = \CurrentMagnitude_{\upsilon,\Harmonic},                                                                   \\
+                    &~& \text{maximin constraints --~} \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}:                     \nonumber   \\
+                    &~& \quad \CurrentMagnitude_{\Harmonic} \leq \CurrentMagnitude_{\Unit,\Harmonic},                                                                         \\
+                    &~& \text{KS bargaining constraints --~} \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}:               \nonumber   \\
+                    &~& \quad \CurrentMagnitude_{\Unit,\Harmonic} = \mathsf{f}_{\Harmonic} \hat{\CurrentParameter}^{\text{max}}_{\Unit,\Harmonic},                            \\
+                    &~& \quad 0 \leq \mathsf{f}_{\Harmonic} \leq 1,                                                                                                           \\
+                    &~& \textsc{Bus Constraints}                                                                                                            \nonumber   \\
+                    &~& \text{reference bus voltage --~} \forall \Node \in \RefNodeSet, \Harmonic \in \HarmonicSet:                                         \nonumber   \\
+                    &~& \quad \RealVoltage_{\Node,\Harmonic} = \RealRefVoltage_{\Node,\Harmonic},                                                                             \\ 
+                    &~& \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryRefVoltage_{\Node,\Harmonic},                                                                   \\
+                    &~& \text{Kirchhoff's current law --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet:                                          \nonumber   \\
+                    &~& \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \RealCurrent_{\Edge\Node\AltNode,\Harmonic} + \mkern-9mu \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \RealCurrent_{\UnitTuple,\Harmonic}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic} -\ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic}  = 0,                                                                                                           \\
+                    &~& \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \ImaginaryCurrent_{\Edge\Node\AltNode,\Harmonic} + \mkern-9mu \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \ImaginaryCurrent_{\UnitTuple,\Harmonic} + \ShuntConductance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + \ShuntSusceptance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic}= 0,                                                                                                                  \\
+                    &~& \textsc{Branch Constraints}                                                                                                         \nonumber   \\
+                    &~& \text{Ohm's law --~} \forall \LineTuple \in \LineTupleSetFr, \Harmonic \in \HarmonicSet:                                            \nonumber   \\
+                    &~& \quad \RealVoltage_{\AltNode,\Harmonic} = \RealVoltage_{\Node,\Harmonic} - \SeriesResistance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic} + \SeriesReactance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic},                                                                   \\
+                    &~& \quad \ImaginaryVoltage_{\AltNode,\Harmonic} = \ImaginaryVoltage_{\Node,\Harmonic} - \SeriesResistance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic} -\SeriesReactance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic},                        \\
+                    &~& \text{branch total current --~} \forall \LineTuple \in \LineTupleSet, \Harmonic \in \HarmonicSet:                                   \nonumber   \\
+                    &~& \quad \RealCurrent_{\LineTuple,\Harmonic} = \ShuntConductance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} - \ShuntSusceptance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + \RealSeriesCurrent_{\LineTuple,\Harmonic},                                                                    \\
+                    &~& \quad \ImaginaryCurrent_{\LineTuple,\Harmonic} = \ShuntConductance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + \ShuntSusceptance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} + \ImaginarySeriesCurrent_{\LineTuple,\Harmonic},                            \\
+                    &~& \textsc{Transformer Core Constraints}                                                                                               \nonumber   \\
+                    &~& \text{Ohm's law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSetFr, \Harmonic \in \HarmonicSet:                                    \nonumber   \\
+                    &~& \quad \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} = \RealExcitationVoltage_{\Xfmr,\Harmonic} - \SeriesReactance{\Xfmr,\Harmonic} \,\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic},                                                                                           \\
+                    &~& \quad \ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} = \ImaginaryExcitationVoltage_{\Xfmr,\Harmonic} + \SeriesReactance{\Xfmr,\Harmonic}\,\RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic},                                                               \\ 
+                    &~& \text{Kirchhoff's current law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSetFr, \Harmonic \in \HarmonicSet:                      \nonumber   \\
+                    &~& \quad \RealSeriesCurrent_{\Xfmr\AltNode\Node,\Harmonic} + \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} - \RealMagnetizingCurrent_{\Xfmr,\Harmonic} - \frac{\RealExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg)     \nonumber   \\ 
+                    &~& \quad \qquad ~\, +\,\ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} - \ImaginaryMagnetizingCurrent_{\Xfmr,\Harmonic} -  \frac{\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) = 0,   \\
+                    &~& \quad \ImaginarySeriesCurrent_{\Xfmr\AltNode\Node,\Harmonic} + \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} - \ImaginaryMagnetizingCurrent_{\Xfmr,\Harmonic} -  \frac{\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) \nonumber \\ 
+                    &~& \quad \qquad ~\, +\,\ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} - \RealMagnetizingCurrent_{\Xfmr,\Harmonic} - \frac{\RealExcitationVoltage_{\Xfmr,\Harmonic}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) = 0,               \\
+                    &~& \text{transformer phase shift --~} \forall \Xfmr\AltNode\Node \in \XfmrTupleSetTo, \Harmonic \in \HarmonicSet: \nonumber \\
+                    &~& \quad \RealExcitationVoltage_{\Xfmr,\Harmonic} = \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealAltVoltage_{\Xfmr\AltNode\Node,\Harmonic} - \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\AltNode\Node,\Harmonic}, \\
+                    &~& \quad \ImaginaryExcitationVoltage_{\Xfmr,\Harmonic} = \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\AltNode\Node,\Harmonic} + \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealAltVoltage_{\Xfmr\AltNode\Node,\Harmonic}, \\
+                    &~& \textsc{Transformer Winding Constraints} \nonumber \\
+                    &~& \text{Kirchhoff's current law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet, \Harmonic \in \HarmonicSet: \nonumber \\
+                    &~& \quad \RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} = \RealCurrent_{\Xfmr\Node\AltNode,\Harmonic} + \ShuntConductance{\Xfmr\Node\AltNode,\Harmonic}\,\RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} - \ShuntSusceptance{\Xfmr\Node\AltNode,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic}, \\
+                    &~& \quad \ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic} = \ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic} + \ShuntConductance{\Xfmr\Node\AltNode,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + \ShuntSusceptance{\Xfmr\Node\AltNode,\Harmonic}\,\RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic}, \\
+                    &~& \text{Ohm's law (pos./neg. seq.) --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet, \Harmonic \in \PositiveHarmonicSet \cup \NegativeHarmonicSet: \nonumber\\
+                    &~& \quad \RealVoltage_{\Node,\Harmonic}  = \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + \Resistance_{\Xfmr\Node\AltNode,\Harmonic}\,\RealCurrent_{\Xfmr\Node\AltNode,\Harmonic},  \\
+                    &~& \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + \Resistance_{\Xfmr\Node\AltNode,\Harmonic}\,\ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic}, \\
+                    &~& \text{Ohm's law (zero seq.) --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet^{\text{,earthed}}, \Harmonic \in \ZeroHarmonicSet: \nonumber \\
+                    &~& \quad \RealVoltage_{\Node,\Harmonic}  = \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + (r_{\Xfmr\Node\AltNode,\Harmonic}+3r^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}) \RealCurrent_{\Xfmr\Node\AltNode,\Harmonic} \nonumber \\ 
+                    &~& \quad \qquad \qquad \quad~\, - \, 3x^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}\ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic},\\
+                    &~& \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic} + (r_{\Xfmr\Node\AltNode,\Harmonic}+3r^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}) \ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic} \nonumber \\ 
+                    &~& \quad \qquad \qquad \quad~\, +\,3x^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}\RealCurrent_{\Xfmr\Node\AltNode,\Harmonic}, \\
+                    &~& \text{zero seq. blocking --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet^{\text{,ne}} \cup \XfmrTupleSet^{\text{,delta}}, \Harmonic \in \ZeroHarmonicSet: \nonumber \\
+                    &~& \quad \RealCurrent_{\Xfmr\Node\AltNode,\Harmonic} = 0, \\ 
+                    &~& \quad \ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic} = 0, \\
+                    &~& \textsc{Harmonic Unit Constraints} \nonumber \\
+                    &~& \text{harmonic current injection --~} \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet \backslash \{1\}: \nonumber \\
+                    &~& \quad \cos(\phi^{\text{ref}}_{\Unit,\Harmonic}) \, \CurrentMagnitude_{\Unit,\Harmonic} = \RealCurrent_{\Unit,\Harmonic}, \\
+                    &~& \quad \sin(\phi^{\text{ref}}_{\Unit,\Harmonic}) \, \CurrentMagnitude_{\Unit,\Harmonic} = \ImaginaryCurrent_{\Unit,\Harmonic}, \\
+                    &~& \textsc{Bus Voltage Constraints} \nonumber \\
+                    &~& \text{root mean square voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+                    &~& \quad \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\MaximumVoltage_{\Node})^{2} - (\FundamentalVoltageMagnitude{\Node})^{2}, \\
+                    &~& \text{total harmonic voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+                    &~& \quad \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\textit{THD}_{\Node}^{\text{u}})^2\,(\FundamentalVoltageMagnitude{\Node})^{2}, \\
+                    &~& \text{individual harmonic voltage --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
+                    &~& \quad (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\textit{IDH}^{\text{u}}_{\Node,\Harmonic})^{2}\,(\FundamentalVoltageMagnitude{\Node})^{2}, \\
+                    &~& \textsc{Edge Current Constraints} \nonumber \\
+                    &~& \text{root mean square current --~} \forall \Edge\Node\AltNode \in \EdgeTupleSet: \nonumber \\
+                    &~& \quad \sum_{\Harmonic \in \HarmonicSet} (\RealCurrent_{\Edge\Node\AltNode,\Harmonic})^{2} + (\ImaginaryCurrent_{\Edge\Node\AltNode,\Harmonic})^{2} \leq (\RatedCurrent_{\Edge\Node\AltNode})^{2} - (\FundamentalCurrentMagnitude{\Edge\Node\AltNode})^2.
+\end{IEEEeqnarray}}

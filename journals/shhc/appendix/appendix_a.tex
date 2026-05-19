@@ -1,0 +1,95 @@
+\appendices
+
+\section{Optimization Model}
+\label{app:optimization_model}
+
+\begin{enumerate}
+    \item the fundamental harmonic~$1$ is excluded from the set~$\HarmonicSet$,
+    \item absolute equality fairness criteria is used as the harmonic hosting capacity objective,
+    \item the index 0 for the harmonic current magnitude~$\CurrentMagnitude_{\Unit,\Harmonic,0}$ for the harmonic unit is purely decorative as the variable is not defined for any other polynomial chaos expansion index
+\end{enumerate}
+
+
+\allowdisplaybreaks
+\begin{IEEEeqnarray}{ 0 l l }
+\text{max}  
+    & \sum_{\Unit \in \HarmonicUnitSet} \sum_{\Harmonic \in \HarmonicSet} \CurrentMagnitude_{\Unit,\Harmonic,0}, \label{eq:obj_abs_equality} \\
+\text{s.t.} 
+    & \CurrentMagnitude_{\Unit,\Harmonic,0} = \CurrentMagnitude_{\upsilon,\Harmonic,0},~\forall \Unit, \upsilon \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \label{eq:abs_equality} \\
+    &\textsc{Bus Constraints} \nonumber \\
+    &\text{reference bus voltage --~} \forall \Node \in \RefNodeSet, \Harmonic \in \HarmonicSet: \nonumber\\
+    &\quad \RealVoltage_{\Node,\Harmonic,0} = \RealRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_a} \\
+    &\quad \ImaginaryVoltage_{\Node,\Harmonic,0} = \ImaginaryRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_b} \\
+    &\text{Kirchhoff's current law --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \RealCurrent_{\Edge\Node\AltNode,\Harmonic,\PCEIndex} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \RealCurrent_{\UnitTuple,\Harmonic,\PCEIndex}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic,\PCEIndex} \nonumber \\
+    & \qquad \qquad \qquad \qquad \qquad \quad \,\,\,\, - \ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex}  = 0, \label{eq:kcl_node_real} \\
+    &\quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \ImaginaryCurrent_{\Edge\Node\AltNode,\Harmonic,\PCEIndex} + \mkern-9mu
+    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \ImaginaryCurrent_{\UnitTuple,\Harmonic,\PCEIndex} + \ShuntConductance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} \nonumber \\
+    & \qquad \qquad \qquad \qquad \qquad \quad \,\,\,\, + \ShuntSusceptance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic,\PCEIndex}= 0, \label{eq:kcl_node_imag} \\
+    &\textsc{Branch Constraints} \nonumber \\
+    &\text{Ohm's law --~} \forall \LineTuple \in \LineTupleSetFr, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber\\
+    &\quad \RealVoltage_{\AltNode,\Harmonic,\PCEIndex} = \RealVoltage_{\Node,\Harmonic,\PCEIndex} - 
+    \SeriesResistance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic,\PCEIndex} +
+    \SeriesReactance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic,\PCEIndex}, \label{eq:ol_real} \\
+    &\quad \ImaginaryVoltage_{\AltNode,\Harmonic,\PCEIndex} = \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} - 
+    \SeriesResistance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic,\PCEIndex} -
+    \SeriesReactance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic,\PCEIndex}, \label{eq:ol_imag} \\
+    &\text{branch total current --~} \forall \LineTuple \in \LineTupleSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \RealCurrent_{\LineTuple,\Harmonic,\PCEIndex} =
+    \ShuntConductance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic,\PCEIndex} - 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} +
+    \RealSeriesCurrent_{\LineTuple,\Harmonic,\PCEIndex}, \label{eq:btc_real} \\
+&\quad \ImaginaryCurrent_{\LineTuple,\Harmonic,\PCEIndex} =
+    \ShuntConductance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} + 
+    \ShuntSusceptance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic,\PCEIndex} +
+    \ImaginarySeriesCurrent_{\LineTuple,\Harmonic,\PCEIndex}, \label{eq:btc_imag} \\
+    &\textsc{Transformer Core Constraints} \nonumber \\
+    &\text{Ohm's law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSetFr, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} = \RealExcitationVoltage_{\Xfmr,\Harmonic,\PCEIndex} - \SeriesReactance{\Xfmr,\Harmonic} \,\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex}, \\
+    &\quad \ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} = \ImaginaryExcitationVoltage_{\Xfmr,\Harmonic,\PCEIndex} + \SeriesReactance{\Xfmr,\Harmonic}\,\RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex}, \\ 
+    &\text{Kirchhoff's current law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSetFr, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \RealSeriesCurrent_{\Xfmr\AltNode\Node,\Harmonic,\PCEIndex} + \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} - \RealMagnetizingCurrent_{\Xfmr,\Harmonic,\PCEIndex} - \frac{\RealExcitationVoltage_{\Xfmr,\Harmonic,\PCEIndex}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) \nonumber \\ 
+    &\qquad \quad \,\,\,\,\,\,\, +\,\ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} - \ImaginaryMagnetizingCurrent_{\Xfmr,\Harmonic,\PCEIndex} -  \frac{\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic,\PCEIndex}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) = 0 \\
+    &\quad \ImaginarySeriesCurrent_{\Xfmr\AltNode\Node,\Harmonic,\PCEIndex} + \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} - \ImaginaryMagnetizingCurrent_{\Xfmr,\Harmonic,\PCEIndex} -  \frac{\ImaginaryExcitationVoltage_{\Xfmr,\Harmonic,\PCEIndex}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) \nonumber \\ 
+    &\qquad \quad \,\,\,\,\,\,\, +\,\ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\Bigg(\RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} - \RealMagnetizingCurrent_{\Xfmr,\Harmonic,\PCEIndex} - \frac{\RealExcitationVoltage_{\Xfmr,\Harmonic,\PCEIndex}}{\ShuntResistance{\Xfmr,\Harmonic}}\Bigg) = 0 \\
+    &\text{transformer phase shift --~} \forall \Xfmr\AltNode\Node \in \XfmrTupleSetTo, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \RealExcitationVoltage_{\Xfmr,\Harmonic,\PCEIndex} = \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealAltVoltage_{\Xfmr\AltNode\Node,\Harmonic,\PCEIndex} - \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\AltNode\Node,\Harmonic,\PCEIndex}, \\
+    &\quad \ImaginaryExcitationVoltage_{\Xfmr,\Harmonic,\PCEIndex} = \RealVectorGroupTransform_{\Xfmr,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\AltNode\Node,\Harmonic,\PCEIndex} + \ImaginaryVectorGroupTransform_{\Xfmr,\Harmonic}\,\RealAltVoltage_{\Xfmr\AltNode\Node,\Harmonic,\PCEIndex}, \\
+    &\textsc{Transformer Winding Constraints} \nonumber \\
+    &\text{Kirchhoff's current law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \RealSeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} = \RealCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} +  \ShuntConductance{\Xfmr\Node\AltNode,\Harmonic}\,\RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} - \ShuntSusceptance{\Xfmr\Node\AltNode,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex}, \label{eq:xfmr_winding_series_real} \\
+    &\quad \ImaginarySeriesCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} = \ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} + \ShuntConductance{\Xfmr\Node\AltNode,\Harmonic}\,\ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} + \ShuntSusceptance{\Xfmr\Node\AltNode,\Harmonic}\,\RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex}, \label{eq:xfmr_winding_series_imag} \\
+    &\text{Ohm's law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet, \Harmonic \in \PositiveHarmonicSet \cup \NegativeHarmonicSet, \PCEIndex \in \PCESet: \nonumber\\
+    &\quad \RealVoltage_{\Node,\Harmonic,\PCEIndex}  = \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} + \Resistance_{\Xfmr\Node\AltNode,\Harmonic}\,\RealCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex},  \\
+    &\quad \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} = \ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} + \Resistance_{\Xfmr\Node\AltNode,\Harmonic}\,\ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex}, \\
+    &\text{Ohm's law --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet^{\text{,earthed}}, \Harmonic \in \ZeroHarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \RealVoltage_{\Node,\Harmonic,\PCEIndex}  = \RealAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} + (r_{\Xfmr\Node\AltNode,\Harmonic}+3r^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}) \RealCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} \nonumber \\ 
+    &\qquad \qquad \qquad \quad \,\,\,\,\,\,\,
+    - \, 3x^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}\ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex},\\
+    &\quad \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} = \ImaginaryAltVoltage_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} + (r_{\Xfmr\Node\AltNode,\Harmonic}+3r^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}) \ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} \nonumber \\ 
+    &\qquad \qquad \qquad \quad \,\,\,\,\,\,\,
+    +\,3x^{\text{0}}_{\Xfmr\Node\AltNode,\Harmonic}\RealCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex}, \\
+    &\text{cur. blocking --~} \forall \Xfmr\Node\AltNode \in \XfmrTupleSet^{\text{,ne}} \cup \XfmrTupleSet^{\text{,delta}}, \Harmonic \in \ZeroHarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \RealCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} = 0, \\ 
+    &\quad \ImaginaryCurrent_{\Xfmr\Node\AltNode,\Harmonic,\PCEIndex} = 0. \label{eq_zero_se_block} \\
+    &\text{harmonic current injection --~} \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} \, \CurrentMagnitude_{\Unit,\Harmonic,0} = \RealCurrent_{\Unit,\Harmonic,\PCEIndex},
+    \label{eq:real_harmonic_unit_current_pce_alt} \\
+    &\quad \sin(\phi_{\Unit,\Harmonic})_{\PCEIndex} \, \CurrentMagnitude_{\Unit,\Harmonic,0} = \ImaginaryCurrent_{\Unit,\Harmonic,\PCEIndex}, 
+    \label{eq:imag_harmonic_unit_current_pce_alt} \\ 
+    &\text{auxiliary variables --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \Big( \RealCurrent_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \RealCurrent_{\Node,\Harmonic,\bar{\kappa}_{2}} + \ImaginaryCurrent_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \ImaginaryCurrent_{\Node,\Harmonic,\bar{\kappa}_{2}} \Big)
+    \leq \LiftedCurrent_{\Node,\Harmonic,\PCEIndex}, \\
+    &\quad \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \Big( \RealVoltage_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \RealVoltage_{\Node,\Harmonic,\bar{\kappa}_{2}} + \ImaginaryVoltage_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \ImaginaryVoltage_{\Node,\Harmonic,\bar{\kappa}_{2}} \Big)
+    \leq \LiftedVoltage_{\Node,\Harmonic,\PCEIndex}, \nonumber \\ & \\
+    &\text{root mean square voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+    &\quad \Expectation(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedVoltage}_{\Node,\Harmonic}) + \lambda(\varepsilon) \sqrt{\Variance(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedVoltage}_{\Node,\Harmonic})} \leq (\MaximumVoltage_{\Node})^{2} - (\FundamentalVoltageMagnitude{\Node})^{2}, \label{eq:soc_rms} \nonumber \\ & \\
+    &\text{total harmonic voltage --~} \forall \Node \in \NodeSet: \nonumber \\
+    &\quad \Expectation(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedVoltage}_{\Node,\Harmonic}) + \lambda(\varepsilon) \sqrt{\Variance(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedVoltage}_{\Node,\Harmonic})} \leq
+    (\VoltageParameter_{\Node}^{\text{thd}})^2\,(\FundamentalVoltageMagnitude{\Node})^{2},  \label{eq:soc_thd} \nonumber \\ & \\
+    &\text{individual harmonic voltage --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    &\quad \Expectation(\bar{\LiftedVoltage}_{\Node,\Harmonic}) + \lambda(\varepsilon) \sqrt{\Variance(\bar{\LiftedVoltage}_{\Node,\Harmonic})} \leq (\VoltageParameter^{\text{ihd}}_{\Node,\Harmonic})^{2}\,(\FundamentalVoltageMagnitude{\Node})^{2}. \\
+    &\text{root mean square current --~} \forall \Edge\Node\AltNode \in \EdgeTupleSet: \nonumber \\
+    &\quad \Expectation(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedCurrent}_{\Node,\Harmonic}) + \lambda(\varepsilon) \sqrt{\Variance(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedCurrent}_{\Node,\Harmonic})} \leq (\RatedCurrent_{\Edge\Node\AltNode})^{2} - (\FundamentalCurrentMagnitude{\Edge\Node\AltNode})^2,\label{eq:soc_rms_current} \nonumber \\ & 
+\end{IEEEeqnarray}
