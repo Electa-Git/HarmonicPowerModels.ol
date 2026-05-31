@@ -18,9 +18,236 @@
 	publisher = {Springer International Publishing},
 	author = {Sullivan, T.J.},
 	urldate = {2022-12-19},
-	date = {2015},
+	year = {2015},
 	langid = {english},
 	doi = {10.1007/978-3-319-23395-6},
+}
+
+% ============================================================
+% Standards
+% ============================================================
+@standard{noauthor_ieee519_2022,
+  title        = {{IEEE} Standard for Harmonic Control in Electric Power Systems},
+  organization = {IEEE},
+  number       = {519-2022},
+  year         = {2022},
+}
+
+@standard{noauthor_er-g5-5_2020,
+  title        = {Engineering Recommendation {G5/5}: Planning Levels for Harmonic Voltage Distortion and the Connection of Non-Linear Equipment to Transmission Systems and Distribution Networks in the United Kingdom},
+  organization = {Energy Networks Association},
+  year         = {2020},
+}
+
+@standard{noauthor_iec61000-3-6_2008,
+  title        = {{IEC} 61000-3-6: Assessment of Emission Limits for the Connection of Distorting Installations to {MV}, {HV} and {EHV} Power Systems},
+  organization = {International Electrotechnical Commission},
+  year         = {2008},
+}
+
+% ============================================================
+% Deterministic HHC literature
+% ============================================================
+@article{santos_considerations_2015,
+  author  = {Santos, I. N. and Cuk, V. and Almeida, P. M. and Bollen, M. H. J. and Ribeiro, P. F.},
+  title   = {Considerations on hosting capacity for harmonic distortions on transmission and distribution systems},
+  journal = {Electric Power Systems Research},
+  volume  = {119},
+  pages   = {199--206},
+  year    = {2015},
+  doi     = {10.1016/j.epsr.2014.09.020},
+}
+
+@article{nakhodchi_impact_2023,
+  author  = {Nakhodchi, N. and Bollen, M. H. J.},
+  title   = {Impact of modelling of {MV} network and remote loads on estimated harmonic hosting capacity for an {EV} fast charging station},
+  journal = {Electric Power Systems Research},
+  volume  = {214},
+  pages   = {108815},
+  year    = {2023},
+  doi     = {10.1016/j.epsr.2022.108815},
+}
+
+@article{carmelito_hosting_2023,
+  author  = {Carmelito, G. and Guglielmi, P. and Russo, A.},
+  title   = {Hosting Capacity Evaluation of Unbalanced Three-Phase Systems for Distributed Energy Resources},
+  journal = {IEEE Transactions on Power Delivery},
+  volume  = {38},
+  number  = {1},
+  pages   = {447--457},
+  year    = {2023},
+  doi     = {10.1109/TPWRD.2022.3186232},
+}
+
+@article{sakar_integration_2018,
+  author  = {Sakar, S. and Balci, M. E. and Abdel Aleem, S. H. E. and Zobaa, A. F.},
+  title   = {Integration of Large-Scale {PV} Plants in Non-Sinusoidal Environments: Considerations on Hosting Capacity and Harmonic Distortion Limits},
+  journal = {Renewable and Sustainable Energy Reviews},
+  volume  = {82},
+  pages   = {176--186},
+  year    = {2018},
+  doi     = {10.1016/j.rser.2017.09.016},
+}
+
+@article{sun_distribution_2012,
+  author  = {Sun, Y. and Zhang, G. and Xu, W. and Mayordomo, J. G.},
+  title   = {A Harmonically Coupled Admittance Matrix Model for {AC/DC} Converters},
+  journal = {IEEE Transactions on Power Systems},
+  volume  = {22},
+  number  = {4},
+  pages   = {1574--1582},
+  year    = {2007},
+  doi     = {10.1109/TPWRS.2007.907381},
+}
+
+@article{sun_incorporating_2012,
+  author  = {Sun, Y. and Luo, L. and Li, P. and Xu, W.},
+  title   = {Incorporating Load Diversity into Hosting Capacity Assessment of Distribution Feeders},
+  journal = {IEEE Transactions on Power Delivery},
+  volume  = {27},
+  number  = {2},
+  pages   = {809--816},
+  year    = {2012},
+  doi     = {10.1109/TPWRD.2011.2174203},
+}
+
+@article{sun_distribution_2022,
+  author  = {Sun, W. and Harrison, G. P. and Djokic, S. Z.},
+  title   = {Distribution network hosting capacity assessment: Incorporating probabilistic harmonic distortion limits using chance constrained optimal power flow},
+  journal = {IET Smart Grid},
+  volume  = {5},
+  number  = {2},
+  pages   = {63--75},
+  year    = {2022},
+  doi     = {10.1049/stg2.12052},
+}
+
+@article{vanacker_hosting_2026,
+  author  = {Van Acker, Tom and Ergun, Hakan},
+  title   = {Exact Lower Bound for Equitable Harmonic Hosting Capacity},
+  journal = {IEEE Transactions on Power Delivery},
+  volume  = {},
+  number  = {},
+  pages   = {1--12},
+  year    = {2025},
+  doi     = {10.1109/TPWRD.2025.3648618},
+}
+
+% ============================================================
+% Stochastic HHC and probabilistic HLF literature
+% ============================================================
+@article{pileggi1993,
+  author  = {Pileggi, D. J. and Gulachenski, E. M. and Root, C. E. and Gentile, T. J. and Emanuel, A. E.},
+  title   = {The Effect of Modern Compact Fluorescent Lights on Voltage Distortion},
+  journal = {IEEE Transactions on Power Delivery},
+  volume  = {8},
+  number  = {3},
+  pages   = {1451--1459},
+  year    = {1993},
+  doi     = {10.1109/61.252670},
+}
+
+@book{bollen2006,
+  author    = {Bollen, M. H. J. and Gu, I. Y. H.},
+  title     = {Signal Processing of Power Quality Disturbances},
+  publisher = {Wiley-IEEE Press},
+  year      = {2006},
+  isbn      = {978-0-471-73168-9},
+}
+
+@article{xu2011,
+  author  = {Xu, W. and Liu, X. and Liu, Y.},
+  title   = {An Investigation on the Validity of Power Direction Method for Harmonic Source Determination},
+  journal = {IEEE Transactions on Power Delivery},
+  volume  = {18},
+  number  = {1},
+  pages   = {214--219},
+  year    = {2003},
+  doi     = {10.1109/TPWRD.2002.803842},
+}
+
+@inproceedings{blanco2014,
+  author    = {Blanco, A. M. and Meyer, J. and Schegner, P.},
+  title     = {Calculation of Phase Angle Diversity for Time-Varying Harmonics},
+  booktitle = {International Conference on Renewable Energies and Power Quality (ICREPQ)},
+  year      = {2014},
+  pages     = {490},
+}
+
+@article{arghandeh2014,
+  author  = {Arghandeh, R. and von Meier, A. and Broadwater, R.},
+  title   = {Phasor-Based Assessment for Harmonic Sources in Distribution Networks},
+  journal = {Electric Power Systems Research},
+  volume  = {116},
+  pages   = {94--105},
+  year    = {2014},
+  doi     = {10.1016/j.epsr.2014.05.003},
+}
+
+@article{li2020,
+  author  = {Li, Z. and He, Z. and Song, Y. and Tang, L. and Wang, Y.},
+  title   = {Stochastic Assessment of Harmonic Propagation and Amplification in Power Systems Under Uncertainty},
+  journal = {IEEE Transactions on Power Delivery},
+  volume  = {36},
+  number  = {4},
+  pages   = {1149--1158},
+  year    = {2021},
+  doi     = {10.1109/TPWRD.2020.3002651},
+}
+
+@article{nakhodchi2022,
+  author  = {Nakhodchi, N. and Bakhtiari, H. and Bollen, M. H. J. and R{\"o}nnberg, S. K.},
+  title   = {Including Uncertainties in Harmonic Hosting Capacity Calculation of a Fast {EV} Charging Station Utilizing {Bayesian} Statistics and Harmonic Correlation},
+  journal = {Electric Power Systems Research},
+  volume  = {213},
+  pages   = {108697},
+  year    = {2022},
+  doi     = {10.1016/j.epsr.2022.108697},
+}
+
+@article{rodriguez2022,
+  author  = {Rodr{\'i}guez-Pajar{\'o}n, P. and Arranz-Gimon, A. and Zorita-Lamadrid, A. and Duque-Perez, O. and Morinigo-Sotelo, D.},
+  title   = {A Piecewise Probabilistic Harmonic Power Flow Approach in Unbalanced Residential Distribution Systems},
+  journal = {International Journal of Electrical Power \& Energy Systems},
+  volume  = {141},
+  pages   = {108114},
+  year    = {2022},
+  doi     = {10.1016/j.ijepes.2022.108114},
+}
+
+@article{xie2022,
+  author  = {Xie, X. and Peng, F. and Zhang, Y.},
+  title   = {A Data-Driven Probabilistic Harmonic Power Flow Approach in Power Distribution Systems with {PV} Generations},
+  journal = {Applied Energy},
+  volume  = {321},
+  pages   = {119331},
+  year    = {2022},
+  doi     = {10.1016/j.apenergy.2022.119331},
+}
+
+@article{cadenazarate2024,
+  author  = {Cadena-Zarate, C. and Caballero-Pe{\~n}a, J. and Osma-Pinto, G.},
+  title   = {Simulation-Based Probabilistic Harmonic Load Flow for the Study of {DERs} Integration in a Low-Voltage Distribution Network},
+  journal = {AIMS Electronics and Electrical Engineering},
+  volume  = {8},
+  number  = {1},
+  pages   = {53--70},
+  year    = {2024},
+  doi     = {10.3934/electreng.2024003},
+}
+
+% misc references cited in introduction
+@misc{international_energy_agency_world_2023,
+  author = {{International Energy Agency}},
+  title  = {World Energy Outlook 2023},
+  year   = {2023},
+  url    = {https://www.iea.org/reports/world-energy-outlook-2023},
+}
+
+@misc{energyville_paths_2023,
+  author = {{EnergyVille}},
+  title  = {Paths to a Climate-Neutral Belgium by 2050},
+  year   = {2023},
 }
 
 @article{vanacker_ivr,

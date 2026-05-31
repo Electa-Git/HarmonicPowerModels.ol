@@ -20,6 +20,9 @@
     &\text{reference bus voltage --~} \forall \Node \in \RefNodeSet, \Harmonic \in \HarmonicSet: \nonumber\\
     &\quad \RealVoltage_{\Node,\Harmonic,0} = \RealRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_a} \\
     &\quad \ImaginaryVoltage_{\Node,\Harmonic,0} = \ImaginaryRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_b} \\
+    &\text{reference bus PCE modes --~} \forall \Node \in \RefNodeSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet\backslash\{0\}: \nonumber\\
+    &\quad \RealVoltage_{\Node,\Harmonic,\PCEIndex} = 0, \label{eq_ref_bus_pce_re} \\
+    &\quad \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} = 0, \label{eq_ref_bus_pce_im} \\
     &\text{Kirchhoff's current law --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
     &\quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \RealCurrent_{\Edge\Node\AltNode,\Harmonic,\PCEIndex} + \mkern-9mu
     \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \RealCurrent_{\UnitTuple,\Harmonic,\PCEIndex}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic,\PCEIndex} \nonumber \\
@@ -79,17 +82,25 @@
     &\quad \sin(\phi_{\Unit,\Harmonic})_{\PCEIndex} \, \CurrentMagnitude_{\Unit,\Harmonic,0} = \ImaginaryCurrent_{\Unit,\Harmonic,\PCEIndex}, 
     \label{eq:imag_harmonic_unit_current_pce_alt} \\ 
     &\text{auxiliary variables --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
+    &\quad \LiftedVoltage^{\Sigma}_{\Node,\PCEIndex} = \sum_{\Harmonic \in \HarmonicSet} \LiftedVoltage_{\Node,\Harmonic,\PCEIndex}, \label{eq:lifted_voltage_sum} \\
+    &\quad \LiftedCurrent^{\Sigma}_{\Edge\Node\AltNode,\PCEIndex} = \sum_{\Harmonic \in \HarmonicSet} \LiftedCurrent_{\Edge\Node\AltNode,\Harmonic,\PCEIndex}, \label{eq:lifted_current_sum} \\
+    &\text{quadratic lifting ($k=0$) --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
+    &\quad \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},0} \Big( \RealCurrent_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \RealCurrent_{\Node,\Harmonic,\bar{\kappa}_{2}} + \ImaginaryCurrent_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \ImaginaryCurrent_{\Node,\Harmonic,\bar{\kappa}_{2}} \Big)
+    \leq \LiftedCurrent_{\Node,\Harmonic,0}, \\
+    &\quad \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},0} \Big( \RealVoltage_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \RealVoltage_{\Node,\Harmonic,\bar{\kappa}_{2}} + \ImaginaryVoltage_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \ImaginaryVoltage_{\Node,\Harmonic,\bar{\kappa}_{2}} \Big)
+    \leq \LiftedVoltage_{\Node,\Harmonic,0}, \\
+    &\text{quadratic lifting ($k\neq0$) --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet\backslash\{0\}: \nonumber \\
     &\quad \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \Big( \RealCurrent_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \RealCurrent_{\Node,\Harmonic,\bar{\kappa}_{2}} + \ImaginaryCurrent_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \ImaginaryCurrent_{\Node,\Harmonic,\bar{\kappa}_{2}} \Big)
-    \leq \LiftedCurrent_{\Node,\Harmonic,\PCEIndex}, \\
+    = \LiftedCurrent_{\Node,\Harmonic,\PCEIndex}, \\
     &\quad \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \Big( \RealVoltage_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \RealVoltage_{\Node,\Harmonic,\bar{\kappa}_{2}} + \ImaginaryVoltage_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \ImaginaryVoltage_{\Node,\Harmonic,\bar{\kappa}_{2}} \Big)
-    \leq \LiftedVoltage_{\Node,\Harmonic,\PCEIndex}, \nonumber \\ & \\
+    = \LiftedVoltage_{\Node,\Harmonic,\PCEIndex}, \nonumber \\ & \\
     &\text{root mean square voltage --~} \forall \Node \in \NodeSet: \nonumber \\
-    &\quad \Expectation(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedVoltage}_{\Node,\Harmonic}) + \lambda(\varepsilon) \sqrt{\Variance(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedVoltage}_{\Node,\Harmonic})} \leq (\MaximumVoltage_{\Node})^{2} - (\FundamentalVoltageMagnitude{\Node})^{2}, \label{eq:soc_rms} \nonumber \\ & \\
+    &\quad \LiftedVoltage^{\Sigma}_{\Node,0} + \sqrt{\frac{1-\varepsilon}{\varepsilon}} \sqrt{\mkern-8mu \sum_{\PCEIndex \in \PCESet\backslash\{0\}} \mkern-8mu \langle\Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle\,(\LiftedVoltage^{\Sigma}_{\Node,\PCEIndex})^{2}} \leq (\MaximumVoltage_{\Node})^{2} - (\FundamentalVoltageMagnitude{\Node})^{2}, \label{eq:soc_rms} \nonumber \\ & \\
     &\text{total harmonic voltage --~} \forall \Node \in \NodeSet: \nonumber \\
-    &\quad \Expectation(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedVoltage}_{\Node,\Harmonic}) + \lambda(\varepsilon) \sqrt{\Variance(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedVoltage}_{\Node,\Harmonic})} \leq
+    &\quad \LiftedVoltage^{\Sigma}_{\Node,0} + \sqrt{\frac{1-\varepsilon}{\varepsilon}} \sqrt{\mkern-8mu \sum_{\PCEIndex \in \PCESet\backslash\{0\}} \mkern-8mu \langle\Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle\,(\LiftedVoltage^{\Sigma}_{\Node,\PCEIndex})^{2}} \leq
     (\VoltageParameter_{\Node}^{\text{thd}})^2\,(\FundamentalVoltageMagnitude{\Node})^{2},  \label{eq:soc_thd} \nonumber \\ & \\
     &\text{individual harmonic voltage --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
-    &\quad \Expectation(\bar{\LiftedVoltage}_{\Node,\Harmonic}) + \lambda(\varepsilon) \sqrt{\Variance(\bar{\LiftedVoltage}_{\Node,\Harmonic})} \leq (\VoltageParameter^{\text{ihd}}_{\Node,\Harmonic})^{2}\,(\FundamentalVoltageMagnitude{\Node})^{2}. \\
+    &\quad \LiftedVoltage_{\Node,\Harmonic,0} + \sqrt{\frac{1-\varepsilon}{\varepsilon}} \sqrt{\mkern-8mu \sum_{\PCEIndex \in \PCESet\backslash\{0\}} \mkern-8mu \langle\Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle\,\LiftedVoltage_{\Node,\Harmonic,\PCEIndex}^{2}} \leq (\VoltageParameter^{\text{ihd}}_{\Node,\Harmonic})^{2}\,(\FundamentalVoltageMagnitude{\Node})^{2}. \\
     &\text{root mean square current --~} \forall \Edge\Node\AltNode \in \EdgeTupleSet: \nonumber \\
-    &\quad \Expectation(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedCurrent}_{\Node,\Harmonic}) + \lambda(\varepsilon) \sqrt{\Variance(\sum_{\Harmonic \in \HarmonicSet} \bar{\LiftedCurrent}_{\Node,\Harmonic})} \leq (\RatedCurrent_{\Edge\Node\AltNode})^{2} - (\FundamentalCurrentMagnitude{\Edge\Node\AltNode})^2,\label{eq:soc_rms_current} \nonumber \\ & 
+    &\quad \LiftedCurrent^{\Sigma}_{\Edge\Node\AltNode,0} + \sqrt{\frac{1-\varepsilon}{\varepsilon}} \sqrt{\mkern-8mu \sum_{\PCEIndex \in \PCESet\backslash\{0\}} \mkern-8mu \langle\Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle\,(\LiftedCurrent^{\Sigma}_{\Edge\Node\AltNode,\PCEIndex})^{2}} \leq (\RatedCurrent_{\Edge\Node\AltNode})^{2} - (\FundamentalCurrentMagnitude{\Edge\Node\AltNode})^2, \label{eq:soc_rms_current} \nonumber \\ &
 \end{IEEEeqnarray}

@@ -1,10 +1,9 @@
 \section{Mathematical Framework}
 \label{sec:mathematical_framework}
-% reviewed until line 130, TVA
 
-This section presents the mathematical framework for the stochastic harmonic hosting capacity problem of a phase-balanced three-phase power system, considering uncertainty on the angle of the harmonic current injected by the connected harmonic units. To this end, the formulation for the deterministic harmonic hosting capacity presented in~\cite{vanacker_dhhc} is extended. For brevity, the original formulation is not repeated in this section, rather the relevant variables and constraints are highlighted and transformed to their stochastic counterpart. 
+This section presents the mathematical framework for the stochastic harmonic hosting capacity problem of a phase-balanced three-phase power system, considering uncertainty on the angle of the harmonic current injected by the connected harmonic units. To this end, the formulation for the deterministic harmonic hosting capacity presented in~\cite{vanacker_dhhc} is extended. For brevity, the original formulation is not repeated in this section, rather the relevant variables and constraints are highlighted and transformed to their stochastic counterpart.
 
-First, Section~\ref{sec:polynomial_chaos_expansion} introduces the generalized polynomial chaos expansion method used to incorporate random variables into the formulation. Second, Section~\ref{sec:harmonic_current_angle_uncertainty} introduces the uncertainty on the angle of the injected harmonic current and a method to approximate the related trigonometric functions in the context of polynomial chaos expansion. Finally, Section~\ref{sec:stochastic_harmonic_hosting_capacity} presents the transformation of the deterministic formulation presented in~\cite{vanacker_dhhc} into its stochastic counterpart. For the full stochastic formulation of the harmonic hosting capacity problem, the reader is referred to Appendix~\ref{app:optimization_model}. 
+First, Section~\ref{sec:polynomial_chaos_expansion} introduces the generalized polynomial chaos expansion method used to incorporate random variables into the formulation. Second, Section~\ref{sec:harmonic_current_angle_uncertainty} introduces the uncertainty on the angle of the injected harmonic current and a method to approximate the related trigonometric functions in the context of polynomial chaos expansion. Third, Section~\ref{sec:stochastic_harmonic_hosting_capacity} presents the transformation of the deterministic formulation into its stochastic counterpart and characterizes the resulting problem class. Finally, Section~\ref{sec:absolute_equality_lp} shows that for the absolute equality fairness criterion the problem reduces to an exact linear program. For the full stochastic formulation of the harmonic hosting capacity problem, the reader is referred to Appendix~\ref{app:optimization_model}.
 
 In the following table, a general overview and generic examples of the notation used throughout the mathematical framework are provided.
 \begin{table}[ht!]
@@ -12,7 +11,7 @@ In the following table, a general overview and generic examples of the notation 
     \begin{tabular}{ l l c }
         element             & notation                  & example                           \\ \hline
         index               & lower-case italic         & $x$                               \\
-        set                 & calligraphic              & $\mathcal{X}$                     \\ 
+        set                 & calligraphic              & $\mathcal{X}$                     \\
         (random) variable   & sans serif                & $\mathsf{X}$                      \\
         parameter           & italic                    & $X$                               \\
         approximation       & hat notation              & $\hat{\mathsf{X}}$                \\
@@ -23,9 +22,9 @@ In the following table, a general overview and generic examples of the notation 
 \subsection{Background on Polynomial Chaos Expansion}
 \label{sec:polynomial_chaos_expansion}
 
-This section introduces the necessary background on polynomial chaos expansion, a method for representing random variables in terms of polynomial functions. Concretely, a vector of input random variables, e.g., harmonic current angles, is propagated through the set of constraints of the harmonic hosting capacity problem to obtain a vector of unknown output random variables, e.g., harmonic bus voltages. 
+This section introduces the necessary background on polynomial chaos expansion, a method for representing random variables in terms of polynomial functions. Concretely, a vector of input random variables, e.g., harmonic current angles, is propagated through the set of constraints of the harmonic hosting capacity problem to obtain a vector of unknown output random variables, e.g., harmonic bus voltages.
 
-First, uncertainty quantification of random variables is introduced in terms of polynomial chaos expansion. Second and third, the impact of the polynomial chaos expansion method on equality and inequality constraints is discussed, respectively. For a detailed treatment of the subject, the reader is referred to~\cite{sullivan_introduction_2015}. 
+First, uncertainty quantification of random variables is introduced in terms of polynomial chaos expansion. Second and third, the impact of the polynomial chaos expansion method on equality and inequality constraints is discussed, respectively. For a detailed treatment of the subject, the reader is referred to~\cite{sullivan_introduction_2015}.
 
 \subsubsection{Uncertainty Quantification}
 In general, it is assumed that the stochastic input is captured by a real-valued finite-variance stochastic germ~$\bar{\omega} = [\omega_{1},...,\omega_{N}]^{\text{T}}$. Optimization solvers are unable to handle equations involving random variables directly, necessitating the formulation of a deterministic equivalent of the stochastic problem. For this purpose, polynomial chaos expansion approximates any real-valued random variable~$\RVX$ of finite variance that is a function of the stochastic germ~$\bar{\omega}$ as a linear combination~$\ApproxRVX$ of the orthogonal polynomial basis~$[\Polynoom_{\PCEIndex}(\bar{\omega})]_{\PCEIndex \in \PCESet}$, where $\PCESet\subseteq\NaturalNumberSet_{0}$, as,
@@ -33,201 +32,164 @@ In general, it is assumed that the stochastic input is captured by a real-valued
     \ApproxRVX &=& \sum_{\PCEIndex \in \PCESet} \CoefficientX_{\PCEIndex} \cdot \Polynoom_{\PCEIndex} =
     \sum_{\PCEIndex \in \PCESet} \frac{\langle \RVX, \Polynoom_{\PCEIndex} \rangle}{\langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle} \cdot \Polynoom_{\PCEIndex}, \label{eq:gpc_expansion}
 \end{IEEEeqnarray}
-where~$\CoefficientX_{\PCEIndex} \in \RealNumberSet$ denote the polynomial chaos expansion coefficients and $\langle \cdot,\cdot \rangle$ denotes the inner product. Through the use of the polynomial chaos expansion coefficients, a deterministic equivalent can be built for the stochastic problem. 
+where~$\CoefficientX_{\PCEIndex} \in \RealNumberSet$ denote the polynomial chaos expansion coefficients and $\langle \cdot,\cdot \rangle$ denotes the inner product. Through the use of the polynomial chaos expansion coefficients, a deterministic equivalent can be built for the stochastic problem. The choice of orthogonal polynomial basis depends on the distribution of the stochastic germ. In this work, following the Askey scheme~\cite{sullivan_introduction_2015}, Beta-distributed germ corresponds to Jacobi polynomials.
 
 \subsubsection{Uncertainty Projection onto Equality Constraints}
 An optimization problem requires an intrusive approach to exploit polynomial chaos expansion. Through polynomial chaos expansion, any stochastic equality constraint is equivalently represented by $|\PCESet|$ deterministic equality constraints. The total number of resulting equations, known as the cardinality of the model~$|\PCESet|$, is determined by the number of independent uncertainty sources and the highest polynomial degree as,
 \begin{IEEEeqnarray}{ r C l }
     |\PCESet| &=& \frac{(|\bar{\omega}| + \delta)!}{|\bar{\omega}|!\,\delta!},
 \end{IEEEeqnarray}
-where~$\delta$ denotes the maximum degree of the polynomial basis functions. The truncation error~$\norm{\RVX-\ApproxRVX}$ decays to zero for~$|\PCESet| \to \infty$. 
+where~$\delta$ denotes the maximum degree of the polynomial basis functions. The truncation error~$\norm{\RVX-\ApproxRVX}$ decays to zero for~$|\PCESet| \to \infty$.
 
-Additionally, the Galerkin projection is required to form a system of equations for the stochastic modes, which are generally coupled together~(Ch. 12 in~\cite{sullivan_introduction_2015}). For the purpose of the harmonic hosting capacity problem, in terms of the Galerkin projection, two distinct operations stand out: summation and multiplication. As an example, consider three approximated random variables~$\ApproxRVX$,~$\ApproxRVY$ and~$\ApproxRVZ$ defined using the same polynomial basis. The Galerkin projection (gp) of both operations is,
+Additionally, the Galerkin projection is required to form a system of equations for the stochastic modes, which are generally coupled together~(Ch.~12 in~\cite{sullivan_introduction_2015}). For the purpose of the harmonic hosting capacity problem, in terms of the Galerkin projection, two distinct operations stand out: summation and multiplication. As an example, consider three approximated random variables~$\ApproxRVX$,~$\ApproxRVY$ and~$\ApproxRVZ$ defined using the same polynomial basis. The Galerkin projection (gp) of both operations is,
 \begin{IEEEeqnarray}{ l C l l}
     \ApproxRVZ = \ApproxRVX + \ApproxRVY &\gp& \CoefficientZ_{\PCEIndex} = \CoefficientX_{\PCEIndex} + \CoefficientY_{\PCEIndex},~&\forall \PCEIndex \in \PCESet,~ \label{eq:gp_sum} \\
     \ApproxRVZ = \ApproxRVX \cdot \ApproxRVY &\gp& \CoefficientZ_{\PCEIndex} = \mkern-15mu \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \,(\CoefficientX_{\bar{\kappa}_{1}} \cdot \CoefficientY_{\bar{\kappa}_{2}}),\quad&\forall \PCEIndex \in \PCESet,~ \label{eq:gp_product}
 \end{IEEEeqnarray}
-where~$P^{*}(\PCESet,2)$ denotes the 2-tuples of~$\PCESet$. In general, the multiplication tensor is denoted as $M_{\bar{\kappa},k}$ is determined as,
+where~$P^{*}(\PCESet,2)$ denotes the 2-tuples of~$\PCESet$. The multiplication tensor~$M_{\bar{\kappa},k}$ is determined as,
 \begin{IEEEeqnarray}{ r C l }
     M_{\bar{\kappa},\PCEIndex} = \frac{\langle \Polynoom_{\bar{\kappa}_{1}},...,\Polynoom_{\bar{\kappa}_{|\bar{\kappa}|}},\Polynoom_{k} \rangle}{\langle \Polynoom_{k},\Polynoom_{k}\rangle}, \label{eq_m_tensor_def}
 \end{IEEEeqnarray}
-and can be computed ahead-of-time. 
+and can be computed ahead-of-time. For $\PCEIndex=0$, orthogonality of the basis implies $M_{\bar{\kappa},0}$ is diagonal with strictly positive entries; for $\PCEIndex \neq 0$, the tensor has mixed-sign off-diagonal entries, and the resulting matrix $[M_{\bar{\kappa},k}]_{{\bar\kappa}}$ is generally indefinite.
 
 \subsubsection{Chance-Constraint Reformulation of Inequality Constraints}
 
-It is infeasible to enforce deterministic bounds on infinite-support continuous random variables. Alternatively, chance constraints ensure that the probability of a random variable~$\RVX$ violating a deterministic bound~$x^{\text{min}}$ or~$x^{\text{max}}$ is below a certain level~$\varepsilon$: 
+All harmonic limits in this work are upper bounds. It is infeasible to enforce a deterministic upper bound on an infinite-support continuous random variable. Alternatively, a chance constraint ensures that the probability of~$\RVX$ exceeding a deterministic limit~$x^{\text{max}}$ is below a risk level~$\varepsilon$:
 \begin{IEEEeqnarray}{ r C l }
-\Probability(\RVX \geq x^{\text{min}}) &\geq& (1- \varepsilon)~\text{or}~\Probability(\RVX \leq x^{\text{max}}) \geq (1- \varepsilon).
+    \Probability(\RVX \leq x^{\text{max}}) &\geq& 1 - \varepsilon.
 \end{IEEEeqnarray}
-Equivalently, the moment-based reformulation states this as, 
-\begin{IEEEeqnarray}{  C  }
-x^{\text{min}} \leq \Expectation(\RVX) \pm \lambda(\varepsilon) \sqrt{\Variance(\RVX)} \leq x^{\text{max}}, \label{eq:cc_constraint}
-\end{IEEEeqnarray} 
-where~$\lambda(\varepsilon) > 0$ is chosen based on knowledge of the random variable. For example, for a Gaussian random variable, the reformulation is exact with~$\lambda(\varepsilon)=\lambda_{\Phi}(\varepsilon) := \Phi^{-1}(1 - \varepsilon)$, where $\Phi(\cdot)$ is the quantile function of the standard Gaussian distribution~$\mathcal{N}(0,1)$. The expectation~$\Expectation$ and variance~$\Variance$ of an approximated random variable~$\ApproxRVX$ are,
+Since the output random variables are nonlinear functions of a Beta-distributed input, their output distribution is generally non-Gaussian and unknown. The distribution-free one-sided Cantelli bound is therefore adopted,
+\begin{IEEEeqnarray}{ r C l }
+    \Expectation(\RVX) + \lambda(\varepsilon)\sqrt{\Variance(\RVX)} \leq x^{\text{max}}, \quad \lambda(\varepsilon) = \sqrt{\frac{1-\varepsilon}{\varepsilon}}, \label{eq:cc_constraint}
+\end{IEEEeqnarray}
+which guarantees the chance constraint for any distribution with finite variance~\cite{sullivan_introduction_2015}, without any assumption on how uncertainty propagates through the nonlinear network equations.
+
+The expectation~$\Expectation$ and variance~$\Variance$ of an approximated random variable~$\ApproxRVX$ are expressed in terms of the polynomial chaos expansion coefficients as,
 \begin{IEEEeqnarray}{ r C l }
     \Expectation[\ApproxRVX]   &=& \CoefficientX_{0}, \label{eq:gpc_expectation} \\
     \Variance[\ApproxRVX]      &=& \mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \CoefficientX_{\PCEIndex}^{2}. \label{eq:gpc_variance}
-\end{IEEEeqnarray} 
-
-By integrating (\ref{eq:gpc_expectation}) and (\ref{eq:gpc_variance}) into (\ref{eq:cc_constraint}), the deterministic equivalent of the chance constraints is obtained in terms of the polynomial chaos expansion coefficients.
+\end{IEEEeqnarray}
+Substituting~\eqref{eq:gpc_expectation}--\eqref{eq:gpc_variance} into~\eqref{eq:cc_constraint} gives the deterministic equivalent in terms of the polynomial chaos expansion coefficients, which is a second-order cone constraint in the coefficients~$\{\CoefficientX_{\PCEIndex}\}_{\PCEIndex \in \PCESet}$.
 
 \subsection{Uncertainty on Angle of Harmonic Current Injection}
 \label{sec:harmonic_current_angle_uncertainty}
 
-\begin{table*}[t!]
-    \centering
-    \caption{Error [-] on the moments related to the $n$-term Taylor series approximation~$\hat{\cos}(\phi)$ and~$\hat{\sin}(\phi)$, and the subsequent $\delta$-degree polynomial chaos expansion approximation~$\hat{\cos}(\hat{\phi})$ and~$\hat{\sin}(\hat{\phi})$. To this end, the approximations are sampled~100,000~times.}
-    \label{tab:precision}
-    \begin{tabular}{ c | c | c c c c | c c c c | c c c c }
-    \multirow{2}{*}{$\phi$} 
-            &                           & \multicolumn{4}{ c | }{error [-] ($n=3,\delta=2$)} 
-                                        & \multicolumn{4}{ c | }{error [-] ($n=4,\delta=2$)}                          
-                                        & \multicolumn{4}{ c }{error [-] ($n=3,\delta=3$)}                        \\
-            &                           & $\Expectation$    & $\Variance$       & $\Skewness$       & $\Kurtosis$
-                                        & $\Expectation$    & $\Variance$       & $\Skewness$       & $\Kurtosis$
-                                        & $\Expectation$    & $\Variance$       & $\Skewness$       & $\Kurtosis$   \\ \hline
-    \multirow{4}{*}{\rotatebox[origin=c]{90}{$\mathcal{N}(20,5)$}} 
-            & $\hat{\cos}(\phi)$        & 5.66e-6           & 4.63e-4           & 8.56e-4           & 3.20e-3 
-                                        & 2.15e-8           & 2.28e-6           & 6.13e-6           & 2.66e-5
-                                        & 5.67e-6           & 4.63e-4           & 8.64e-4           & 3.23e-3       \\
-            & $\hat{\cos}(\hat{\phi})$  & 4.03e-5           & 7.25e-4           & 3.34e-3           & 4.19e-2      
-                                        & 8.44e-5           & 2.32e-3           & 1.33e-2           & 8.45e-2
-                                        & 3.69e-5           & 1.16e-3           & 6.74e-3           & 4.79e-2       \\
-            & $\hat{\sin}(\phi)$        & 1.01e-6           & 1.11e-5           & 2.10e-4           & 1.14e-3      
-                                        & 3.15e-9           & 4.18e-8           & 9.71e-7           & 8.13e-6
-                                        & 1.01e-6           & 1.11e-5           & 2.03e-4           & 1.35e-3       \\
-            & $\hat{\sin}(\hat{\phi})$  & 1.85e-4           & 2.14e-3           & 3.96e-3           & 1.28463
-                                        & 8.84e-5           & 1.43e-4           & 1.81e-2           & 1.49375
-                                        & 2.74e-4           & 5.27e-4           & 1.66e-2           & 0.15491       \\ \arrayrulecolor{gray!20} \hline
-    \multirow{4}{*}{\rotatebox[origin=c]{90}{$\mathcal{B}(2,5)$}} 
-            & $\hat{\cos}(\phi)$        & 1.10e-5           & 9.97e-4           & 1.10e-3           & 3.51e-3
-                                        & 7.72e-8           & 8.48e-6           & 1.29e-5           & 4.48e-5
-                                        & 5.67e-6           & 4.63e-4           & 8.64e-4           & 3.23e-3       \\
-            & $\hat{\cos}(\hat{\phi})$  & 4.44e-5           & 1.27e-3           & 1.07e-2           & 4.97e-2
-                                        & 5.51e-5           & 3.84e-3           & 1.70e-2           & 6.85e-2
-                                        & 3.69e-5           & 1.16e-3           & 6.74e-3           & 4.79e-2       \\
-            & $\hat{\sin}(\phi)$        & 3.30e-6           & 2.61e-5           & 1.18e-4           & 3.84e-4
-                                        & 1.95e-8           & 1.71e-7           & 9.03e-7           & 3.18e-6
-                                        & 1.01e-6           & 1.11e-5           & 2.03e-4           & 1.35e-3       \\
-            & $\hat{\sin}(\hat{\phi})$  & 2.67e-4           & 1.53e-3           & 4.45e-3           & 0.10288
-                                        & 6.55e-4           & 7.25e-4           & 2.30e-4           & 0.10546
-                                        & 2.74e-4           & 5.27e-4           & 1.66e-2           & 0.15491       \\ \arrayrulecolor{gray!20} \hline
-    \end{tabular}
-\end{table*}
+This section discusses the treatment of uncertain angles~$\phi_{\Unit,\Harmonic}$ of harmonic currents injected by harmonic units~$\Unit \in \HarmonicUnitSet$, for all harmonics~$\Harmonic \in \HarmonicSet$. Throughout, a polynomial basis of degree~$\delta = 2$ is used, as it has been shown that polynomial basis functions with degree two capture the non-linear nature of
+the power flow equations without significant loss of accuracy~\cite{mulphordt_generalized_framework_for_chance_constrained_optimal_power_flow}.
 
-This section presents a detailed discussion on the treatment of an uncertain angle~$\phi_{\Unit,\Harmonic}$ of harmonic current injected by the harmonic units~$\Unit \in \HarmonicUnitSet$, for all harmonics~$\Harmonic \in \HarmonicSet$, excluding the fundamental harmonic\footnote{In~\cite{vanacker_dhhc}, this set was originally denoted as~$\HarmonicSet\backslash\{1\}$. However, here, the set notation is simplified to~$\HarmonicSet$ as only the second-order cone model is considered.}. As introduced in the previous section, it is assumed that all random variables~$\phi_{\Unit,\Harmonic}$ are captured by a stochastic germ~$\bar{\omega}$, and as such, are approximated through the orthogonal polynomial basis~$[\Polynoom_{\PCEIndex}(\bar{\omega})]_{\PCEIndex \in \PCESet}$ as,
+As shown in Section~\ref{sec:uncertainty}, the phase angles of a given unit across different harmonic orders exhibit strong mutual dependency, and their marginal distributions are well approximated by a single shared Beta distribution with shared shape parameters and harmonic-specific location and scale parameters. Each harmonic angle is recovered using a harmonic-specific affine transformation. The angles of different units are assumed to be mutually independent, each driven by its own Beta distribution, so the total germ vector has dimension~$|\HarmonicUnitSet|$ and the cardinality of the model is~$|\PCESet| = (|\HarmonicUnitSet|+2)! / (|\HarmonicUnitSet|!\,2!)$. Given the affine transformation, the polynomial chaos expansion coefficients of~$\phi_{\Unit,\Harmonic}$ are non-zero only at indices~$k=0$ and~$k=1$ within the~$\delta=2$ basis.
+
+In the deterministic formulation of the harmonic hosting capacity problem presented in~\cite{vanacker_dhhc}, the harmonic current magnitude~$\CurrentMagnitude_{\Unit,\Harmonic}$ is related to its rectangular components using the angle~$\phi_{\Unit,\Harmonic}$, as,
 \begin{IEEEeqnarray}{ l }
-    \hat{\phi}_{\Unit,\Harmonic} = \sum_{\PCEIndex \in \PCESet} \phi_{\Unit,\Harmonic,\PCEIndex} \cdot \Polynoom_{\PCEIndex}. 
-\end{IEEEeqnarray}
-In the deterministic formulation of the harmonic hosting capacity problem presented in~\cite{vanacker_dhhc}, the harmonic current magnitude~$\CurrentMagnitude_{\Unit,\Harmonic}$ of the harmonic units~$\Unit \in \HarmonicUnitSet$, i.e., the to-be-determined hosted harmonic capacity, is related to its rectangular components~$\RealCurrent_{\Unit,\Harmonic}$ and~$\ImaginaryCurrent_{\Unit,\Harmonic}$, using the angle~$\phi_{\Unit,\Harmonic}$, as,
-\begin{IEEEeqnarray}{ l }
-        \cos(\phi_{\Unit,\Harmonic}) \, \CurrentMagnitude_{\Unit,\Harmonic} = 
+        \cos(\phi_{\Unit,\Harmonic}) \, \CurrentMagnitude_{\Unit,\Harmonic} =
         \RealCurrent_{\Unit,\Harmonic}, \quad \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet,\label{eq:real_harmonic_unit_current} \\
         \sin(\phi_{\Unit,\Harmonic}) \, \CurrentMagnitude_{\Unit,\Harmonic} =
         \ImaginaryCurrent_{\Unit,\Harmonic}, \quad \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet. \label{eq:imag_harmonic_unit_current}
 \end{IEEEeqnarray}
-Direct substitution of the approximated random variable~$\hat{\phi}_{\Unit,\Harmonic}$ in~\eqref{eq:real_harmonic_unit_current} and~\eqref{eq:imag_harmonic_unit_current} is impossible, since the Galerkin projection is not directly defined for trigonometric functions. However, alternatively, as suggested in~\cite{sullivan_introduction_2015}, such functions can be approximated by a Taylor series as, 
+Direct substitution of the approximated angle~$\hat{\phi}_{\Unit,\Harmonic}$ is impossible, since the Galerkin projection is not defined for trigonometric functions. Instead, as suggested in~\cite{sullivan_introduction_2015}, the trigonometric functions are approximated by a truncated Taylor series,
 \begin{IEEEeqnarray}{ l }
     \cos(\phi) \approx \hat{\cos}(\phi) = 1 - \frac{\phi^2}{2!} + \frac{\phi^4}{4!} - \frac{\phi^6}{6!} + ... \, , \\
     \sin(\phi) \approx \hat{\sin}(\phi) = \phi - \frac{\phi^3}{3!} + \frac{\phi^5}{5!} - \frac{\phi^7}{7!} + ... \, ,
 \end{IEEEeqnarray}
-and in contrast to the original trigonometric functions, the Galerkin projection is defined for their Taylor expansion as,
-\begin{IEEEeqnarray}{ l }
-    \hat{\cos}(\hat{\phi}) \gp \cos(\phi)_{\PCEIndex} = 0^{k} + \mkern-25mu \sum_{n \in \{2,4,6,...\}} \mkern-25mu (\texttt{-}1)^{\frac{n}{2}} \cdot \mkern-17mu \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-17mu\frac{M_{\bar{\kappa},\PCEIndex}}{n!} \cdot \prod_{\kappa \in \bar{\kappa}} \phi_{\kappa}, \nonumber \\
-    \mkern355mu \forall \PCEIndex \in \PCESet,\\
-    \hat{\sin}(\hat{\phi}) \gp \sin(\phi)_{\PCEIndex} = \phi_{k} + \mkern-25mu \sum_{n \in \{3,5,7,...\}} \mkern-25mu (\texttt{-}1)^{\frac{n-1}{2}} \cdot \mkern-17mu \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-17mu\frac{M_{\bar{\kappa},\PCEIndex}}{n!} \cdot \prod_{\kappa \in \bar{\kappa}} \phi_{\kappa}, \nonumber \\
-    \mkern355mu \forall \PCEIndex \in \PCESet.
-\end{IEEEeqnarray}
-Note that the first term of the Galerkin projection of the cosine function equals one for the zeroth k-index and zero for all others.
-
-Table~\ref{tab:precision} illustrates the accuracy of the approximation in terms of the number of terms of the Taylor series and degree of polynomial basis. Given the stochastic nature of the terms under investigation, precision is expressed in terms of its moments, i.e., expectation~$\Expectation$, variance~$\Variance$, skewness~$\Skewness$ and kurtosis~$\Kurtosis$. In summary, for first-quadrant angles described by a distribution exactly captured by a polynomial basis of degree two, e.g., normal or uniform distribution, a three-term Taylor series of the trigonometric functions performs adequately without the need to increase the degree of the polynomial basis beyond two. Exploitation of the trigonometric relations,
+whose Galerkin projection is well-defined. Exploiting~\eqref{eq:gp_product} and the known polynomial chaos expansion coefficients of~$\hat{\phi}_{\Unit,\Harmonic}$, the Galerkin projection yields precomputed scalar coefficients~$\cos(\phi_{\Unit,\Harmonic})_k$ and~$\sin(\phi_{\Unit,\Harmonic})_k$ for each~$k \in \PCESet$. It is important to note that these are parameters, not optimization variables. A four-term Taylor series ($n=4$) is adequate for first-quadrant Beta-distributed angles. Finally, exploitation of the trigonometric addition relations,
 \begin{IEEEeqnarray}{ l }
     \sin(\phi + \varphi) = \sin(\phi)\cos(\varphi) + \cos(\phi)\sin(\varphi), \label{eq:sin(a+b)} \\
     \cos(\phi + \varphi) = \cos(\phi)\cos(\varphi) - \sin(\phi)\sin(\varphi), \label{eq:cos(a+b)}
 \end{IEEEeqnarray}
-allows to cast any uncertain angle as the sum of a first-quadrant uncertain angle~$\phi$ and a deterministic angle~$\varphi$. Given the deterministic nature of the second angle, the Galerkin projection of~\eqref{eq:sin(a+b)} and~\eqref{eq:cos(a+b)} reduces to a linear combination, following~\eqref{eq:gp_sum}.
+allows any uncertain angle outside the first quadrant to be written as the sum of a first-quadrant uncertain angle~$\phi$ and a deterministic offset~$\varphi$. Since~$\varphi$ is deterministic, the Galerkin projection of~\eqref{eq:sin(a+b)}--\eqref{eq:cos(a+b)} reduces to a linear combination via~\eqref{eq:gp_sum}.
 
-\subsection{Stochastic Harmonic Hosting Capacity}
+\subsection{General Stochastic Harmonic Hosting Capacity}
 \label{sec:stochastic_harmonic_hosting_capacity}
 
-This section presents the reformulation of the deterministic harmonic hosting capacity model presented in~\cite{vanacker_dhhc} to obtain a stochastic harmonic hosting capacity model using polynomial chaos expansion. Specifically, the stochastic harmonic hosting capacity model aims at determining a deterministic harmonic hosting capacity given uncertainty on the harmonic current angles while complying with chance constraints on (harmonic) voltages and currents. Given that the problem is formulated from the perspective of the power system operator, it is most practical to suggest deterministic rather than stochastic harmonic budgets for its costumers, as interpretation of the latter becomes obscure. Note that a deterministic harmonic hosting capacity in a polynomial chaos expansion context implies that all~$\CurrentMagnitude_{\Unit,\Harmonic,\PCEIndex}$ equals zero for any non-zero index~$\PCEIndex$. As such, the polynomial chaos expansion counterparts of~\eqref{eq:real_harmonic_unit_current} and~\eqref{eq:imag_harmonic_unit_current} are,
+This section presents the reformulation of the deterministic harmonic hosting capacity model presented in~\cite{vanacker_dhhc} to obtain a stochastic harmonic hosting capacity model using polynomial chaos expansion. The stochastic model aims at determining a \emph{deterministic} harmonic hosting capacity given uncertainty on the harmonic current angles, while complying with chance constraints on (harmonic) voltages and currents. Given that the problem is formulated from the perspective of the power system operator, it is most practical to suggest deterministic rather than stochastic harmonic budgets for its customers, as interpretation of the latter becomes obscure. A deterministic harmonic hosting capacity in a polynomial chaos expansion context implies that~$\CurrentMagnitude_{\Unit,\Harmonic,\PCEIndex} = 0$ for any non-zero index~$\PCEIndex$. As such, the polynomial chaos expansion counterparts of~\eqref{eq:real_harmonic_unit_current} and~\eqref{eq:imag_harmonic_unit_current} are,
 \begin{IEEEeqnarray}{ l }
-    \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} \, \CurrentMagnitude_{\Unit,\Harmonic,0} = \RealCurrent_{\Unit,\Harmonic,\PCEIndex}, 
+    \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} \, \CurrentMagnitude_{\Unit,\Harmonic,0} = \RealCurrent_{\Unit,\Harmonic,\PCEIndex},
         \quad \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet,
     \label{eq:real_harmonic_unit_current_pce} \\
-    \sin(\phi_{\Unit,\Harmonic})_{\PCEIndex} \, \CurrentMagnitude_{\Unit,\Harmonic,0} = \ImaginaryCurrent_{\Unit,\Harmonic,\PCEIndex}, 
-        \quad \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet. 
+    \sin(\phi_{\Unit,\Harmonic})_{\PCEIndex} \, \CurrentMagnitude_{\Unit,\Harmonic,0} = \ImaginaryCurrent_{\Unit,\Harmonic,\PCEIndex},
+        \quad \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet.
     \label{eq:imag_harmonic_unit_current_pce}
 \end{IEEEeqnarray}
-Furthermore, any variables related to the chosen fairness objective, e.g., minimum harmonic current~$\CurrentMagnitude_{\Harmonic}$ for the maximin criterion and equal fraction~$\mathsf{f}_{\Harmonic}$ for the Kalai-Smorodinsky bargaining criterion, are also treated as deterministic, i.e., only non-zero for index~$k=0$. Lastly, note that all other parameters, e.g., impedance, are deterministic.
+Since $\cos(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ and $\sin(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ are precomputed parameters, constraints~\eqref{eq:real_harmonic_unit_current_pce}--\eqref{eq:imag_harmonic_unit_current_pce} are \emph{linear} in the decision variables $\CurrentMagnitude_{\Unit,\Harmonic,0}$, $\RealCurrent_{\Unit,\Harmonic,\PCEIndex}$, and $\ImaginaryCurrent_{\Unit,\Harmonic,\PCEIndex}$. Furthermore, any variables related to the chosen fairness objective are also treated as deterministic, i.e., only non-zero for index~$k=0$. All other parameters, e.g., network impedances, are deterministic.
 
-In the remainder of the section, the necessary constraint reformulations are presented, classified as
+In the remainder of this section, the necessary constraint reformulations are presented, classified as
 \begin{enumerate*}
     \item [\S\ref{sec:reformulation_of_linear_constraints}] linear constraints, or
-    \item [\S\ref{sec:reformulation_of_second_order_constraints}] second-order cone constraints.
+    \item [\S\ref{sec:reformulation_of_quadratic_constraints}] quadratic constraints.
 \end{enumerate*}
 First, the applicable constraints in the deterministic model are enumerated, and second, the reformulation is introduced in a general sense and is exemplified.
 
 \subsubsection{Reformulation of Linear Constraints}
 \label{sec:reformulation_of_linear_constraints}
 
-(10)-(31), (34), (36), and (38)-(41) in the deterministic harmonic hosting capacity model~\cite{vanacker_dhhc}. Consider a generic linear constraint,
+Constraints (10)--(31), (34), (36), and (38)--(41) in the deterministic harmonic hosting capacity model~\cite{vanacker_dhhc} are all linear. Consider a generic linear constraint,
 \begin{IEEEeqnarray}{ l }
     a\,\RVX + b\,\RVY = c,
 \end{IEEEeqnarray}
-where the parameters~$a$,~$b$ and~$c$, and variables~$\RVX$ and~$\RVY$ are deterministic and stochastic, respectively. Supported by~\eqref{eq:gp_sum}, the reformulation of a linear constraint in a polynomial chaos expansion is straightforward, i.e., repeat the original constraint over all indices~$\PCEIndex \in \PCESet$, and is denoted as,
+where the parameters~$a$,~$b$ and~$c$ are deterministic, and variables~$\RVX$ and~$\RVY$ are stochastic. Supported by~\eqref{eq:gp_sum}, the reformulation of a linear constraint in a polynomial chaos expansion is straightforward, i.e., repeat the original constraint over all indices~$\PCEIndex \in \PCESet$:
 \begin{IEEEeqnarray}{ l }
-    a\,\RVX_{k} + b\,\RVY_{k} = c, \quad \forall \PCEIndex \in \PCESet.
+    a\,\RVX_{k} + b\,\RVY_{k} = c_{k}, \quad \forall \PCEIndex \in \PCESet,
 \end{IEEEeqnarray}
-To put this into context, please consider the following illustrative example: the deterministic constraint~\cite{vanacker_dhhc}-(12),
-\begin{IEEEeqnarray}{ 0 l }
-    \text{Kirchhoff's current law (real) --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
-    \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-7mu \RealCurrent_{\Edge\Node\AltNode,\Harmonic} + \mkern-10mu
-    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-7mu \RealCurrent_{\UnitTuple,\Harmonic}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic} -\ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic}  = 0, \label{eq:det_kcl_node_real}
-\end{IEEEeqnarray}
-is reformulated as its stochastic counterpart,
-\begin{IEEEeqnarray}{ 0 l }
-    \text{Kirchhoff's current law (real) --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet: \nonumber \\
-    \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-7mu \RealCurrent_{\Edge\Node\AltNode,\Harmonic,\PCEIndex} + \mkern-10mu
-    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-7mu \RealCurrent_{\UnitTuple,\Harmonic,\PCEIndex}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic,\PCEIndex} -\ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} = 0. \label{eq:stoch_kcl_node_real}
-\end{IEEEeqnarray}
+where $c_{k} = c$ for $k=0$ and $c_{k}=0$ for $k\neq 0$ when $c$ is a deterministic constant. The resulting set of $|\PCESet|$ equality constraints is linear in the PCE coefficients of the decision variables.
 
-\subsubsection{Reformulation of Second-Order Constraints}
-\label{sec:reformulation_of_second_order_constraints}
+\subsubsection{Reformulation of Quadratic Constraints and Problem Class}
+\label{sec:reformulation_of_quadratic_constraints}
 
-(47)-(49), and~(51) in the deterministic harmonic hosting capacity model~\cite{}. Consider a generic second-order cone constraint,
+Constraints (47)--(49) and~(51) in the deterministic harmonic hosting capacity model~\cite{vanacker_dhhc} take the form of second-order cone constraints. Consider a generic second-order cone constraint,
 \begin{IEEEeqnarray}{ l }
     \RVX^{2} + \RVY^{2} \leq a^{2},
 \end{IEEEeqnarray}
-where the parameter~$a$, and variables~$\RVX$ and~$\RVY$ are deterministic and stochastic, respectively. First, following the strategy denoted in~\cite{vanacker_ivr}, an auxiliary variable is introduced as,
+where the parameter~$a$ is deterministic and the variables~$\RVX$,~$\RVY$ are stochastic. Following the strategy of~\cite{vanacker_ivr}, an auxiliary lifted variable~$\RVZ$ is introduced as,
 \begin{IEEEeqnarray}{ l }
-    \RVX^{2} + \RVY^{2} = \RVZ \leq a^{2},      \label{eq:soc_base}
+    \RVX^{2} + \RVY^{2} = \RVZ \leq a^{2}. \label{eq:soc_base}
 \end{IEEEeqnarray}
-Supported by~\eqref{eq:gp_product}, in a polynomial chaos expansion context, the left-hand side of \eqref{eq:soc_base} is formulated as,
+
+Supported by~\eqref{eq:gp_product}, in a polynomial chaos expansion context, the left-hand side of~\eqref{eq:soc_base} yields the following $|\PCESet|$ constraints on the PCE coefficients of the auxiliary variable~$\RVZ$,
 \begin{IEEEeqnarray}{ l }
-    \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \,(\RVX_{\bar{\kappa}_{1}} \cdot \RVY_{\bar{\kappa}_{2}}) = \RVZ_{\PCEIndex}, \quad \forall \PCEIndex \in \PCESet.  \label{eq:soc_aux_eq}
+    \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \,(\RVX_{\kappa_{1}} \cdot \RVX_{\kappa_{2}} + \RVY_{\kappa_{1}} \cdot \RVY_{\kappa_{2}}) = \RVZ_{\PCEIndex}, \quad \forall \PCEIndex \in \PCESet. \label{eq:soc_aux_eq}
 \end{IEEEeqnarray}
-However, given the direction of the optimization and the deterministic nature of the harmonic current budget, \eqref{eq:soc_aux_eq} is exactly reformulated as its second-order cone equivalent,
+These constraints are quadratic in the PCE coefficients of~$\RVX$ and~$\RVY$. Their convexity depends on the index~$\PCEIndex$. On the one hand, for~$\PCEIndex = 0$, orthogonality of the polynomial basis renders~$M_{\bar{\kappa},0}$ diagonal with positive entries, making the quadratic form positive semidefinite and the constraint convex. On the other hand, for~$\PCEIndex \neq 0$, the tensor~$M_{\bar{\kappa},k}$ has mixed-sign off-diagonal entries, making the quadratic form indefinite and the constraint non-convex. Consequently, the stochastic harmonic hosting capacity problem is a non-convex quadratically constrained quadratic program. Consequently, the treatment of~\eqref{eq:soc_aux_eq} differs by index. For~$\PCEIndex = 0$, the equality is relaxed to an inequality,
 \begin{IEEEeqnarray}{ l }
-    \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \,(\RVX_{\bar{\kappa}_{1}} \cdot \RVY_{\bar{\kappa}_{2}}) \leq \RVZ_{\PCEIndex}, \quad \forall \PCEIndex \in \PCESet. \label{eq:soc_aux_ref}  
+    \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},0} \,(\RVX_{\kappa_{1}} \cdot \RVX_{\kappa_{2}} + \RVY_{\kappa_{1}} \cdot \RVY_{\kappa_{2}}) \leq \RVZ_{0}, \label{eq:soc_aux_ref_k0}
 \end{IEEEeqnarray}
-This will be illustrated in the first case study of the numerical illustration. Lastly, using the auxiliary variables, the right-hand side of \eqref{eq:soc_base}, in a polynomial chaos expansion context, is reformulated as a chance constraint,
+which is a convex rotated second-order cone constraint. This relaxation is exact at optimality: since~$\RVZ_0$ is the expectation of~$\RVZ$ and appears with a positive coefficient in the chance constraint~\eqref{eq:cc_soc}, the optimizer minimises it and will always set~$\RVZ_0 = Q_0(\RVX,\RVY)$ at any optimal solution, so~\eqref{eq:soc_aux_ref_k0} binds at equality. This tightness is verified numerically in the first case study of Section~\ref{sec:numerical_illustration}. For~$\PCEIndex \neq 0$, the equality in~\eqref{eq:soc_aux_eq} must be retained,
 \begin{IEEEeqnarray}{ l }
-    \Expectation([\RVZ_{\PCEIndex}]_{\PCEIndex\in\PCESet}) + \lambda(\varepsilon) \sqrt{\Variance([\RVZ_{\PCEIndex}]_{\PCEIndex\in\PCESet})} \leq a^{2}. 
+    \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \,(\RVX_{\kappa_{1}} \cdot \RVX_{\kappa_{2}} + \RVY_{\kappa_{1}} \cdot \RVY_{\kappa_{2}}) = \RVZ_{\PCEIndex}, \quad \forall \PCEIndex \in \PCESet \backslash \{0\}. \label{eq:soc_aux_eq_kn0}
 \end{IEEEeqnarray}
-To put this into context, please consider the following illustrative example: the deterministic constraint~\cite{vanacker_dhhc}-(49),
-\begin{IEEEeqnarray}{ 0 l }
-    \text{individual harmonic voltage --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
-    \quad (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\VoltageParameter^{\text{ihd}}_{\Node,\Harmonic})^{2}\,(\FundamentalVoltageMagnitude{\Node})^{2},
-    \label{eq:soc_ihd}
+The reason is that relaxing~\eqref{eq:soc_aux_eq} to an inequality for $\PCEIndex \neq 0$ would introduce a correctness error in the chance constraint. Since the quadratic form $Q_k(\RVX,\RVY)$ is indefinite, it can take negative values. An inequality~$Q_k \leq \RVZ_k$ would allow the optimizer to set~$\RVZ_k = 0$ whenever $Q_k < 0$, as this is both feasible and minimises the variance term~$\langle\Polynoom_k,\Polynoom_k\rangle\,\RVZ_k^2$ in the chance constraint. However, the true PCE coefficient is $\RVZ_k = Q_k < 0$, with a variance contribution~$\langle\Polynoom_k,\Polynoom_k\rangle\,Q_k^2 > 0$. Setting~$\RVZ_k = 0$ would therefore underestimate the variance and produce an over-optimistic chance constraint. Enforcing equality~\eqref{eq:soc_aux_eq_kn0} ensures that~$\RVZ_k$ always tracks the true $k$-th PCE coefficient of~$\RVX^2 + \RVY^2$, regardless of its sign.
+
+Using the auxiliary variables~$\{\RVZ_{\PCEIndex}\}_{\PCEIndex\in\PCESet}$ and~\eqref{eq:cc_pce}, the right-hand side of~\eqref{eq:soc_base} is reformulated as a Cantelli chance constraint,
+\begin{IEEEeqnarray}{ l }
+    \RVZ_{0} + \sqrt{\frac{1-\varepsilon}{\varepsilon}} \sqrt{\mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \RVZ_{\PCEIndex}^{2}} \leq a^{2}. \label{eq:cc_soc}
 \end{IEEEeqnarray}
-is reformulated as its stochastic counterpart,
-\begin{IEEEeqnarray}{ 0 l }
-    \text{individual harmonic voltage --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
-    \quad \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \Big( \RealVoltage_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \RealVoltage_{\Node,\Harmonic,\bar{\kappa}_{2}} + \ImaginaryVoltage_{\Node,\Harmonic,\bar{\kappa}_{1}} \cdot \ImaginaryVoltage_{\Node,\Harmonic,\bar{\kappa}_{2}} \Big)
-    \leq \LiftedVoltage_{\Node,\Harmonic,\PCEIndex}, \nonumber \\
-    \mkern365mu \forall \PCEIndex \in \PCESet, \\
-    \quad \Expectation(\bar{\LiftedVoltage}_{\Node,\Harmonic}) + \lambda(\varepsilon) \sqrt{\Variance(\bar{\LiftedVoltage}_{\Node,\Harmonic})} \leq (\VoltageParameter^{\text{ihd}}_{\Node,\Harmonic})^{2}\,(\FundamentalVoltageMagnitude{\Node})^{2}.
-    \label{eq:soc_ihd}
+This constraint is a second-order cone in the auxiliary variables~$\{\RVZ_{\PCEIndex}\}_{\PCEIndex\in\PCESet}$: it is convex, and does not contribute to the non-convexity of the problem.
+
+\subsection{Exact Linear Program for Absolute Equality Fairness Criterion}
+\label{sec:absolute_equality_lp}
+
+When the absolute equality fairness criterion is applied, all harmonic units share a single hosting capacity~$I_{\Harmonic}$ per harmonic, so that the vector of hosting capacities collapses to a scalar. Since the network equations of the IVR-formulation are all linear in the polynomial chaos expansion coefficients, and the harmonic current injection constraints~\eqref{eq:real_harmonic_unit_current_pce}--\eqref{eq:imag_harmonic_unit_current_pce} express each polynomial chaos expansion coefficient of the injected current as a known parameter times~$I_{\Harmonic}$, all voltage and branch current are affine functions of the scalar~$I_{\Harmonic}$,
+\begin{IEEEeqnarray}{ l }
+    \RealVoltage_{\Node,\Harmonic,\PCEIndex} = C^{\text{re}}_{\Node,\Harmonic,\PCEIndex} \cdot I_{\Harmonic}, \qquad
+    \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} = C^{\text{im}}_{\Node,\Harmonic,\PCEIndex} \cdot I_{\Harmonic},
+    \label{eq:voltage_linear}
 \end{IEEEeqnarray}
-where~$\LiftedVoltage$ denotes the lifted voltage magnitude representative for the square voltage magnitude, and moreover~$\bar{\LiftedVoltage}$ denotes the vector~$[\LiftedVoltage_{\PCEIndex}]_{\PCEIndex \in \PCESet}$.
+where~$C^{\text{re}}_{\Node,\Harmonic,\PCEIndex}$ and~$C^{\text{im}}_{\Node,\Harmonic,\PCEIndex}$ are precomputed constants from the harmonic admittance matrix and the trigonometric polynomial chaos expansion coefficients. An analogous relation holds for branch currents. Substituting~\eqref{eq:voltage_linear} into the lifting constraints, the quadratic forms reduce to scalar multiples of~$I_{\Harmonic}^2$,
+\begin{IEEEeqnarray}{ l }
+    I_{\Harmonic}^{2} \cdot \alpha_{\Node,\Harmonic,\PCEIndex} \leq \LiftedVoltage_{\Node,\Harmonic,\PCEIndex}, \quad \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet, \label{eq:lifting_scalar}
+\end{IEEEeqnarray}
+where the precomputed scalar,
+\begin{IEEEeqnarray}{ l }
+\alpha_{\Node,\Harmonic,\PCEIndex} = \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} M_{\bar{\kappa},\PCEIndex} \big( C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{2}} + C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{2}} \big)
+\end{IEEEeqnarray} 
+absorbs the network topology and polynomial chaos expansion structure. Substituting~\eqref{eq:lifting_scalar} at equality into the chance constraint~\eqref{eq:cc_soc} and collecting terms, every chance constraint collapses to a linear bound,
+\begin{IEEEeqnarray}{ l }
+    I_{\Harmonic} \leq \frac{a_{\Node,\Harmonic,c}}{\sqrt{C_{\Node,\Harmonic,c}}}, \quad \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet, c \in \mathcal{C}, \label{eq:lp_bound}
+\end{IEEEeqnarray}
+where~$a_{\Node,\Harmonic,c}$ is the deterministic limit for constraint~$c$ and~$\mathcal{C}$ indexes the active chance constraints, and the composite scalar,
+\begin{IEEEeqnarray}{ r C l }
+    C_{\Node,\Harmonic,c} &=& \alpha_{\Node,\Harmonic,0} + \sqrt{\frac{1-\varepsilon}{\varepsilon}} \sqrt{\sum_{\PCEIndex \in \PCESet \backslash \{0\}} \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \alpha_{\Node,\Harmonic,\PCEIndex}^{2}}, \label{eq:C_scalar}
+\end{IEEEeqnarray}
+is precomputed from network data, polynomial chaos expansion parameters, and the risk level~$\varepsilon$. Since~$\alpha_{\Node,\Harmonic,0} \geq 0$, we have~$C_{\Node,\Harmonic,c} \geq 0$ always. The problem therefore reduces to an \emph{exact linear program} with closed-form solution,
+\begin{IEEEeqnarray}{ r C l }
+    I_{\Harmonic}^{*} &=& \min_{\Node,\, c} \frac{a_{\Node,\Harmonic,c}}{\sqrt{C_{\Node,\Harmonic,c}}}. \label{eq:lp_solution}
+\end{IEEEeqnarray}
