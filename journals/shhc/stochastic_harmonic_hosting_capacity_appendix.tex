@@ -1,0 +1,79 @@
+\documentclass[journal]{IEEEtran}
+\PassOptionsToPackage{x11names}{xcolor}
+
+% packages
+\usepackage{hyperref}
+\usepackage{flushend}
+\usepackage[inline]{enumitem}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+\usepackage{cite}
+\usepackage{bm}
+\usepackage{orcidlink}
+
+\usepackage{xcolor}
+% \usepackage{microtype,xparse,tcolorbox}
+
+%% footnote
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\makesavenoteenv{tabular*}
+\makesavenoteenv{table*}
+% \usepackage{tablefootnote}
+
+%% graphics packages
+\usepackage{tikz}
+\usepackage{pgfplots}
+    \pgfplotsset{compat=1.15}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{circuitikz}
+\usepackage{dblfloatfix}
+\usepackage[bottom]{footmisc}
+\ifCLASSOPTIONcompsoc
+    \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+    \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+%% checkmark packages 
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+%% math packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+% math 
+\IEEEeqnarraydefcolsep{0}{\hoffset}
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+% definition setup
+%\theoremstyle{definition}
+
+\newtheorem{defn}{Definition}[section]
+
+% text that may be removed to reach the 10-page limit
+\newcommand{\removable}[1]{{\color{red}#1}}
+% placeholder for input after the Harmonic Meeting of 30/10
+\newcommand{\placeholder}[1]{\textcolor{blue}{[#1]}}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% document
+\begin{document}
+
+\title{Stochastic Harmonic Hosting Capacity \\ Considering Harmonic Recombination: \\ Supplementary Material}
+\author{Tom~Van~Acker, Jinwen~Xiang, and~Hakan~Ergun}
+\maketitle
+
+\input{nomenclature}
+\input{journals/shhc/appendix/appendix_a}
+
+\end{document}
