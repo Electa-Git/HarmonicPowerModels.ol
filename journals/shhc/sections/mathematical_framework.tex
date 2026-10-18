@@ -3,7 +3,7 @@
 
 This section presents the mathematical framework for the stochastic harmonic hosting capacity problem of a phase-balanced three-phase power system, considering uncertainty on the angle of the harmonic current injected by the connected harmonic units. To this end, the formulation for the deterministic harmonic hosting capacity presented in~\cite{vanacker_hosting_2026} is extended. For brevity, the original formulation is not repeated in this section, rather the relevant variables and constraints are highlighted and transformed to their stochastic counterpart.
 
-First, Section~\ref{sec:polynomial_chaos_expansion} introduces the generalized polynomial chaos expansion used to incorporate random variables into the formulation. Second, Section~\ref{sec:harmonic_current_angle_uncertainty} introduces the uncertainty on the angle of the injected harmonic current, its reference, its dependence on the converter type, and the exact projection of the related trigonometric functions. Third, Section~\ref{sec:stochastic_harmonic_hosting_capacity} presents the transformation of the deterministic formulation into its stochastic counterpart and characterizes the resulting problem class. Fourth, Section~\ref{sec:absolute_equality_socp} shows that for the absolute equality fairness criterion the problem reduces to a small second-order cone program. Finally, Section~\ref{sec:recombination_metrics} defines the metrics used to quantify harmonic recombination. For the full stochastic formulation, the reader is referred to Appendix~\ref{app:optimization_model}.
+\removable{First, Section~\ref{sec:polynomial_chaos_expansion} introduces the generalized polynomial chaos expansion used to incorporate random variables into the formulation. Second, Section~\ref{sec:harmonic_current_angle_uncertainty} introduces the uncertainty on the angle of the injected harmonic current, its reference, its dependence on the converter type, and the exact projection of the related trigonometric functions. Third, Section~\ref{sec:stochastic_harmonic_hosting_capacity} presents the transformation of the deterministic formulation into its stochastic counterpart and characterizes the resulting problem class. Fourth, Section~\ref{sec:absolute_equality_socp} shows that for the absolute equality fairness criterion the problem reduces to a small second-order cone program. Finally, Section~\ref{sec:recombination_metrics} defines the metrics used to quantify harmonic recombination. For the full stochastic formulation, the reader is referred to Appendix~\ref{app:optimization_model}.
 
 In the following table, a general overview and generic examples of the notation used throughout the mathematical framework are provided.
 \begin{table}[ht!]
@@ -17,7 +17,7 @@ In the following table, a general overview and generic examples of the notation 
         approximation       & hat notation              & $\hat{\mathsf{X}}$                \\
         vector              & bar notation              & $\bar{\mathsf{X}}$, $\bar{X}$
     \end{tabular}
-\end{table}
+\end{table}}
 
 \subsection{Background on Polynomial Chaos Expansion}
 \label{sec:polynomial_chaos_expansion}
@@ -37,7 +37,7 @@ Through polynomial chaos expansion, any stochastic equality constraint is equiva
 \begin{IEEEeqnarray}{ r C l }
     |\PCESet| &=& \frac{(|\bar{\omega}| + \delta)!}{|\bar{\omega}|!\,\delta!}, \label{eq:cardinality}
 \end{IEEEeqnarray}
-where~$\delta$ denotes the maximum degree of the polynomial basis functions. The truncation error~$\norm{\RVX-\ApproxRVX}$ decays to zero for~$|\PCESet| \to \infty$.
+where~$\delta$ denotes the maximum degree of the polynomial basis functions. \removable{The truncation error~$\norm{\RVX-\ApproxRVX}$ decays to zero for~$|\PCESet| \to \infty$.}
 
 The Galerkin projection forms a system of equations for the stochastic modes~(Ch.~12 in~\cite{sullivan_introduction_2015}). For the harmonic hosting capacity problem, two operations stand out: summation and multiplication. For three approximated random variables~$\ApproxRVX$,~$\ApproxRVY$ and~$\ApproxRVZ$ defined on the same basis, the Galerkin projection (gp) of both operations is,
 \begin{IEEEeqnarray}{ l C l l}
@@ -66,7 +66,7 @@ so that~\eqref{eq:cc_constraint} is a second-order cone constraint in the coeffi
     \item[(ii)] the Gaussian quantile $\lambda(\varepsilon) = \Phi^{-1}(1-\varepsilon)$; and
     \item[(iii)] an empirical, per-constraint factor $\lambda^{*} = (q_{1-\varepsilon}(\RVX)-\Expectation(\RVX))/\sqrt{\Variance(\RVX)}$, calibrated from samples of the constrained quantity and updated with the hosting capacity until convergence.
 \end{enumerate*}
-The Cantelli bound is the safe choice when nothing is known about the output distribution; the empirical factor targets the risk level~$\varepsilon$ exactly.
+\removable{The Cantelli bound is the safe choice when nothing is known about the output distribution; the empirical factor targets the risk level~$\varepsilon$ exactly.}
 
 \subsection{Uncertainty on Angle of Harmonic Current Injection}
 \label{sec:harmonic_current_angle_uncertainty}

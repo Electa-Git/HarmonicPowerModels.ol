@@ -58,6 +58,11 @@
 
 \newtheorem{defn}{Definition}[section]
 
+% text that may be removed to reach the 10-page limit
+\newcommand{\removable}[1]{{\color{red}#1}}
+% placeholder for input after the Harmonic Meeting of 30/10
+\newcommand{\placeholder}[1]{\textcolor{blue}{[#1]}}
+
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
@@ -95,12 +100,12 @@ Chance constraints, harmonic distortion, harmonic recombination, hosting capacit
 \IEEEpeerreviewmaketitle
 
 % sections
+\input{nomenclature}
 \input{journals/shhc/sections/introduction_new}
 
 \input{journals/shhc/sections/angle_uncertainty_v2}
 \input{journals/shhc/sections/converter_types}
 
-\input{nomenclature}
 \input{journals/shhc/sections/mathematical_framework}
 
 \input{journals/shhc/sections/numerical_illustration}
@@ -108,6 +113,7 @@ Chance constraints, harmonic distortion, harmonic recombination, hosting capacit
 \input{journals/shhc/sections/conclusion}
 
 % appendices
+\clearpage
 \appendix
 \input{journals/shhc/appendix/appendix_a}
 
