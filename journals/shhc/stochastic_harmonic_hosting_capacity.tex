@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
+\PassOptionsToPackage{x11names}{xcolor}
 
 % packages
-\usepackage{lipsum}
 \usepackage{hyperref}
 \usepackage{flushend}
 \usepackage[inline]{enumitem}
@@ -11,7 +11,7 @@
 \usepackage{bm}
 \usepackage{orcidlink}
 
-\usepackage[x11names]{xcolor}
+\usepackage{xcolor}
 % \usepackage{microtype,xparse,tcolorbox}
 
 %% footnote
@@ -83,42 +83,29 @@
 
 % abstract
 \begin{abstract}
-\lipsum[1-2]
+The aggregation of harmonic currents from many power-electronic interfaced units depends on their phase angles, which are uncertain at the planning stage. This paper presents a stochastic harmonic hosting capacity method for phase-balanced three-phase power systems that captures this harmonic recombination. The angle uncertainty of a 6-pulse line-commutated converter is characterized through a harmonic state-space model and represented by polynomial chaos expansion, with one germ per unit and one germ shared by all units of a converter type, and the angles are referenced to each unit's fundamental terminal voltage. Harmonic voltage and current limits are enforced through chance constraints. Under the absolute equality fairness criterion, the problem reduces to a small second-order cone program that recovers the deterministic hosting capacity exactly when the uncertainty vanishes. On the IEEE 30-bus system with capacitor banks and underground cables, recombination among units of a single converter type is limited, and the indicative summation exponents of IEC~61000-3-6 overestimate the hosting capacity by a factor of about two. A mix of converter types with different mean angles raises the hosting capacity by about one third and brings the low-order summation exponent close to the indicative value.
 \end{abstract}
 
 % keywords
 \begin{IEEEkeywords}
-Harmonic distortion, fairness, hosting capacity, mathematical optimization.
+Chance constraints, harmonic distortion, harmonic recombination, hosting capacity, polynomial chaos expansion.
 \end{IEEEkeywords}
 
 % peer-review title
 \IEEEpeerreviewmaketitle
 
 % sections
-\input{sections/introduction_new}
-
-% \newpage
+\input{journals/shhc/sections/introduction_new}
 
 \input{journals/shhc/sections/angle_uncertainty_v2}
-
-\newpage
-~
-\newpage
-~
-\newpage
+\input{journals/shhc/sections/converter_types}
 
 \input{nomenclature}
 \input{journals/shhc/sections/mathematical_framework}
 
-\newpage
+\input{journals/shhc/sections/numerical_illustration}
 
-\input{sections/numerical_illustration}
-
-\input{sections/conclusion}
-
-\newpage
-~
-\newpage
+\input{journals/shhc/sections/conclusion}
 
 % appendices
 \appendix

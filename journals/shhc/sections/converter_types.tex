@@ -1,0 +1,6 @@
+\subsection{Second Converter Type: Phase-Controlled Rectifier}
+\label{sec:converter_types}
+
+The analysis above concerns a single converter type. Real networks host a mix of converter technologies, whose harmonic current angles differ in their mean. As a second type, a phase-controlled version of the same 6-pulse converter is considered, i.e., a thyristor rectifier operated at a firing delay~$\alpha_{\text{f}}$. Delaying the firing delays the whole current waveform, which rotates the $h$-th harmonic phasor of phase~$a$ by~$-h\,\alpha_{\text{f}}$ relative to the uncontrolled converter, while the dispersion caused by the uncertain inductances is retained. The firing delay is set by the operating point, e.g., the demanded dc voltage, and is therefore common to all units of this type and uncertain at the planning stage.
+
+\emph{Working assumption.} Pending a dedicated harmonic state-space analysis of the phase-controlled converter, the firing delay is modelled with a mean of~$30^{\circ}$ and a Beta-distributed support of~$30^{\circ}$ width, with the shape parameters of Table~\ref{tab:beta_phase_params}, and the overlap angle is assumed independent of the firing delay. The resulting angle model, with one germ shared by all units of the type, is given in Section~\ref{sec:harmonic_current_angle_uncertainty}.
