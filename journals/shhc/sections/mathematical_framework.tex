@@ -1,9 +1,13 @@
+\newpage
+~
+\newpage
+
 \section{Mathematical Framework}
 \label{sec:mathematical_framework}
 
-This section presents the mathematical framework for the stochastic harmonic hosting capacity problem of a phase-balanced three-phase power system, considering uncertainty on the angle of the harmonic current injected by the connected harmonic units. To this end, the formulation for the deterministic harmonic hosting capacity presented in~\cite{vanacker_hosting_2026} is extended. For brevity, the original formulation is not repeated in this section, rather the relevant variables and constraints are highlighted and transformed to their stochastic counterpart. For the full stochastic formulation, the reader is referred to the supplementary material.
+This section presents the mathematical framework for the stochastic harmonic hosting capacity problem of a phase-balanced three-phase power system, considering uncertainty on the angle of the harmonic current injected by the connected harmonic units. To this end, the formulation for the deterministic harmonic hosting capacity presented in~\cite{vanacker_hosting_2026} is extended. For brevity, the original formulation is not repeated in this section, rather the relevant variables and constraints are highlighted and transformed to their stochastic counterpart. %For the full stochastic formulation, the reader is referred to the supplementary material.
 
-\removable{Table~\ref{tab:notation} gives an overview and generic examples of the notation used throughout the mathematical framework.
+Table~\ref{tab:notation} gives an overview and generic examples of the notation used throughout the mathematical framework.
 \begin{table}[ht!]
     \centering
     \caption{Notation used throughout the mathematical framework.}
@@ -17,7 +21,7 @@ This section presents the mathematical framework for the stochastic harmonic hos
         approximation       & hat notation              & $\hat{\mathsf{X}}$                \\
         vector              & bar notation              & $\bar{\mathsf{X}}$, $\bar{X}$
     \end{tabular}
-\end{table}}
+\end{table}
 
 \subsection{Background on Polynomial Chaos Expansion}
 \label{sec:polynomial_chaos_expansion}
@@ -37,7 +41,7 @@ Through polynomial chaos expansion, any stochastic equality constraint is equiva
 \begin{IEEEeqnarray}{ r C l }
     |\PCESet| &=& \frac{(|\bar{\omega}| + \delta)!}{|\bar{\omega}|!\,\delta!}, \label{eq:cardinality}
 \end{IEEEeqnarray}
-where~$\delta$ denotes the maximum degree of the polynomial basis functions. \removable{The truncation error~$\norm{\RVX-\ApproxRVX}$ decays to zero for~$|\PCESet| \to \infty$.}
+where~$\delta$ denotes the maximum degree of the polynomial basis functions. 
 
 The Galerkin projection forms a system of equations for the stochastic modes~(Chapter~12 in~\cite{sullivan_introduction_2015}). For the harmonic hosting capacity problem, two operations stand out: summation and multiplication. For three approximated random variables~$\ApproxRVX$,~$\ApproxRVY$ and~$\ApproxRVZ$ defined on the same basis, the Galerkin projection, denoted by~$\gp$, of both operations is,
 \begin{IEEEeqnarray}{ l C l l}
@@ -66,7 +70,7 @@ so that~\eqref{eq:cc_constraint} is a second-order cone constraint in the coeffi
     \item[(ii)] the Gaussian quantile $\lambda(\varepsilon) = \Phi^{-1}(1-\varepsilon)$; and
     \item[(iii)] an empirical, per-constraint factor $\lambda^{*} = (q_{1-\varepsilon}(\RVX)-\Expectation(\RVX))/\sqrt{\Variance(\RVX)}$, calibrated from samples of the constrained quantity and updated with the hosting capacity until convergence.
 \end{enumerate*}
-\removable{The Cantelli bound is the safe choice when nothing is known about the output distribution; the empirical factor targets the risk level~$\varepsilon$ exactly.}
+The Cantelli bound is the safe choice when nothing is known about the output distribution; the empirical factor targets the risk level~$\varepsilon$ exactly.
 
 \subsection{Uncertainty on Angle of Harmonic Current Injection}
 \label{sec:harmonic_current_angle_uncertainty}
@@ -103,12 +107,12 @@ Since the angle~\eqref{eq:angle_affine} is affine in a single random variable, $
 \begin{IEEEeqnarray}{ r C l }
     \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} &=& \frac{1}{\langle \Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle} \sum_{q} w_{q} \cos\big(\phi_{\Unit,\Harmonic}(\xi_{q})\big)\,\Polynoom_{\PCEIndex}(\xi_{q}), \label{eq:trig_quadrature}
 \end{IEEEeqnarray}
-with nodes~$\xi_{q}$ and weights~$w_{q}$, and analogously for the sine. This replaces the truncated Taylor series used previously, has no expansion point, and leaves only the degree-$\delta$ truncation error. For the type angle~\eqref{eq:angle_affine_type}, the identities $\cos(a+b) = \cos a\cos b - \sin a \sin b$ and $\sin(a+b) = \sin a\cos b + \cos a \sin b$ split the functions into products of functions of the independent random variables~$\omega_{\Unit}$ and~$\omega_{t}$. As the basis is a tensor product, their coefficients are the products of the univariate projections~\eqref{eq:trig_quadrature}, truncated to total degree~$\delta$. In both cases~$\cos(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ and~$\sin(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ are parameters, not optimization variables.
+with nodes~$\xi_{q}$ and weights~$w_{q}$, and analogously for the sine. For the type angle~\eqref{eq:angle_affine_type}, the identities $\cos(a+b) = \cos a\cos b - \sin a \sin b$ and $\sin(a+b) = \sin a\cos b + \cos a \sin b$ split the functions into products of functions of the independent random variables~$\omega_{\Unit}$ and~$\omega_{t}$. As the basis is a tensor product, their coefficients are the products of the univariate projections~\eqref{eq:trig_quadrature}, truncated to total degree~$\delta$. In both cases~$\cos(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ and~$\sin(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ are parameters, not optimization variables.
 
 \subsection{General Stochastic Harmonic Hosting Capacity}
 \label{sec:stochastic_harmonic_hosting_capacity}
 
-The stochastic model determines a \emph{deterministic} harmonic hosting capacity given uncertainty on the harmonic current angles, while complying with chance constraints on (harmonic) voltages and currents. Given that the problem is formulated from the perspective of the power system operator, deterministic harmonic budgets are the practical outcome for its customers. A deterministic hosting capacity implies that~$\CurrentMagnitude_{\Unit,\Harmonic,\PCEIndex} = 0$ for any non-zero index~$\PCEIndex$, so the counterparts of~\eqref{eq:real_harmonic_unit_current} and~\eqref{eq:imag_harmonic_unit_current} are,
+The stochastic model determines a deterministic harmonic hosting capacity given uncertainty on the harmonic current angles, while complying with chance constraints on (harmonic) voltages and currents. Given that the problem is formulated from the perspective of the power system operator, deterministic harmonic budgets are the practical outcome for its customers. A deterministic hosting capacity implies that~$\CurrentMagnitude_{\Unit,\Harmonic,\PCEIndex} = 0$ for any non-zero index~$\PCEIndex$, so the counterparts of~\eqref{eq:real_harmonic_unit_current} and~\eqref{eq:imag_harmonic_unit_current} are,
 \begin{IEEEeqnarray}{ l }
     \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} \, \CurrentMagnitude_{\Unit,\Harmonic,0} = \RealCurrent_{\Unit,\Harmonic,\PCEIndex},
         \quad \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet,
@@ -117,7 +121,7 @@ The stochastic model determines a \emph{deterministic} harmonic hosting capacity
         \quad \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \PCEIndex \in \PCESet,
     \label{eq:imag_harmonic_unit_current_pce}
 \end{IEEEeqnarray}
-which are \emph{linear} in the decision variables. Any variables related to the fairness objective are also deterministic. All other parameters, e.g., network impedances, are deterministic.
+which are linear in the decision variables. Any variables related to the fairness objective are also deterministic. All other parameters, e.g., network impedances, are deterministic.
 
 \subsubsection{Reformulation of Linear Constraints}
 \label{sec:reformulation_of_linear_constraints}
@@ -177,7 +181,7 @@ where~$A_{\Node,\Harmonic}$ aggregates the unit contributions~$c_{\Node\Unit,\Ha
     \item[(iii)] the deterministic angle $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}(\Expectation[\bar\omega])|$, as in~\cite{vanacker_hosting_2026}; and
     \item[(iv)] the $(1-\varepsilon)$-quantile of $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$, i.e., the exact per-constraint chance bound.
 \end{enumerate*}
-The uplift of~(iv) over~(ii) is the hosting capacity a chance constraint gains over a safe deterministic bound. To relate the result to IEC~61000-3-6~\cite{noauthor_iec61000-3-6_2008}, the \emph{equivalent summation exponent}~$\alpha^{\text{eq}}_{\Harmonic}$ is defined as the exponent for which the general summation law,
+The uplift of~(iv) over~(ii) is the hosting capacity a chance constraint gains over a safe deterministic bound. To relate the result to IEC~61000-3-6~\cite{noauthor_iec61000-3-6_2008}, the equivalent summation exponent~$\alpha^{\text{eq}}_{\Harmonic}$ is defined as the exponent for which the general summation law,
 \begin{IEEEeqnarray}{ r C l }
     A_{\Node,\Harmonic} &=& \Big(\sum_{\Unit \in \HarmonicUnitSet} |c_{\Node\Unit,\Harmonic}|^{\alpha^{\text{eq}}_{\Harmonic}}\Big)^{1/\alpha^{\text{eq}}_{\Harmonic}}, \label{eq:summation_law}
 \end{IEEEeqnarray}
