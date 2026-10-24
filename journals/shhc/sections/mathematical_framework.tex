@@ -3,9 +3,11 @@
 
 This section presents the mathematical framework for the stochastic harmonic hosting capacity problem of a phase-balanced three-phase power system, considering uncertainty on the angle of the harmonic current injected by the connected harmonic units. To this end, the formulation for the deterministic harmonic hosting capacity presented in~\cite{vanacker_hosting_2026} is extended. For brevity, the original formulation is not repeated in this section, rather the relevant variables and constraints are highlighted and transformed to their stochastic counterpart. For the full stochastic formulation, the reader is referred to the supplementary material.
 
-\removable{In the following table, a general overview and generic examples of the notation used throughout the mathematical framework are provided.
+\removable{Table~\ref{tab:notation} gives an overview and generic examples of the notation used throughout the mathematical framework.
 \begin{table}[ht!]
     \centering
+    \caption{Notation used throughout the mathematical framework.}
+    \label{tab:notation}
     \begin{tabular}{ l l c }
         element             & notation                  & example                           \\ \hline
         index               & lower-case italic         & $x$                               \\
@@ -157,6 +159,16 @@ a second-order cone in~$\bar{g}$: $\mathcal{H}_{c} = \{\Harmonic\}$ for the indi
     \max_{\bar{I},\,\bar{g}} \; \sum_{\Harmonic \in \HarmonicSet} |\HarmonicUnitSet|\, I_{\Harmonic} \;\; \text{s.t.} \;\; I_{\Harmonic}^{2} \leq g_{\Harmonic},\; I_{\Harmonic} \leq I^{\text{rated}},\; \eqref{eq:socp_cc}, \label{eq:socp}
 \end{IEEEeqnarray}
 with one pair of variables per harmonic, whatever the size of the network or the cardinality of the basis; the latter only enters the precomputed scalars~$\alpha$. A limit that the fundamental already exhausts, $a_{\Node,c} \leq 0$, leaves no harmonic headroom and forces the contributing~$g_{\Harmonic}$ to zero. When every angle range collapses to a point, all variances vanish and~\eqref{eq:socp} reduces exactly to the deterministic model.
+
+\subsubsection{Other Fairness Criteria}
+Absolute equality is one of several social welfare functions that encode fairness in an optimization model; Chen and Hooker survey these criteria together with their formulations and properties~\cite{chen_guide_2023}, and the deterministic predecessor of this work considers maximum efficiency, absolute equality, maximin and Kalai-Smorodinsky bargaining, i.e., the objectives~(32), (33), (35) and~(37) in~\cite{vanacker_hosting_2026}. Their stochastic counterparts relate to the second-order cone program~\eqref{eq:socp} of this work as follows:
+\begin{enumerate*}
+    \item[(i)] weighted equality, $\CurrentMagnitude_{\Unit,\Harmonic} = w_{\Unit}\,I_{\Harmonic}$ with fixed positive weights~$w_{\Unit}$, e.g., proportional to the rated power of the units, only scales the coefficients~$C^{\text{re}}$ and~$C^{\text{im}}$ and remains an exact second-order cone program with one pair of variables per harmonic;
+    \item[(ii)] the Kalai-Smorodinsky solution~(37)--(39) in~\cite{vanacker_hosting_2026} equalizes the ratio of each allocation to the individual maximum~$I^{\text{max}}_{\Unit,\Harmonic}$ of the unit; where these ratios are equal at the optimum, it is the weighted equality with~$w_{\Unit} = I^{\text{max}}_{\Unit,\Harmonic}$, and each individual maximum follows from~\eqref{eq:socp} with unit~$\Unit$ alone;
+    \item[(iii)] maximin~(35) in~\cite{vanacker_hosting_2026} maximizes the smallest allocation and coincides with absolute equality whenever raising the current of a unit cannot relax a binding constraint, i.e., whenever the contributions at the binding buses do not cancel; and
+    \item[(iv)] maximum efficiency, proportional fairness, i.e., the Nash bargaining solution, and alpha fairness~\cite{chen_guide_2023} are concave objectives over a free allocation~$\bar{I}_{\Harmonic} = [\CurrentMagnitude_{\Unit,\Harmonic}]_{\Unit \in \HarmonicUnitSet}$. Every polynomial chaos expansion coefficient of~$|\ComplexVoltage_{\Node,\Harmonic}|^{2}$ is then a quadratic form in~$\bar{I}_{\Harmonic}$. Replacing the outer product~$\bar{I}_{\Harmonic}\bar{I}_{\Harmonic}^{\text{T}}$ by a matrix variable~$G_{\Harmonic}$ with $\left[\begin{smallmatrix} G_{\Harmonic} & \bar{I}_{\Harmonic} \\ \bar{I}_{\Harmonic}^{\text{T}} & 1 \end{smallmatrix}\right] \succeq 0$ makes each coefficient linear in~$G_{\Harmonic}$, so that every chance constraint remains a second-order cone in~$G_{\Harmonic}$. The result is a semidefinite relaxation, whose allocation is scaled down to a feasible point afterwards.
+\end{enumerate*}
+Criteria~(i)--(iii) therefore retain the size and exactness of~\eqref{eq:socp}, whereas~(iv) trades them for a free allocation. The criterion determines how the hosting capacity is shared among the units, while the recombination enters through the angle-dependent coefficients~$\alpha_{\Node,\Harmonic,\PCEIndex}$.
 
 \subsection{Quantifying Harmonic Recombination}
 \label{sec:recombination_metrics}

@@ -28,7 +28,7 @@ The standard IEC~61000-3-6 allocates planning levels over the installations conn
 
 \subsubsection{Stochastic harmonic power flow}
 
-Pileggi et al.\ showed early on that a large population of small nonlinear loads, i.e., compact fluorescent lights, aggregates into significant voltage distortion at the system level~\cite{pileggi1993}. Bollen and Gu treated the phase angles of harmonic currents as random and showed that their diversity reduces the aggregate harmonic voltage relative to the in-phase assumption~\cite{bollen2006}. Uncertainty also resides in the network response: Li et al.\ separated aleatory and epistemic uncertainty sources, defined quantitative amplification indices as ratios of transfer to driving-point impedances, and assessed them with Monte Carlo simulation~\cite{li2020}. \removable{Monte Carlo and data-driven methods have since become the standard tool for probabilistic harmonic power flow: Xie and Sun proposed a piecewise probabilistic harmonic power flow for unbalanced residential distribution systems~\cite{xie_piecewise_2022}, Xie et al.\ a data-driven approach for distribution systems with photovoltaic generation~\cite{xie2022}, and Cadena-Zarate et al.\ a simulation-based approach for low-voltage networks with distributed energy resources~\cite{cadenazarate2024}.} These methods quantify uncertainty, but do not optimize the hosting capacity.
+Probabilistic harmonic power flow quantifies the uncertainty of the harmonic emissions and of the network response. Li et al.\ separated aleatory and epistemic uncertainty sources, defined quantitative amplification indices as ratios of transfer to driving-point impedances, and assessed them with Monte Carlo simulation~\cite{li2020}. \removable{Monte Carlo and data-driven methods have since become the standard tool for probabilistic harmonic power flow: Xie and Sun proposed a piecewise probabilistic harmonic power flow for unbalanced residential distribution systems~\cite{xie_piecewise_2022}, Xie et al.\ a data-driven approach for distribution systems with photovoltaic generation~\cite{xie2022}, and Cadena-Zarate et al.\ a simulation-based approach for low-voltage networks with distributed energy resources~\cite{cadenazarate2024}.} These methods quantify uncertainty, but do not optimize the hosting capacity.
 
 \subsubsection{Stochastic harmonic hosting capacity}
 
@@ -43,13 +43,11 @@ Table~\ref{tab:literature_review} shows that no existing method simultaneously a
     \caption{Literature review on harmonic hosting capacity and stochastic harmonic power flow, in order of discussion, enumerating the stochastic features~(a)--(e). The entry marked $\star$ is the deterministic predecessor of this work.}
     \label{tab:literature_review}
     \begin{tabular}{ c | c | c | c c | c | c c c c c | r r }
-        \multirow{2}{*}{reference} & \multirow{2}{*}{objective} & \multirow{2}{*}{method\footnotemark} & \multicolumn{2}{c |}{network} & \multirow{2}{*}{stochastic\footnotemark} & \multicolumn{5}{c |}{stochastic features} & \multicolumn{2}{c}{tractability\footnotemark} \\
+        \multirow{2}{*}{reference} & \multirow{2}{*}{objective} & \multirow{2}{*}{method$^{a}$} & \multicolumn{2}{c |}{network} & \multirow{2}{*}{stochastic$^{b}$} & \multicolumn{5}{c |}{stochastic features} & \multicolumn{2}{c}{tractability$^{c}$} \\
                                             &       &       & model & phases &       & (a)  & (b)   & (c)   & (d)   & (e)   & nodes & minutes \\ \hline
         \cite{noauthor_iec61000-3-6_2008}   & hhc   & ae    & nodal & bal.  & an.   &\cmark &\xmark &\xmark &\xmark &\cmark & --    & --    \\
         \cite{santos_considerations_2015}   & hhc   & ae    & nodal & bal.  & an.   &\cmark &\cmark &\xmark &\xmark &\xmark & --    & --    \\
         \cite{cho_analysis_2019}            & hhc   & ae    & nodal & bal.  & an.   &\cmark &\xmark &\xmark &\xmark &\xmark & --    & --    \\ \arrayrulecolor{gray!20} \hline
-        \cite{pileggi1993}                  & hpf   & pf    & full  & bal.  & --    &\xmark &\xmark &\xmark &\xmark &\xmark & --    & --    \\
-        \cite{bollen2006}                   & hpf   & ae    & nodal & bal.  & an.   &\cmark &\xmark &\xmark &\xmark &\xmark & --    & --    \\
         \cite{li2020}                       & hpf   & pf    & full  & bal.  & mc    &\cmark &\xmark &\cmark &\xmark &\xmark & --    & --    \\
         \cite{xie_piecewise_2022}           & hpf   & pf    & full  & unb.  & an.   &\cmark &\xmark &\xmark &\xmark &\xmark & 8500  & --    \\
         \cite{xie2022}                      & hpf   & pf    & full  & bal.  & an.   &\cmark &\xmark &\xmark &\xmark &\xmark & --    & --    \\
@@ -59,15 +57,18 @@ Table~\ref{tab:literature_review} shows that no existing method simultaneously a
         \cite{sakar_integration_2018}       & hhc   & pf    & full  & bal.  & --    &\xmark &\xmark &\xmark &\xmark &\xmark & 3     & --    \\
         \cite{sun_distribution_2022}        & hhc   & cc    & full  & bal.  & scen. &\xmark &\cmark &\xmark &\cmark &\cmark & --    & --    \\
         \cite{nakhodchi2022}                & hhc   & ae    & nodal & bal.  & mc    &\cmark &\xmark &\xmark &\xmark &\cmark & --    & --    \\
-        \cite{nakhodchi_impact_2023}        & hhc   & ae    & nodal & bal.  & --    &\xmark &\xmark &\xmark &\xmark &\xmark & 64    & --    \\ \arrayrulecolor{black} \hline
+        \cite{nakhodchi_impact_2023}        & hhc   & ae    & nodal & bal.  & mc    &\cmark &\xmark &\xmark &\xmark &\xmark & 64    & --    \\ \arrayrulecolor{black} \hline
         $\star$~\cite{vanacker_hosting_2026}& hhc   & soc   & full  & bal.  & --    &\xmark &\xmark &\xmark &\xmark &\xmark & 1880  & $<$\,6 \\ \arrayrulecolor{black} \hline
         This work                           & hhc   & qcqp/soc & full  & bal.  & pce   &\cmark &\xmark &\xmark &\xmark &\cmark & 30    & $<$\,1 \\
     \end{tabular}
+
+    \vspace{2pt}
+    \parbox{\textwidth}{\scriptsize
+    $^{a}$Mathematical methods: (ae)~analytical expression, (pf)~power flow, (nl)~nonlinear optimal power flow, (soc)~second-order cone optimal power flow, (cc)~chance-constrained optimal power flow, (qcqp)~quadratically constrained quadratic program. Objective: (hhc)~harmonic hosting capacity, (hpf)~harmonic power flow. Phases: (bal.)~balanced, (unb.)~unbalanced.
+    $^{b}$Stochastic methods: (mc)~Monte Carlo simulation, (an.)~analytical or moment-based, (scen.)~scenario-based, (pce)~polynomial chaos expansion.
+    $^{c}$Tractability expressed as the number of nodes and the solve time in minutes.}
 \end{table*}
 
-\footnotetext[1]{Mathematical methods: (ae)~analytical expression, (pf)~power flow, (nl)~nonlinear optimal power flow, (soc)~second-order cone optimal power flow, (cc)~chance-constrained optimal power flow, (qcqp)~quadratically constrained quadratic program. Objective: (hhc)~harmonic hosting capacity, (hpf)~harmonic power flow. Phases: (bal.)~balanced, (unb.)~unbalanced.}
-\footnotetext[2]{Stochastic methods: (mc)~Monte Carlo simulation, (an.)~analytical or moment-based, (scen.)~scenario-based, (pce)~polynomial chaos expansion.}
-\footnotetext[3]{Tractability expressed as the number of nodes and the solve time in minutes.}
 
 \subsection{Contributions and Outline}
 \label{sec:contribution_and_outline}

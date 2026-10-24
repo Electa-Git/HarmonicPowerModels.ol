@@ -50,8 +50,8 @@ Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematica
 Three capacitive elements are added to the base network, each followed by the same re-dispatch:
 \begin{enumerate*}
     \item[(i)] \emph{bank}, a 19\,Mvar capacitor bank at bus~29, the size of the largest bank of the original data, at a location where it raises the hosting capacity;
-    \item[(ii)] \emph{cable33}, with all 33\,kV lines replaced by underground cables (155\,km in total); and
-    \item[(iii)] \emph{cable132c}, with all 132\,kV lines replaced by cables (588\,km), with~80\,\% of their charging compensated by shunt reactors.
+    \item[(ii)] \emph{cables at mv}, with all 33\,kV lines replaced by underground cables (155\,km in total); and
+    \item[(iii)] \emph{cables at hv}, with all 132\,kV lines replaced by cables (588\,km), with~80\,\% of their charging compensated by shunt reactors.
 \end{enumerate*}
 \removable{The cable route lengths follow from the overhead-line reactance, and typical cable parameters are used.} Without compensation, the 132\,kV cables cannot be operated within the branch ratings. Fig.~\ref{fig:freqscan} shows the driving-point impedance at bus~30, the end of the longest 33\,kV feeder. The base network has no resonance. The bank places a parallel resonance at~$\Harmonic = 2.8$, below the characteristic harmonics, which lowers the impedance at all of them; the 33\,kV cables place resonances at~$\Harmonic = 6.6$ and~$13.8$, close to the 7th and 13th harmonic; and the compensated 132\,kV cables place resonances at~$\Harmonic = 2.5$ and~$6.5$ and stiffen the network.
 
@@ -67,7 +67,7 @@ Three capacitive elements are added to the base network, each followed by the sa
             \addplot[densely dashed] table[x=h, y=bank] {journals/shhc/data/paper_freqscan.dat};
             \addplot[densely dotted, line width=0.9pt] table[x=h, y=cable33] {journals/shhc/data/paper_freqscan.dat};
             \addplot[dashdotted] table[x=h, y=cable132c] {journals/shhc/data/paper_freqscan.dat};
-            \legend{base, bank, cable33, cable132c}
+            \legend{base, bank, cables at mv, cables at hv}
         \end{semilogyaxis}
     \end{tikzpicture}
     \caption{Driving-point harmonic impedance at bus~30.}
@@ -80,7 +80,7 @@ Three capacitive elements are added to the base network, each followed by the sa
     \subfloat[hosting capacity per aggregation rule]{%
     \begin{tikzpicture}
         \begin{axis}[capplot, width=0.335\textwidth, ybar=0pt, bar width=3pt, ymin=0, ymax=11,
-            xtick={1,2,3,4}, xticklabels={base, bank, cable33, cable132c}, xmin=0.5, xmax=4.5, xticklabel style={font=\scriptsize},
+            xtick={1,2,3,4}, xticklabels={base, bank, {cables\\at mv}, {cables\\at hv}}, xmin=0.5, xmax=4.5, xticklabel style={font=\scriptsize, align=center},
             ylabel={$\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$ per unit]}, legend columns=3,
             every axis plot/.append style={mark=none}]
             \addplot[fill=white] table[x=x, y=arith] {journals/shhc/data/paper_cap_hosting.dat};
@@ -101,7 +101,7 @@ Three capacitive elements are added to the base network, each followed by the sa
             \addplot[sbank] table[x=x, y=bank] {journals/shhc/data/paper_cap_alpha.dat};
             \addplot[scable] table[x=x, y=cable33] {journals/shhc/data/paper_cap_alpha.dat};
             \addplot[scablec] table[x=x, y=cable132c] {journals/shhc/data/paper_cap_alpha.dat};
-            \legend{IEC, base, bank, cable33, cable132c}
+            \legend{IEC, base, bank, cables at mv, cables at hv}
         \end{axis}
     \end{tikzpicture}}%
     \subfloat[size of the bank at bus 29]{%
