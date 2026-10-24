@@ -21,7 +21,7 @@ The IEEE 30-bus system has a meshed 132\,kV transmission level and a 33\,kV dist
 \subsection{Equivalence of the Methods}
 \label{sec:equivalence}
 
-Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematical_framework} on the base network. When every angle range collapses to its mean, the uncertainty vanishes and the second-order cone program~\eqref{eq:socp} reproduces the deterministic model of~\cite{vanacker_hosting_2026}. With uncertainty, the second-order cone program and the general quadratically constrained program agree to within~0.4\,\% for each risk factor; the former is solved with \textsc{Mosek}, the latter with the local solver \textsc{Ipopt}, which limits it to~$N = 4$. The same offset appears without uncertainty, so it does not stem from the stochastic reformulation. \placeholder{Cause of the 0.4\,\% offset of the quadratically constrained program under investigation.} Finally, the hosting capacity reduced to the individual harmonic voltage limits~\eqref{eq:reduced_hosting} equals the deterministic model at the mean angles and, for the exact~95\,\% quantile, the second-order cone program with the empirical risk factor, which confirms that these limits bind and that the reduced metrics of Section~\ref{sec:recombination_metrics} describe the full model.
+Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematical_framework} on the base network. When every angle range collapses to its mean, the uncertainty vanishes and the second-order cone program~\eqref{eq:socp} reproduces the deterministic model of~\cite{vanacker_hosting_2026}. With uncertainty, the second-order cone program and the general quadratically constrained program agree to within~$10^{-3}$\,\% for each risk factor, i.e., the local solution of the non-convex program is the global one in these cases; the former is solved with \textsc{Mosek}, the latter with the local solver \textsc{Ipopt}, which limits it to~$N = 4$. Finally, the hosting capacity reduced to the individual harmonic voltage limits~\eqref{eq:reduced_hosting} equals the deterministic model at the mean angles and, for the exact~95\,\% quantile, the second-order cone program with the empirical risk factor, which confirms that these limits bind and that the reduced metrics of Section~\ref{sec:recombination_metrics} describe the full model.
 
 \begin{table}[t]
     \centering
@@ -32,10 +32,10 @@ Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematica
     \begin{tabular}{l c l l r r r}
         case & $N$ & method A & method B & A & B & $\Delta$ [\%] \\ \hline
         point mass & 4 & deterministic & cone & 54.064 & 54.064 & $-9.4\cdot10^{-8}$ \\
-        point mass & 4 & deterministic & quadratic & 54.064 & 53.842 & $-0.41$ \\
-        Cantelli & 4 & cone & quadratic & 48.613 & 48.472 & $-0.29$ \\
-        Gaussian & 4 & cone & quadratic & 52.395 & 52.179 & $-0.41$ \\
-        empirical & 4 & cone & quadratic & 52.522 & 52.305 & $-0.41$ \\
+        point mass & 4 & deterministic & quadratic & 54.064 & 54.064 & $-3.9\cdot10^{-6}$ \\
+        Cantelli & 4 & cone & quadratic & 48.612 & 48.612 & $6.4\cdot10^{-6}$ \\
+        Gaussian & 4 & cone & quadratic & 52.395 & 52.395 & $-1.3\cdot10^{-4}$ \\
+        empirical & 4 & cone & quadratic & 52.522 & 52.522 & $-9.6\cdot10^{-5}$ \\
         reduction & 21 & deterministic & reduced, mean & 3.255 & 3.255 & $3.0\cdot10^{-7}$ \\
         reduction & 21 & cone & reduced, 95\,\% & 3.244 & 3.244 & $-0.01$ \\
     \end{tabular}
