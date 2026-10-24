@@ -8,7 +8,7 @@ First, a steady-state harmonic state-space model of the line-commutated converte
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=0.8\columnwidth]{figures/topo_indust_LCC.pdf}
-\caption{6-pulse line-commutated converter}
+\caption{6-pulse line-commutated converter with ac-side commutation inductance~$L_{ac}$, dc-side smoothing inductance~$L_{dc}$ and dc load, as represented in the harmonic state-space model.}
 \label{fig:topo_indust_LCC} 
 \end{figure}
 
@@ -70,7 +70,7 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the harmonic phasor distribution 
 \begin{figure*}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/harmonic_phasors_CI_LacLdc.png}
-    \caption{Harmonic phasor distributions caused by parameter uncertainty}
+    \caption{Phasors of the characteristic harmonic currents of the converter of Fig.~\ref{fig:topo_indust_LCC} for 5000 Monte Carlo samples of~$L_{ac}$ and~$L_{dc}$: phasor with the mean magnitude and mean phase angle (red) and phasors within the 95\,\% confidence intervals (blue).}
     \label{fig:harmonic_phasors_CI_LacLdc}
 \end{figure*}
 
@@ -82,7 +82,7 @@ As shown in Fig.~\ref{fig:Correlation_Matrix_Copula}, the phase angle correlatio
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\columnwidth]{figures/Correlation_Matrix_Copula.png}
-    \caption{Gaussian copula correlation matrices for harmonic magnitudes and harmonic phase angles.}
+    \caption{Gaussian copula correlation matrices of the harmonic current magnitudes and of the harmonic current phase angles across the harmonic orders, from 5000 Monte Carlo samples of~$L_{ac}$ and~$L_{dc}$.}
     \label{fig:Correlation_Matrix_Copula}
 \end{figure}
 
@@ -121,7 +121,7 @@ The parameters of the Beta distribution are given as $[\alpha, \beta, \ell, \the
 \begin{figure*}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/Bestfit_PDF.png}
-    \caption{Harmonic phasor distributions with corresponding best-fit probability density functions.}
+    \caption{Histograms of the harmonic current magnitudes and phase angles from 5000 Monte Carlo samples of~$L_{ac}$ and~$L_{dc}$, with the best-fit probability density functions of Table~\ref{tab:bestfit_phase}.}
     \label{fig:Bestfit_PDF} 
 \end{figure*}
 
@@ -190,7 +190,7 @@ The comparison plots between the empirical histograms and the denormalized share
 \begin{figure*}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/Shared_Beta_Fit.png}
-    \caption{Empirical histograms and denormalized shared Beta probability density functions for harmonic phase angles.}
+    \caption{Histograms of the harmonic current phase angles from 5000 Monte Carlo samples of~$L_{ac}$ and~$L_{dc}$, with the denormalized shared Beta probability density functions of Table~\ref{tab:beta_phase_params}.}
     \label{fig:Shared_Beta_Fit} 
 \end{figure*}
 

@@ -150,7 +150,7 @@ For fixed weights, \eqref{eq:real_harmonic_unit_current_pce}--\eqref{eq:imag_har
     \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} = C^{\text{im}}_{\Node,\Harmonic,\PCEIndex}\, I_{\Harmonic},
     \label{eq:voltage_linear}
 \end{IEEEeqnarray}
-where~$C^{\text{re}}$ and~$C^{\text{im}}$ follow from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network, obtained by inverting the harmonic admittance matrix, the weights~$w_{\Unit}$ and the trigonometric coefficients~\eqref{eq:trig_quadrature}; branch currents follow analogously. The lifting then collapses to the precomputed scalars,
+where~$C^{\text{re}}$ and~$C^{\text{im}}$ follow from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network, obtained by inverting the harmonic admittance matrix, the weights~$w_{\Unit}$ and the trigonometric coefficients~\eqref{eq:trig_quadrature}; branch currents follow analogously. The admittance matrix includes the phase shift of the transformer vector groups, which is exact for the positive- and negative-sequence harmonics considered in this work; zero-sequence harmonics would additionally require the winding configuration and earthing of the transformers. The lifting then collapses to the precomputed scalars,
 \begin{IEEEeqnarray}{ l }
 \alpha_{\Node,\Harmonic,\PCEIndex} = \mkern-12mu \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-12mu M_{\bar{\kappa},\PCEIndex} \big( C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{2}} \nonumber \\
 \qquad\qquad +\: C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{2}} \big),

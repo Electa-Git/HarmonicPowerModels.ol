@@ -13,7 +13,7 @@
     scable/.style={densely dotted, mark=square},
     scablec/.style={dashdotted, mark=triangle}}
 
-Fist, the equivalence is shown between the methods of Section~\ref{sec:mathematical_framework}, and second, the levers for harmonic recombination are investigated, both on the IEEE 30-bus system. The IEEE 30-bus system has a meshed 132\,kV transmission level and a 33\,kV distribution level. Bus~1 is the only reference bus, at~$1.0\angle0^{\circ}$ per unit at the fundamental; the other generator buses are voltage-controlled buses, and no bus is an ideal harmonic ground. At the harmonics, the generators are represented by their subtransient impedance, with a short-circuit power of~2\,GVA for the generators at buses~1 and~2 and~0.2\,GVA for the others, at a reactance-to-resistance ratio of~20, as in~\cite{vanacker_impact_2025}. The line charging of the original data is removed, so that the base network is purely inductive, as the overhead-line case of~\cite{vanacker_impact_2025}: with it, the line charging forms a parallel resonance with the network inductance near~$\Harmonic = 9.4$, i.e., a capacitive element in disguise. Without line charging, the network cannot be operated within the original reactive power limits of its generators and synchronous condensers. The fundamental operating point therefore follows from an ac optimal power flow with bus~1 fixed at~1.0 per unit, the branch ratings and the original voltage limits of~0.94--1.05 per unit enforced, and the reactive power limits of all generators lifted. The harmonics~$\HarmonicSet = \{5,7,11,13\}$, characteristic of the 6-pulse converter of Section~\ref{sec:uncertainty}, are limited by the individual and total harmonic distortion planning levels and the root-mean-square voltage and current limits. The harmonic units are the first~$N$ loads, with $N = 21$ unless stated otherwise, under the absolute equality fairness criterion, at a risk level~$\varepsilon = 0.05$. All results are in per unit on a 100\,MVA basis, and each subsection below has its own script in \textsc{HarmonicPowerModels.jl}.
+First, the equivalence is shown between the methods of Section~\ref{sec:mathematical_framework}, and second, the levers for harmonic recombination are investigated, both on the IEEE 30-bus system. The IEEE 30-bus system has a meshed 132\,kV transmission level and a 33\,kV distribution level. Bus~1 is the only reference bus, at~$1.0\angle0^{\circ}$\,pu at the fundamental; the other generator buses are voltage-controlled buses, and no bus is an ideal harmonic ground. At the harmonics, the generators are represented by their subtransient impedance, with a short-circuit power of~2\,GVA for the generators at buses~1 and~2 and~0.2\,GVA for the others, at a reactance-to-resistance ratio of~20, as in~\cite{vanacker_impact_2025}. The line charging of the original data is removed, so that the base network is purely inductive, as the overhead-line case of~\cite{vanacker_impact_2025}: with it, the line charging forms a parallel resonance with the network inductance near~$\Harmonic = 9.4$, i.e., a capacitive element in disguise. Without line charging, the network cannot be operated within the original reactive power limits of its generators and synchronous condensers. The fundamental operating point therefore follows from an ac optimal power flow with bus~1 fixed at~1.0\,pu, the branch ratings and the original voltage limits of~0.94--1.05\,pu enforced, and the reactive power limits of all generators lifted. The harmonics~$\HarmonicSet = \{5,7,11,13\}$, characteristic of the 6-pulse converter of Section~\ref{sec:uncertainty}, are limited by the individual and total harmonic distortion planning levels and the root-mean-square voltage and current limits. The harmonic units are the first~$N$ loads, with $N = 21$ unless stated otherwise, under the absolute equality fairness criterion, at a risk level~$\varepsilon = 0.05$. All results are in pu on a 100\,MVA basis, and each subsection below has its own script in \textsc{HarmonicPowerModels.jl}.
 
 \subsection{Equivalence of the Methods}
 \label{sec:equivalence}
@@ -22,23 +22,23 @@ Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematica
 
 \begin{table}[b!]
     \centering
-    \caption{Equivalence of the methods on the base network: total hosting capacity $\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$ per unit].}
+    \caption{Equivalence of the methods on the base network.}
     \label{tab:equivalence}
-    \setlength{\tabcolsep}{1.8pt}
+    \setlength{\tabcolsep}{3pt}
     \scriptsize
-    \begin{tabular}{l c l l r r r}
-        case & $N$ & method A & method B & A & B & $\Delta$ [\%] \\ \hline
-        point mass & 4 & deterministic & cone & 54.064 & 54.064 & $-9.4\cdot10^{-8}$ \\
-        point mass & 4 & deterministic & quadratic & 54.064 & 54.064 & $-3.9\cdot10^{-6}$ \\
-        Cantelli & 4 & cone & quadratic & 48.612 & 48.612 & $1.8\cdot10^{-5}$ \\
-        Gaussian & 4 & cone & quadratic & 52.395 & 52.395 & $9.9\cdot10^{-6}$ \\
-        empirical & 4 & cone & quadratic & 52.522 & 52.522 & $8.6\cdot10^{-6}$ \\
-        reduction & 21 & deterministic & reduced, mean & 3.255 & 3.255 & $3.0\cdot10^{-7}$ \\
-        reduction & 21 & cone & reduced, 95\,\% & 3.244 & 3.244 & $-0.01$ \\
+    \begin{tabular}{l c l l r r}
+        case & $N$ & method A & method B & obj. & rel. diff. \\ \hline
+        point mass & 4 & deterministic & cone & 54.064 & $-9.4\cdot10^{-10}$ \\
+        point mass & 4 & deterministic & quadratic & 54.064 & $-3.9\cdot10^{-8}$ \\
+        Cantelli & 4 & cone & quadratic & 48.612 & $1.8\cdot10^{-7}$ \\
+        Gaussian & 4 & cone & quadratic & 52.395 & $9.9\cdot10^{-8}$ \\
+        empirical & 4 & cone & quadratic & 52.522 & $8.6\cdot10^{-8}$ \\
+        reduction & 21 & deterministic & reduced, mean & 3.255 & $3.0\cdot10^{-9}$ \\
+        reduction & 21 & cone & reduced, 95\,\% & 3.244 & $-1.3\cdot10^{-4}$ \\
     \end{tabular}
 
     \vspace{2pt}
-    \parbox{\columnwidth}{\scriptsize Cone: second-order cone program~\eqref{eq:socp}; quadratic: quadratically constrained program; reduced: reduced model~\eqref{eq:reduced_hosting} at the mean angles or the exact 95\,\% quantile; $\Delta$: relative difference of B to A.}
+    \parbox{\columnwidth}{\scriptsize Obj.: total hosting capacity $\sum_{\Harmonic} I_{\Harmonic}$ of method A [$10^{-3}$\,pu]; rel. diff.: relative difference of method B to method A. Cone: second-order cone program~\eqref{eq:socp}; quadratic: quadratically constrained program; reduced: reduced model~\eqref{eq:reduced_hosting} at the mean angles or the exact 95\,\% quantile.}
 \end{table}
 
 \subsection{Levers for Harmonic Recombination}
@@ -60,7 +60,7 @@ Without compensation, the 132\,kV cables cannot be operated within the branch ra
     \begin{tikzpicture}
         \begin{semilogyaxis}[shhc, width=0.95\columnwidth, height=4.4cm,
             xmin=1, xmax=15, ymin=0.1, ymax=30,
-            xlabel={harmonic order $\Harmonic$}, ylabel={$|Z_{30,30}|$ [per unit]},
+            xlabel={harmonic order $\Harmonic$}, ylabel={$|Z_{30,30}|$ [pu]},
             xtick={1,3,5,7,9,11,13,15},
             every axis plot/.append style={mark=none}]
             \addplot[solid] table[x=h, y=base] {journals/shhc/data/paper_freqscan.dat};
@@ -70,7 +70,7 @@ Without compensation, the 132\,kV cables cannot be operated within the branch ra
             \legend{base, bank, cables at mv, cables at hv}
         \end{semilogyaxis}
     \end{tikzpicture}
-    \caption{Driving-point harmonic impedance at bus~30.}
+    \caption{Driving-point harmonic impedance~$|Z_{30,30}|$ at bus~30, the end of the longest 33\,kV feeder, against the harmonic order, for the purely inductive base network, a 19\,Mvar capacitor bank at bus~29, all 33\,kV lines as cables (cables at mv) and all 132\,kV lines as 80\,\% compensated cables (cables at hv).}
     \label{fig:freqscan}
 \end{figure}
 
@@ -79,16 +79,16 @@ Without compensation, the 132\,kV cables cannot be operated within the branch ra
     \pgfplotsset{capplot/.style={shhc, height=4.4cm}}
     \subfloat[hosting capacity per aggregation rule]{%
     \begin{tikzpicture}
-        \begin{axis}[capplot, width=0.335\textwidth, ybar=0pt, bar width=3pt, ymin=0, ymax=11,
+        \begin{axis}[capplot, width=0.295\textwidth, ybar=0pt, bar width=3pt, ymin=0, ymax=11,
             xtick={1,2,3,4}, xticklabels={base, bank, {cables\\at mv}, {cables\\at hv}}, xmin=0.5, xmax=4.5, xticklabel style={font=\scriptsize, align=center},
-            ylabel={$\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$ per unit]}, legend columns=3,
+            ylabel={$\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$\,pu]}, legend columns=2, legend style={/tikz/every even column/.append style={column sep=3pt}},
             every axis plot/.append style={mark=none}]
             \addplot[fill=white] table[x=x, y=arith] {journals/shhc/data/paper_cap_hosting.dat};
             \addplot[fill=gray!30] table[x=x, y=rob] {journals/shhc/data/paper_cap_hosting.dat};
             \addplot[fill=gray!60] table[x=x, y=q95] {journals/shhc/data/paper_cap_hosting.dat};
             \addplot[fill=black] table[x=x, y=det] {journals/shhc/data/paper_cap_hosting.dat};
             \addplot[pattern=north east lines] table[x=x, y=iec] {journals/shhc/data/paper_cap_hosting.dat};
-            \legend{arithmetic, robust, 95\,\%, deterministic, IEC}
+            \legend{arithmetic sum ($\alpha{=}1$), robust bound, 95\,\% chance bound, mean angle, IEC summation law}
         \end{axis}
     \end{tikzpicture}}%
     \subfloat[equivalent summation exponent]{%
@@ -107,33 +107,26 @@ Without compensation, the 132\,kV cables cannot be operated within the branch ra
     \subfloat[size of the bank at bus 29]{%
     \begin{tikzpicture}
         \begin{axis}[capplot, width=0.31\textwidth, xmin=0, xmax=20, ymin=0, ymax=6, xtick={0,5,10,15,20},
-            xlabel={bank size [Mvar]}, ylabel={$\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$ per unit]}]
+            xlabel={bank size [Mvar]}, ylabel={$\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$\,pu]}, legend columns=2]
             \addplot[solid, mark=*] table[x=mvar, y=q95] {journals/shhc/data/paper_cap_size.dat};
-            \addplot[densely dashed, mark=o] table[x=mvar, y=rob] {journals/shhc/data/paper_cap_size.dat};
-            \legend{95\,\%, robust}
+            \addplot[densely dashed, mark=o] table[x=mvar, y=arith] {journals/shhc/data/paper_cap_size.dat};
+            \legend{95\,\% chance bound, arithmetic sum}
         \end{axis}
     \end{tikzpicture}}
-    \caption{Capacitive elements, one converter type, $N = 21$: (a) total hosting capacity per aggregation rule, (b) equivalent summation exponent of the 95\,\% chance bound against the indicative exponents of IEC~61000-3-6 (gray), and (c) total hosting capacity against the size of the bank at bus~29.}
+    \caption{Capacitive elements, IEEE 30-bus system, $N = 21$ units of one converter type, $\varepsilon = 0.05$: (a) total hosting capacity of the base network, a 19\,Mvar bank at bus~29, cables at mv and cables at hv, for each aggregation rule of Section~\ref{sec:recombination_metrics}; (b) equivalent summation exponent of the 95\,\% chance bound per harmonic, against the indicative exponents of IEC~61000-3-6 (gray); (c) total hosting capacity of the 95\,\% chance bound and of arithmetic summation against the size of the bank at bus~29, whose gap is the recombination.}
     \label{fig:capacitive}
-\end{figure*}
 
-The capacitive elements change the hosting capacity through the network impedance, Fig.~\ref{fig:capacitive}(a): relative to the base network, the bank raises the 95\,\% hosting capacity by~43\,\%, the 33\,kV cables lower it by~48\,\% through the resonances near the 7th and 13th harmonic, and the compensated 132\,kV cables raise it by~62\,\%. Their effect on recombination is small, Fig.~\ref{fig:capacitive}(b): with one converter type, the equivalent summation exponent stays between~1.01 and~1.05 for every harmonic and network, except for the 13th harmonic with the 33\,kV cables, where the transfer impedances near the resonance rotate apart and lift it to~1.14. Consequently, the 95\,\% hosting capacity is only~4--12\,\% above arithmetic summation and~3--10\,\% above the robust bound, and the deterministic angle lies within~1\,\% of it. The summation law with the indicative exponents of IEC~61000-3-6 overestimates the hosting capacity by a factor of~1.8--2.8.
-
-The size of the bank matters more than its presence, Fig.~\ref{fig:capacitive}(c). The resonance frequency scales with the inverse square root of the bank size: a 5\,Mvar bank places it at~$\Harmonic \approx 5.5$, close to the 5th harmonic, and lowers the hosting capacity by~30\,\%, whereas banks of~15--20\,Mvar place it below the 5th harmonic and raise it by~41--47\,\%. The equivalent summation exponent remains below~1.05 for every size. Capacitive elements are therefore a strong lever on the hosting capacity, but a weak one on recombination.
-
-\subsubsection{Converter Types}
-\label{sec:converter_mix}
-
-With~$T$ converter types, the units are assigned cyclically to types with mean firing delays $\alpha_{\text{f}} = 60^{\circ}(t-1)/T$, $t = 1,\ldots,T$, each with a firing-delay range of~$30^{\circ}$ and one shared random variable per type, Section~\ref{sec:harmonic_current_angle_uncertainty}; $T = 1$ is the uncontrolled converter, and $T = N = 21$ gives every unit its own firing delay. Fig.~\ref{fig:types} shows the result for the base network and the network with the bank. Mixing converter types with different mean angles is the condition under which substantial recombination occurs: the 95\,\% hosting capacity rises by~40--46\,\% for two types by~80--93\,\% for four types and by up to~129\,\% for eight types, Fig.~\ref{fig:types}(a); with the capacitor bank and eight types, it even exceeds the summation law. With one type per unit, the gain falls back to~80\,\%: the mean firing delays cover the same range, but their assignment to the buses differs, which indicates that the gain also depends on where the types connect. With more types, the mean angles~$\Harmonic\,\alpha_{\text{f}}$ cover more of the circle at every harmonic, which spreads the contributions irrespective of the network. The equivalent summation exponent rises accordingly, Fig.~\ref{fig:types}(b)--(c): for four or more types, the 5th and 7th harmonic reach~1.22--1.76, i.e., around the indicative~1.4, whereas the 11th and 13th harmonic remain at~1.19--1.47, well below the indicative~2.0.
-
-\begin{figure*}[t]
-    \centering
+    \vspace{8pt}
     \pgfplotsset{typeplot/.style={shhc, height=4.4cm, xmin=0.7, xmax=5.3, xtick={1,2,3,4,5},
-        xticklabels={1,2,4,8,21}, xlabel={number of converter types $T$}}}
+        xticklabels={1,2,4,8,21}, xlabel={number of converter types $T$}},
+        expplot/.style={shhc, height=4.4cm, ymin=0.95, ymax=2.1, legend columns=3,
+        xtick={1,2,3,4}, xticklabels={5,7,11,13}, xmin=0.7, xmax=4.3, xlabel={harmonic order $\Harmonic$}},
+        tstyle1/.style={solid, mark=*}, tstyle2/.style={densely dashed, mark=o}, tstyle4/.style={densely dotted, mark=square},
+        tstyle8/.style={dashdotted, mark=triangle}, tstyle21/.style={loosely dashed, mark=diamond*}}
     \subfloat[hosting capacity]{%
     \begin{tikzpicture}
         \begin{axis}[typeplot, width=0.335\textwidth, ymin=0, ymax=12, legend columns=2,
-            ylabel={$\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$ per unit]}]
+            ylabel={$\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$\,pu]}]
             \addplot[sbase] table[x=x, y=bq95] {journals/shhc/data/paper_types.dat};
             \addplot[sbank] table[x=x, y=kq95] {journals/shhc/data/paper_types.dat};
             \addplot[iec, solid] table[x=x, y=biec] {journals/shhc/data/paper_types.dat};
@@ -145,32 +138,41 @@ With~$T$ converter types, the units are assigned cyclically to types with mean f
     \end{tikzpicture}}%
     \subfloat[exponent, base network]{%
     \begin{tikzpicture}
-        \begin{axis}[typeplot, width=0.31\textwidth, ymin=0.95, ymax=2.1, legend columns=5,
-            ylabel={$\alpha^{\text{eq}}_{\Harmonic}$ [-]}]
-            \addplot[iec, forget plot] coordinates {(0.7,1.4) (5.3,1.4)};
-            \addplot[iec] coordinates {(0.7,2.0) (5.3,2.0)};
-            \addplot[solid, mark=*] table[x=x, y=ba5] {journals/shhc/data/paper_types.dat};
-            \addplot[densely dashed, mark=o] table[x=x, y=ba7] {journals/shhc/data/paper_types.dat};
-            \addplot[densely dotted, mark=square] table[x=x, y=ba11] {journals/shhc/data/paper_types.dat};
-            \addplot[dashdotted, mark=triangle] table[x=x, y=ba13] {journals/shhc/data/paper_types.dat};
-            \legend{IEC, $\Harmonic{=}5$, $7$, $11$, $13$}
+        \begin{axis}[expplot, width=0.31\textwidth, ylabel={$\alpha^{\text{eq}}_{\Harmonic}$ [-]}]
+            \addplot[iec] coordinates {(0.7,1.4) (2.5,1.4) (2.5,2.0) (4.3,2.0)};
+            \addplot[tstyle1] table[x=x, y=T1] {journals/shhc/data/paper_types_alpha_b.dat};
+            \addplot[tstyle2] table[x=x, y=T2] {journals/shhc/data/paper_types_alpha_b.dat};
+            \addplot[tstyle4] table[x=x, y=T4] {journals/shhc/data/paper_types_alpha_b.dat};
+            \addplot[tstyle8] table[x=x, y=T8] {journals/shhc/data/paper_types_alpha_b.dat};
+            \addplot[tstyle21] table[x=x, y=T21] {journals/shhc/data/paper_types_alpha_b.dat};
+            \legend{IEC, $T{=}1$, $T{=}2$, $T{=}4$, $T{=}8$, $T{=}21$}
         \end{axis}
     \end{tikzpicture}}%
     \subfloat[exponent, bank]{%
     \begin{tikzpicture}
-        \begin{axis}[typeplot, width=0.31\textwidth, ymin=0.95, ymax=2.1, legend columns=5, yticklabels={}]
-            \addplot[iec, forget plot] coordinates {(0.7,1.4) (5.3,1.4)};
-            \addplot[iec] coordinates {(0.7,2.0) (5.3,2.0)};
-            \addplot[solid, mark=*] table[x=x, y=ka5] {journals/shhc/data/paper_types.dat};
-            \addplot[densely dashed, mark=o] table[x=x, y=ka7] {journals/shhc/data/paper_types.dat};
-            \addplot[densely dotted, mark=square] table[x=x, y=ka11] {journals/shhc/data/paper_types.dat};
-            \addplot[dashdotted, mark=triangle] table[x=x, y=ka13] {journals/shhc/data/paper_types.dat};
-            \legend{IEC, $\Harmonic{=}5$, $7$, $11$, $13$}
+        \begin{axis}[expplot, width=0.31\textwidth, yticklabels={}]
+            \addplot[iec] coordinates {(0.7,1.4) (2.5,1.4) (2.5,2.0) (4.3,2.0)};
+            \addplot[tstyle1] table[x=x, y=T1] {journals/shhc/data/paper_types_alpha_k.dat};
+            \addplot[tstyle2] table[x=x, y=T2] {journals/shhc/data/paper_types_alpha_k.dat};
+            \addplot[tstyle4] table[x=x, y=T4] {journals/shhc/data/paper_types_alpha_k.dat};
+            \addplot[tstyle8] table[x=x, y=T8] {journals/shhc/data/paper_types_alpha_k.dat};
+            \addplot[tstyle21] table[x=x, y=T21] {journals/shhc/data/paper_types_alpha_k.dat};
+            \legend{IEC, $T{=}1$, $T{=}2$, $T{=}4$, $T{=}8$, $T{=}21$}
         \end{axis}
     \end{tikzpicture}}
-    \caption{Number of converter types, $N = 21$: (a) total 95\,\% hosting capacity against arithmetic summation and the summation law of IEC~61000-3-6, and (b)--(c) equivalent summation exponent per harmonic order.}
+    \caption{Converter types, $N = 21$ units assigned cyclically to $T$ types with mean firing delays $60^{\circ}(t-1)/T$, $\varepsilon = 0.05$, base network and network with the 19\,Mvar bank at bus~29: (a) total hosting capacity of the 95\,\% chance bound against~$T$, with arithmetic summation and the IEC~61000-3-6 summation law; (b)--(c) equivalent summation exponent of the 95\,\% chance bound per harmonic for each~$T$, against the indicative exponents of IEC~61000-3-6 (gray).}
     \label{fig:types}
 \end{figure*}
+
+The capacitive elements change the hosting capacity through the network impedance, Fig.~\ref{fig:capacitive}(a): relative to the base network, the bank raises the 95\,\% hosting capacity by~43\,\%, the 33\,kV cables lower it by~48\,\% through the resonances near the 7th and 13th harmonic, and the compensated 132\,kV cables raise it by~62\,\%. Their effect on recombination is smaller, but not negligible, Fig.~\ref{fig:capacitive}(a): the 95\,\% hosting capacity lies 4\,\% above arithmetic summation in the base network, and 7\,\% with the bank, 12\,\% with the cables at mv and 7\,\% with the cables at hv. Near a resonance, the transfer impedances from the units to a bus rotate apart, which spreads their contributions. The equivalent summation exponent hardly reflects this, Fig.~\ref{fig:capacitive}(b): it stays between~1.01 and~1.05, except for the 13th harmonic with the cables at mv, at~1.14, as the exponent compresses small gains; for 21 contributions of similar size, an exponent of~1.03 already corresponds to a gain of 9\,\%, whereas the indicative~1.4 corresponds to a factor of~2.4. The 95\,\% hosting capacity also lies 3--10\,\% above the robust bound and within~1\,\% of the deterministic angle. The summation law with the indicative exponents of IEC~61000-3-6 overestimates the hosting capacity by a factor of~1.8--2.8.
+
+The size of the bank matters more than its presence, Fig.~\ref{fig:capacitive}(c). The resonance frequency scales with the inverse square root of the bank size: banks of~1--1.5\,Mvar place it near the 11th harmonic and lower the hosting capacity by~36--38\,\%, a 5\,Mvar bank places it close to the 5th harmonic and lowers it by~30\,\%, whereas banks of~15--20\,Mvar place it below the 5th harmonic and raise it by~41--47\,\%. From 2.5\,Mvar onwards, with the resonance between or below the characteristic harmonics, the gain over arithmetic summation rises from 4\,\% to~6--9\,\%. At bus~29, the end of a 33\,kV feeder, all units see the bank through a common path, which limits the rotation of their transfer impedances. Capacitive elements are therefore a strong lever on the hosting capacity, and a moderate one on recombination.
+
+\subsubsection{Converter Types}
+\label{sec:converter_mix}
+
+With~$T$ converter types, the units are assigned cyclically to types with mean firing delays $\alpha_{\text{f}} = 60^{\circ}(t-1)/T$, $t = 1,\ldots,T$, each with a firing-delay range of~$30^{\circ}$ and one shared random variable per type, Section~\ref{sec:harmonic_current_angle_uncertainty}; $T = 1$ is the uncontrolled converter, and $T = N = 21$ gives every unit its own firing delay. Fig.~\ref{fig:types} shows the result for the base network and the network with the bank. Mixing converter types with different mean angles is the condition under which substantial recombination occurs: the 95\,\% hosting capacity rises by~40--46\,\% for two types by~80--93\,\% for four types and by up to~129\,\% for eight types, Fig.~\ref{fig:types}(a); with the capacitor bank and eight types, it even exceeds the summation law. With one type per unit, the gain falls back to~80\,\%: the mean firing delays cover the same range, but their assignment to the buses differs, which indicates that the gain also depends on where the types connect. With more types, the mean angles~$\Harmonic\,\alpha_{\text{f}}$ cover more of the circle at every harmonic, which spreads the contributions irrespective of the network. The equivalent summation exponent rises accordingly, Fig.~\ref{fig:types}(b)--(c): for four or more types, the 5th and 7th harmonic reach~1.22--1.76, i.e., around the indicative~1.4, whereas the 11th and 13th harmonic remain at~1.19--1.47, well below the indicative~2.0.
+
 
 \subsubsection{Choice of the Stochastic Bound}
 \label{sec:bounds}
@@ -179,32 +181,35 @@ Fig.~\ref{fig:bounds} compares the three risk factors of Section~\ref{sec:polyno
 
 \begin{figure}[t]
     \centering
-    \pgfplotsset{boundplot/.style={shhc, height=4.0cm, xmin=0.008, xmax=0.25,
-        xtick={0.01,0.02,0.05,0.1,0.2}, xticklabels={0.01,0.02,0.05,0.1,0.2}, xlabel={risk level $\varepsilon$}}}
-    \subfloat[hosting capacity relative to the exact quantile]{%
+    \pgfplotsset{boundplot/.style={shhc, width=0.95\columnwidth, height=3.6cm, xmin=0.008, xmax=0.25,
+        xtick={0.01,0.02,0.05,0.1,0.2}, xticklabels={0.01,0.02,0.05,0.1,0.2}, xlabel={risk level $\varepsilon$}},
+        can/.style={solid}, gau/.style={densely dashed}, emp/.style={densely dotted, line width=0.9pt},
+        one/.style={mark=o}, four/.style={mark=square*}}
+    \subfloat[hosting capacity relative to the exact $(1-\varepsilon)$ quantile]{%
     \begin{tikzpicture}
-        \begin{semilogxaxis}[boundplot, width=0.49\columnwidth, ymin=-40, ymax=10, ylabel={difference [\%]}, legend columns=3]
-            \addplot[solid, mark=*] table[x=eps, y=d1can] {journals/shhc/data/paper_bounds.dat};
-            \addplot[solid, mark=o] table[x=eps, y=d1gau] {journals/shhc/data/paper_bounds.dat};
-            \addplot[solid, mark=square] table[x=eps, y=d1emp] {journals/shhc/data/paper_bounds.dat};
-            \addplot[densely dashed, mark=*, forget plot] table[x=eps, y=d4can] {journals/shhc/data/paper_bounds.dat};
-            \addplot[densely dashed, mark=o, forget plot] table[x=eps, y=d4gau] {journals/shhc/data/paper_bounds.dat};
-            \addplot[densely dashed, mark=square, forget plot] table[x=eps, y=d4emp] {journals/shhc/data/paper_bounds.dat};
-            \legend{Cantelli, Gaussian, empirical}
+        \begin{semilogxaxis}[boundplot, ymin=-40, ymax=10, ylabel={difference [\%]}, legend columns=3]
+            \addplot[can, one] table[x=eps, y=d1can] {journals/shhc/data/paper_bounds.dat};
+            \addplot[gau, one] table[x=eps, y=d1gau] {journals/shhc/data/paper_bounds.dat};
+            \addplot[emp, one] table[x=eps, y=d1emp] {journals/shhc/data/paper_bounds.dat};
+            \addplot[can, four] table[x=eps, y=d4can] {journals/shhc/data/paper_bounds.dat};
+            \addplot[gau, four] table[x=eps, y=d4gau] {journals/shhc/data/paper_bounds.dat};
+            \addplot[emp, four] table[x=eps, y=d4emp] {journals/shhc/data/paper_bounds.dat};
+            \legend{Cantelli $T{=}1$, Gaussian $T{=}1$, empirical $T{=}1$, Cantelli $T{=}4$, Gaussian $T{=}4$, empirical $T{=}4$}
         \end{semilogxaxis}
-    \end{tikzpicture}}%
-    \subfloat[violation probability]{%
+    \end{tikzpicture}}\\
+    \subfloat[violation probability of the binding limit]{%
     \begin{tikzpicture}
-        \begin{loglogaxis}[boundplot, width=0.41\columnwidth, xtick={0.01,0.05,0.2}, xticklabels={0.01,0.05,0.2}, ymin=0.001, ymax=0.3, ylabel={}]
+        \begin{loglogaxis}[boundplot, ymin=0.001, ymax=0.3, ylabel={probability [-]}]
             \addplot[iec] coordinates {(0.008,0.008) (0.25,0.25)};
-            \addplot[solid, mark=o] table[x=eps, y=v1gau] {journals/shhc/data/paper_bounds.dat};
-            \addplot[solid, mark=square] table[x=eps, y=v1emp] {journals/shhc/data/paper_bounds.dat};
-            \addplot[densely dashed, mark=*] table[x=eps, y=v4can] {journals/shhc/data/paper_bounds.dat};
-            \addplot[densely dashed, mark=o] table[x=eps, y=v4gau] {journals/shhc/data/paper_bounds.dat};
-            \addplot[densely dashed, mark=o, forget plot] table[x=eps, y=v4emp] {journals/shhc/data/paper_bounds.dat};
+            \addplot[can, one] table[x=eps, y=v1can] {journals/shhc/data/paper_bounds.dat};
+            \addplot[gau, one] table[x=eps, y=v1gau] {journals/shhc/data/paper_bounds.dat};
+            \addplot[emp, one] table[x=eps, y=v1emp] {journals/shhc/data/paper_bounds.dat};
+            \addplot[can, four] table[x=eps, y=v4can] {journals/shhc/data/paper_bounds.dat};
+            \addplot[gau, four] table[x=eps, y=v4gau] {journals/shhc/data/paper_bounds.dat};
+            \addplot[emp, four] table[x=eps, y=v4emp] {journals/shhc/data/paper_bounds.dat};
         \end{loglogaxis}
     \end{tikzpicture}}
-    \caption{Choice of the stochastic bound, base network, $N = 21$, one converter type (solid) and four types (dashed): (a) hosting capacity relative to the exact $(1-\varepsilon)$ quantile, and (b) violation probability of the binding individual harmonic voltage limit against the risk level (gray). Violation probabilities of zero are not shown.}
+    \caption{Choice of the stochastic bound, base network, $N = 21$, one ($T = 1$) and four ($T = 4$) converter types: (a) total hosting capacity with the Cantelli, Gaussian and empirical risk factor relative to the exact $(1-\varepsilon)$ quantile, and (b) violation probability of the binding individual harmonic voltage limit by Monte Carlo simulation with 20\,000 samples, against the risk level~$\varepsilon$ (gray: probability equal to~$\varepsilon$). Violation probabilities of zero are not shown.}
     \label{fig:bounds}
 \end{figure}
 
@@ -225,7 +230,7 @@ Fig.~\ref{fig:tractability} shows the computation time of the second-order cone 
             \legend{total, solver}
         \end{loglogaxis}
     \end{tikzpicture}
-    \caption{Computation time of the second-order cone program for $N = 4$, 8, 13, 21 units of one type (solid) and $T = 2$, 4, 8, 21 types for $N = 21$ (dashed).}
+    \caption{Computation time of the second-order cone program on the IEEE 30-bus base network against the cardinality~$|\PCESet|$ of the basis, for $N = 4$, 8, 13 and 21 units of one converter type (solid) and $T = 2$, 4, 8 and 21 types for $N = 21$ (dashed); total: fundamental power flow, polynomial chaos data, precomputation and solution; solver: \textsc{Mosek} only.}
     \label{fig:tractability}
 \end{figure}
 
@@ -236,8 +241,8 @@ The results identify the conditions under which harmonic recombination raises th
 \begin{enumerate*}
     \item[(i)] differences in mean angle between units, from different converter technologies, which is the dominant mechanism and increases with the number of types;
     \item[(ii)] the rotation~$\Harmonic\,\theta_{\Node}$ of the local angle reference, which grows with the harmonic order and with the spread of the fundamental voltage angles; and
-    \item[(iii)] capacitive elements that rotate the transfer impedances apart around a resonance.
+    \item[(iii)] capacitive elements that rotate the transfer impedances apart around a resonance, which raises the gain over arithmetic summation from 4 to 7--12\,\%.
 \end{enumerate*}
-Uncertainty around a common mean angle does not create recombination by itself: it costs hosting capacity relative to the deterministic angle, and its benefit is the gain over a robust bound that a chance constraint offers.
+The dispersion of the angles around a common mean yields only little recombination by itself, 4--12\,\% over arithmetic summation here, as the angles of a single converter type are concentrated, with standard deviations of~6--16$^{\circ}$ for the harmonics considered; the 95\,\% hosting capacity then lies within~1\,\% of the deterministic angle, which is, however, not a safe design value. The benefit of the chance constraint is its gain over the robust bound, 3--10\,\% here.
 
 With one converter type, the equivalent summation exponent is close to one at every harmonic, and the indicative exponents of IEC~61000-3-6 overestimate the hosting capacity by a factor of~1.8--2.8. This agrees with the measurements of Wang et al.\ in residential distribution systems, where low-order harmonic currents from different homes add up with little cancellation~\cite{wang_characteristics_2017}, and with the caution of Santos et al.\ that the indicative exponents may overestimate the aggregate of correlated sources~\cite{santos_considerations_2015}. Cho et al.\ found that deterministic emission limits can drive the voltage distortion to twice the planning levels~\cite{cho_analysis_2019}; the summation law, applied to a population of one converter type, has the same effect in the opposite direction. With several types, the low-order exponent reaches the indicative~1.4, but the high-order exponent remains below the indicative~2.0. Wang et al.\ measured cancellation mainly at the higher orders and their residential loads combines many technologies, and the angle spread of each converter grows with the harmonic order, which the present 6-pulse model captures only in part. The high-order exponent is therefore the result most sensitive to the converter models of Section~\ref{sec:uncertainty}.
