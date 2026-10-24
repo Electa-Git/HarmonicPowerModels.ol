@@ -135,16 +135,18 @@ For~$\PCEIndex = 0$ the quadratic form is positive semidefinite, but for~$\PCEIn
 \end{IEEEeqnarray}
 a second-order cone in~$\{\RVZ_{\PCEIndex}\}_{\PCEIndex\in\PCESet}$. With the equalities~\eqref{eq:soc_aux_eq} for~$\PCEIndex \neq 0$, the general stochastic harmonic hosting capacity problem is a non-convex quadratically constrained quadratic program.
 
-\subsection{Second-Order Cone Program for Absolute Equality}
+\subsection{Reduction to a Second-Order Cone Program}
 \label{sec:absolute_equality_socp}
 
-Under the absolute equality fairness criterion, all harmonic units share a single hosting capacity~$I_{\Harmonic}$ per harmonic. The network equations are linear in the coefficients, and~\eqref{eq:real_harmonic_unit_current_pce}--\eqref{eq:imag_harmonic_unit_current_pce} express every injected current coefficient as a known parameter times~$I_{\Harmonic}$, so all voltage coefficients are linear in~$I_{\Harmonic}$,
+The general problem reduces to a second-order cone program for every fairness criterion that fixes the ratios between the allocations of the harmonic units, i.e., $\CurrentMagnitude_{\Unit,\Harmonic,0} = w_{\Unit}\,I_{\Harmonic}$ with fixed positive weights~$w_{\Unit}$ and a single hosting capacity~$I_{\Harmonic}$ per harmonic. Absolute equality, $w_{\Unit} = 1$, and weighted equality, e.g., with weights proportional to the rated power of the units, are such criteria. The Kalai-Smorodinsky solution~(37)--(39) in~\cite{vanacker_hosting_2026} is one when all ratios to the individual maxima are equal at the optimum, with~$w_{\Unit}$ the individual maximum of unit~$\Unit$, and maximin~(35) in~\cite{vanacker_hosting_2026} coincides with absolute equality when raising the current of a unit cannot relax a binding constraint. Criteria with a free allocation, e.g., maximum efficiency or proportional fairness~\cite{chen_guide_2023}, require a current per unit and lead to a semidefinite relaxation instead.
+
+For fixed weights, \eqref{eq:real_harmonic_unit_current_pce}--\eqref{eq:imag_harmonic_unit_current_pce} express every injected current coefficient as a known parameter times~$I_{\Harmonic}$. As the network equations are linear in the coefficients, all voltage coefficients are linear in~$I_{\Harmonic}$ as well,
 \begin{IEEEeqnarray}{ l }
     \RealVoltage_{\Node,\Harmonic,\PCEIndex} = C^{\text{re}}_{\Node,\Harmonic,\PCEIndex}\, I_{\Harmonic}, \qquad
     \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} = C^{\text{im}}_{\Node,\Harmonic,\PCEIndex}\, I_{\Harmonic},
     \label{eq:voltage_linear}
 \end{IEEEeqnarray}
-where~$C^{\text{re}}$ and~$C^{\text{im}}$ follow from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network, obtained by inverting the harmonic admittance matrix, and the trigonometric coefficients~\eqref{eq:trig_quadrature}; branch currents follow analogously. The lifting then collapses to the precomputed scalars,
+where~$C^{\text{re}}$ and~$C^{\text{im}}$ follow from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network, obtained by inverting the harmonic admittance matrix, the weights~$w_{\Unit}$ and the trigonometric coefficients~\eqref{eq:trig_quadrature}; branch currents follow analogously. The lifting then collapses to the precomputed scalars,
 \begin{IEEEeqnarray}{ l }
 \alpha_{\Node,\Harmonic,\PCEIndex} = \mkern-12mu \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-12mu M_{\bar{\kappa},\PCEIndex} \big( C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{2}} \nonumber \\
 \qquad\qquad +\: C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{2}} \big),
@@ -154,14 +156,12 @@ i.e., the coefficients of~$|\ComplexVoltage_{\Node,\Harmonic}|^2/I_{\Harmonic}^2
     \sum_{\Harmonic \in \mathcal{H}_{c}} \alpha_{\Node,\Harmonic,0}\, g_{\Harmonic} \leq a_{\Node,c} \nonumber \\
     \quad -\: \lambda(\varepsilon) \sqrt{\mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \Big( \sum_{\Harmonic \in \mathcal{H}_{c}} \alpha_{\Node,\Harmonic,\PCEIndex}\, g_{\Harmonic} \Big)^{2}}, \label{eq:socp_cc}
 \end{IEEEeqnarray}
-a second-order cone in~$\bar{g}$: $\mathcal{H}_{c} = \{\Harmonic\}$ for the individual harmonic voltage distortion, which reduces to a linear bound on~$g_{\Harmonic}$, and $\mathcal{H}_{c} = \HarmonicSet$ for the total harmonic distortion and the root-mean-square voltage and current limits, where~$a_{\Node,c}$ is the limit net of the fundamental. The stochastic harmonic hosting capacity under absolute equality is thus the second-order cone program,
-\begin{IEEEeqnarray}{ r C l }
-    \max_{\bar{I},\,\bar{g}} \; \sum_{\Harmonic \in \HarmonicSet} |\HarmonicUnitSet|\, I_{\Harmonic} \;\; \text{s.t.} \;\; I_{\Harmonic}^{2} \leq g_{\Harmonic},\; I_{\Harmonic} \leq I^{\text{rated}},\; \eqref{eq:socp_cc}, \label{eq:socp}
+a second-order cone in~$\bar{g}$: $\mathcal{H}_{c} = \{\Harmonic\}$ for the individual harmonic voltage distortion, which reduces to a linear bound on~$g_{\Harmonic}$, and $\mathcal{H}_{c} = \HarmonicSet$ for the total harmonic distortion and the root-mean-square voltage and current limits, where~$a_{\Node,c}$ is the limit net of the fundamental. The stochastic harmonic hosting capacity is thus the second-order cone program,
+\begin{IEEEeqnarray}{ l }
+    \max_{\bar{I},\,\bar{g}} \; \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) I_{\Harmonic} \nonumber \\
+    \text{subject to} \;\; I_{\Harmonic}^{2} \leq g_{\Harmonic},\; w_{\Unit}\,I_{\Harmonic} \leq I^{\text{rated}}_{\Unit},\; \eqref{eq:socp_cc}, \label{eq:socp}
 \end{IEEEeqnarray}
 with one pair of variables per harmonic, whatever the size of the network or the cardinality of the basis; the latter only enters the precomputed scalars~$\alpha$. A limit that the fundamental already exhausts, $a_{\Node,c} \leq 0$, leaves no harmonic headroom and forces the contributing~$g_{\Harmonic}$ to zero. When every angle range collapses to a point, all variances vanish and~\eqref{eq:socp} reduces exactly to the deterministic model.
-
-\subsubsection{Other Fairness Criteria}
-The reduction to~\eqref{eq:socp} holds for every fairness criterion that fixes the ratios between the allocations of the units, so that a single scalar~$I_{\Harmonic}$ per harmonic remains, e.g., weighted equality~$\CurrentMagnitude_{\Unit,\Harmonic} = w_{\Unit}\,I_{\Harmonic}$ with fixed weights~$w_{\Unit}$. The Kalai-Smorodinsky solution~(37)--(39) in~\cite{vanacker_hosting_2026} is such a case when all ratios to the individual maxima are equal at the optimum, and maximin~(35) coincides with absolute equality when raising the current of a unit cannot relax a binding constraint. Criteria with a free allocation, e.g., maximum efficiency or proportional fairness~\cite{chen_guide_2023}, require a current per unit, and the problem becomes a semidefinite relaxation instead of an exact second-order cone program.
 
 \subsection{Quantifying Harmonic Recombination}
 \label{sec:recombination_metrics}
