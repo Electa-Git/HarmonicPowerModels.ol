@@ -25,6 +25,7 @@
 %% graphics packages
 \usepackage{tikz}
 \usepackage{pgfplots}
+\usetikzlibrary{patterns}
     \pgfplotsset{compat=1.15}
 \usepackage{colortbl}
 \usepackage{graphicx}
@@ -88,7 +89,7 @@
 
 % abstract
 \begin{abstract}
-The aggregation of harmonic currents from many power-electronic interfaced units depends on their phase angles, which are uncertain at the planning stage. This paper presents a stochastic harmonic hosting capacity method for phase-balanced three-phase power systems that captures this harmonic recombination. The angle uncertainty of a 6-pulse line-commutated converter is characterized through a harmonic state-space model and represented by polynomial chaos expansion, with one germ per unit and one germ shared by all units of a converter type, and the angles are referenced to each unit's fundamental terminal voltage. Harmonic voltage and current limits are enforced through chance constraints. Under the absolute equality fairness criterion, the problem reduces to a small second-order cone program that recovers the deterministic hosting capacity exactly when the uncertainty vanishes. On the IEEE 30-bus system with capacitor banks and underground cables, recombination among units of a single converter type is limited, and the indicative summation exponents of IEC~61000-3-6 overestimate the hosting capacity by a factor of about two. A mix of converter types with different mean angles raises the hosting capacity by about one third and brings the low-order summation exponent close to the indicative value.
+The aggregation of harmonic currents from many power-electronic interfaced units depends on their phase angles, which are uncertain at the planning stage. This paper presents a stochastic harmonic hosting capacity method for phase-balanced three-phase power systems that captures this harmonic recombination. The angle uncertainty of a 6-pulse line-commutated converter is characterized through a harmonic state-space model and represented by polynomial chaos expansion, with one random variable per unit and one shared by all units of a converter type, and the angles are referenced to each unit's fundamental terminal voltage. Harmonic voltage and current limits are enforced through chance constraints. Under the absolute equality fairness criterion, the problem reduces to a small second-order cone program that equals the general formulation and recovers the deterministic hosting capacity exactly when the uncertainty vanishes. On the IEEE 30-bus system, recombination among units of a single converter type is limited, and the indicative summation exponents of IEC~61000-3-6 overestimate the hosting capacity by a factor of about two, irrespective of added capacitor banks or underground cables. A mix of four or more converter types raises the hosting capacity by about 80\,\% and brings the low-order summation exponent to the indicative value, and the choice of the stochastic bound changes the hosting capacity by up to 38\,\%.
 \end{abstract}
 
 % keywords
@@ -130,8 +131,8 @@ The authors would like thank Kaan Yurtseven for the fruitful discussions.
 \begin{IEEEbiographynophoto}{Dr. Jinwen Xiang} received the B.S., M.Sc., and Ph.D. degrees in electrical engineering from Hunan University, China, and was a visiting Ph.D. student at the Technical University of Denmark. He was a control engineer at CRRC Zhuzhou Institute. Currently, he is a post-doctoral researcher with KU Leuven / EnergyVille, Belgium. His main areas of research interes are modeling and control of power electronics and their applications in transportation and power systems. 
 \end{IEEEbiographynophoto}
 
-\begin{IEEEbiographynophoto}{Dr. Dipl.-Ing. Hakan Ergun} has obtained his MSc in electrical engineering at the Graz University of Technology (TU Graz) and his PhD in electrical engineering at KU Leuven, respectively. In the past he has been a post – doctoral researcher, and a research expert at KU Leuven / EnergyVille. Currently he is an Associate Professor with KU Leuven and the Energy Transmission Competence Hub (Etch) within EnergyVille.
-His main research interest is to optimally develop and operate future energy networks for the renewable energy transition. He is the main developer of a number of open-source network modelling tools for optimal planning and operation of AC and DC grids, and stability and security constrained network operation. He is a senior member of IEEE and an active member of CIGRE. 
+\begin{IEEEbiographynophoto}{Dr. Dipl.-Ing. Hakan Ergun} has obtained his MSc in electrical engineering at the Graz University of Technology (TU Graz) and his PhD in electrical engineering at KU Leuven, respectively. In the past he has been a postdoctoral researcher, and a research expert at KU Leuven / EnergyVille. Currently he is an Associate Professor with KU Leuven and the Energy Transmission Competence Hub (Etch) within EnergyVille.
+His main research interest is to optimally develop and operate future energy networks for the renewable energy transition. He is the main developer of a number of open-source network modelling tools for optimal planning and operation of ac and dc grids, and stability and security constrained network operation. He is a senior member of IEEE and an active member of CIGRE. 
 
 \end{IEEEbiographynophoto}
 
