@@ -13,10 +13,9 @@
     scable/.style={densely dotted, mark=square},
     scablec/.style={dashdotted, mark=triangle}}
 
-\subsection{Test System}
-\label{sec:test_system}
+This section first shows that the methods of Section~\ref{sec:mathematical_framework} are equivalent and then investigates the levers for harmonic recombination, both on the IEEE 30-bus system.
 
-The IEEE 30-bus system has a meshed 132\,kV transmission level and a 33\,kV distribution level. Bus~1 is the only reference bus, at~$1.0\angle0^{\circ}$ per unit at the fundamental; the other generator buses are voltage-controlled buses, and no bus is an ideal harmonic ground. At the harmonics, the generators are represented by their subtransient impedance, with a short-circuit power of~2\,GVA for the generators at buses~1 and~2 and~0.2\,GVA for the others, at a reactance-to-resistance ratio of~20, as in~\cite{vanacker_impact_2025}. The line charging of the original data is removed, so that the base network is purely inductive, as the overhead-line case of~\cite{vanacker_impact_2025}: with it, the line charging forms a parallel resonance with the network inductance near~$\Harmonic = 9.4$, i.e., a capacitive element in disguise. Without line charging, the network cannot be operated within the original reactive power limits of its generators and synchronous condensers. The fundamental operating point therefore follows from an ac optimal power flow with bus~1 fixed at~1.0 per unit, the branch ratings and the original voltage limits of~0.94--1.05 per unit enforced, and the reactive power limits of all generators lifted. The harmonics~$\HarmonicSet = \{5,7,11,13\}$, characteristic of the 6-pulse converter of Section~\ref{sec:uncertainty}, are limited by the individual and total harmonic distortion planning levels and the root-mean-square voltage and current limits. The harmonic units are the first~$N$ loads, with $N = 21$ unless stated otherwise, under the absolute equality fairness criterion, at a risk level~$\varepsilon = 0.05$. All results are in per unit on a 100\,MVA basis. Each subsection below has its own script in the examples of \textsc{HarmonicPowerModels.jl}.
+The IEEE 30-bus system has a meshed 132\,kV transmission level and a 33\,kV distribution level. Bus~1 is the only reference bus, at~$1.0\angle0^{\circ}$ per unit at the fundamental; the other generator buses are voltage-controlled buses, and no bus is an ideal harmonic ground. At the harmonics, the generators are represented by their subtransient impedance, with a short-circuit power of~2\,GVA for the generators at buses~1 and~2 and~0.2\,GVA for the others, at a reactance-to-resistance ratio of~20, as in~\cite{vanacker_impact_2025}. The line charging of the original data is removed, so that the base network is purely inductive, as the overhead-line case of~\cite{vanacker_impact_2025}: with it, the line charging forms a parallel resonance with the network inductance near~$\Harmonic = 9.4$, i.e., a capacitive element in disguise. Without line charging, the network cannot be operated within the original reactive power limits of its generators and synchronous condensers. The fundamental operating point therefore follows from an ac optimal power flow with bus~1 fixed at~1.0 per unit, the branch ratings and the original voltage limits of~0.94--1.05 per unit enforced, and the reactive power limits of all generators lifted. The harmonics~$\HarmonicSet = \{5,7,11,13\}$, characteristic of the 6-pulse converter of Section~\ref{sec:uncertainty}, are limited by the individual and total harmonic distortion planning levels and the root-mean-square voltage and current limits. The harmonic units are the first~$N$ loads, with $N = 21$ unless stated otherwise, under the absolute equality fairness criterion, at a risk level~$\varepsilon = 0.05$. All results are in per unit on a 100\,MVA basis, and each subsection below has its own script in the examples of \textsc{HarmonicPowerModels.jl}.
 
 \subsection{Equivalence of the Methods}
 \label{sec:equivalence}
@@ -25,9 +24,9 @@ Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematica
 
 \begin{table}[t]
     \centering
-    \caption{Equivalence of the methods on the base network: total hosting capacity $\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$ per unit] of the deterministic model, the second-order cone program (cone), the quadratically constrained program (quadratic) and the reduced model~\eqref{eq:reduced_hosting} at the mean angles or the exact 95\,\% quantile, and their relative difference~$\Delta$.}
+    \caption{Equivalence of the methods on the base network: total hosting capacity $\sum_{\Harmonic} I_{\Harmonic}$ [$10^{-3}$ per unit].}
     \label{tab:equivalence}
-    \setlength{\tabcolsep}{2.5pt}
+    \setlength{\tabcolsep}{1.8pt}
     \scriptsize
     \begin{tabular}{l c l l r r r}
         case & $N$ & method A & method B & A & B & $\Delta$ [\%] \\ \hline
@@ -39,6 +38,9 @@ Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematica
         reduction & 21 & deterministic & reduced, mean & 3.255 & 3.255 & $3.0\cdot10^{-7}$ \\
         reduction & 21 & cone & reduced, 95\,\% & 3.244 & 3.244 & $-0.01$ \\
     \end{tabular}
+
+    \vspace{2pt}
+    \parbox{\columnwidth}{\scriptsize Cone: second-order cone program~\eqref{eq:socp}; quadratic: quadratically constrained program; reduced: reduced model~\eqref{eq:reduced_hosting} at the mean angles or the exact 95\,\% quantile; $\Delta$: relative difference of B to A.}
 \end{table}
 
 \subsection{Levers for Harmonic Recombination}
@@ -201,11 +203,32 @@ Fig.~\ref{fig:bounds} compares the three risk factors of Section~\ref{sec:polyno
             \addplot[solid, mark=square] table[x=eps, y=v1emp] {journals/shhc/data/paper_bounds.dat};
             \addplot[densely dashed, mark=*] table[x=eps, y=v4can] {journals/shhc/data/paper_bounds.dat};
             \addplot[densely dashed, mark=o] table[x=eps, y=v4gau] {journals/shhc/data/paper_bounds.dat};
-            \addplot[densely dashed, mark=square] table[x=eps, y=v4emp] {journals/shhc/data/paper_bounds.dat};
+            \addplot[densely dashed, mark=o, forget plot] table[x=eps, y=v4emp] {journals/shhc/data/paper_bounds.dat};
         \end{loglogaxis}
     \end{tikzpicture}}
     \caption{Choice of the stochastic bound, base network, $N = 21$, one converter type (solid) and four types (dashed): (a) hosting capacity relative to the exact $(1-\varepsilon)$ quantile, and (b) violation probability of the binding individual harmonic voltage limit against the risk level (gray). Violation probabilities of zero are not shown.}
     \label{fig:bounds}
+\end{figure}
+
+\subsubsection{Computational Tractability}
+\label{sec:tractability}
+
+Fig.~\ref{fig:tractability} shows the computation time of the second-order cone program for the cases of Sections~\ref{sec:capacitive}--\ref{sec:bounds}, i.e., the fundamental power flow, the polynomial chaos data, the precomputed scalars~$\alpha$ and the solution with \textsc{Mosek}, against the cardinality~$|\PCESet|$ of the basis. The solver itself takes at most~0.3\,s in every case, as the program keeps two variables per harmonic and one cone per chance constraint, each with~$|\PCESet|-1$ terms. The total time is dominated by the precomputation of the multiplication tensor~$M$, which grows with~$|\PCESet|^{3}$, and~$|\PCESet|$ grows quadratically with the number of independent random variables for~$\delta = 2$, i.e., the number of units plus the number of converter types, by~\eqref{eq:cardinality}: from 0.02\,s for 4 units to~1.9\,s for 21 units of one type, and to~118\,s when every unit has its own type, $|\PCESet| = 903$. The number of harmonics and the network enter only through the precomputed scalars: from one to four harmonics, the total time rises from~1.6\,s to~1.8\,s, and the four networks of Section~\ref{sec:capacitive} differ by less than~0.2\,s. A larger network adds one inversion of the harmonic admittance matrix per harmonic and one cone per bus and branch, which the solver handles easily; the number of independent random variables, not the network, therefore limits the tractability, which motivates shared random variables per converter type rather than per unit.
+
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}
+        \begin{loglogaxis}[shhc, width=0.95\columnwidth, height=4.2cm, xmin=10, xmax=1200, ymin=0.003, ymax=300,
+            xlabel={cardinality of the basis $|\PCESet|$}, ylabel={time [s]}, legend columns=2]
+            \addplot[solid, mark=*] table[x=K, y=wall] {journals/shhc/data/paper_tractability_units.dat};
+            \addplot[solid, mark=o] table[x=K, y=solver] {journals/shhc/data/paper_tractability_units.dat};
+            \addplot[densely dashed, mark=*, forget plot] table[x=K, y=wall] {journals/shhc/data/paper_tractability_types.dat};
+            \addplot[densely dashed, mark=o, forget plot] table[x=K, y=solver] {journals/shhc/data/paper_tractability_types.dat};
+            \legend{total, solver}
+        \end{loglogaxis}
+    \end{tikzpicture}
+    \caption{Computation time of the second-order cone program for $N = 4$, 8, 13, 21 units of one type (solid) and $T = 2$, 4, 8, 21 types for $N = 21$ (dashed).}
+    \label{fig:tractability}
 \end{figure}
 
 \subsubsection{Comparison with the Summation Law and the Literature}
