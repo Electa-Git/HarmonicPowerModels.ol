@@ -71,7 +71,7 @@
             \legend{95\,\% chance bound, arithmetic sum}
         \end{axis}
     \end{tikzpicture}}
-    \caption{Capacitive elements, IEEE 30-bus system, $N = 21$ units of one converter type, $\varepsilon = 0.05$: (a) total hosting capacity of the base network, a 19\,Mvar bank at bus~29, cables at mv and cables at hv, for each aggregation rule of Section~\ref{sec:recombination_metrics}; (b) equivalent summation exponent of the 95\,\% chance bound per harmonic, against the indicative exponents of IEC~61000-3-6 (gray); (c) total hosting capacity of the 95\,\% chance bound and of arithmetic summation against the size of the bank at bus~29, whose gap is the recombination.}
+    \caption{Capacitive elements, IEEE 30-bus system, $N = 21$ units of one converter type, $\varepsilon = 0.05$: (a) total hosting capacity of the base network, a 19\,Mvar bank at bus~29, cables at mv and cables at hv, for each aggregation rule of Section~\ref{sec:levers}; (b) equivalent summation exponent of the 95\,\% chance bound per harmonic, against the indicative exponents of IEC~61000-3-6 (gray); (c) total hosting capacity of the 95\,\% chance bound and of arithmetic summation against the size of the bank at bus~29, whose gap is the recombination.}
     \label{fig:capacitive}
 
     \vspace{8pt}
@@ -153,10 +153,20 @@ First, the equivalence is shown between the methods of Section~\ref{sec:mathemat
 \subsection{Equivalence of the Methods}
 \label{sec:equivalence}
 
-Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematical_framework} on the base network. When every angle range collapses to its mean, the uncertainty vanishes and the second-order cone program~\eqref{eq:socp} reproduces the deterministic model of~\cite{vanacker_hosting_2026}. With uncertainty, the second-order cone program and the general quadratically constrained program agree to within~$10^{-5}$ for each risk factor, i.e., the local solution of the non-convex program is the global one in these cases; the former is solved with \textsc{Mosek}, the latter with the local solver \textsc{Ipopt}, which limits it to~$N = 4$. Finally, the hosting capacity reduced to the individual harmonic voltage limits~\eqref{eq:reduced_hosting} equals the deterministic model at the mean angles and, for the exact~95\,\% quantile, the second-order cone program with the empirical risk factor, which confirms that these limits bind and that the reduced metrics of Section~\ref{sec:recombination_metrics} describe the full model.
+Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematical_framework} on the base network. When every angle range collapses to its mean, the uncertainty vanishes and the second-order cone program~\eqref{eq:socp} reproduces the deterministic model of~\cite{vanacker_hosting_2026}. With uncertainty, the second-order cone program and the general quadratically constrained program agree to within~$10^{-5}$ for each risk factor, i.e., the local solution of the non-convex program is the global one in these cases; the former is solved with \textsc{Mosek}, the latter with the local solver \textsc{Ipopt}, which limits it to~$N = 4$. Finally, the hosting capacity reduced to the individual harmonic voltage limits~\eqref{eq:reduced_hosting} equals the deterministic model at the mean angles and, for the exact~95\,\% quantile, the second-order cone program with the empirical risk factor, which confirms that these limits bind and that the reduced metrics of Section~\ref{sec:levers} describe the full model.
 
 \subsection{Levers for Harmonic Recombination}
 \label{sec:levers}
+
+With a single hosting capacity per harmonic and binding individual harmonic voltage limits, as in all cases below, the hosting capacity at harmonic~$\Harmonic$ is set by the tightest bus,
+\begin{IEEEeqnarray}{ r C l }
+    I_{\Harmonic} &=& \min_{\Node \in \NodeSet} \frac{U^{\text{ihd}}_{\Node,\Harmonic}\,|\ComplexVoltage_{\Node,1}|}{A_{\Node,\Harmonic}}, \qquad c_{\Node\Unit,\Harmonic} = Z_{\Harmonic,\Node\Node(\Unit)}\,e^{\im\phi_{\Unit,\Harmonic}}, \label{eq:reduced_hosting}
+\end{IEEEeqnarray}
+where~$A_{\Node,\Harmonic}$ aggregates the unit contributions~$c_{\Node\Unit,\Harmonic}$ per unit of current by one of four rules: (i)~arithmetic summation~$\sum_{\Unit}|c_{\Node\Unit,\Harmonic}|$, i.e., no recombination; (ii)~the robust bound~$\max_{\bar{\omega}}|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ over the support of the germ; (iii)~the mean angle, $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ at~$\Expectation[\bar\omega]$, as in~\cite{vanacker_hosting_2026}; and (iv)~the 95\,\% chance bound, i.e., the exact $(1-\varepsilon)$-quantile of~$|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$. The equivalent summation exponent~$\alpha^{\text{eq}}_{\Harmonic}$ is the exponent for which the summation law of IEC~61000-3-6~\cite{noauthor_iec61000-3-6_2008},
+\begin{IEEEeqnarray}{ r C l }
+    A_{\Node,\Harmonic} &=& \Big(\sum_{\Unit \in \HarmonicUnitSet} |c_{\Node\Unit,\Harmonic}|^{\alpha^{\text{eq}}_{\Harmonic}}\Big)^{1/\alpha^{\text{eq}}_{\Harmonic}}, \label{eq:summation_law}
+\end{IEEEeqnarray}
+reproduces the hosting capacity of rule~(iv); $\alpha^{\text{eq}}_{\Harmonic} = 1$ is arithmetic summation, and the indicative values of the standard are~1.4 for~$5 \leq \Harmonic \leq 10$ and~2 for~$\Harmonic > 10$.
 
 \subsubsection{Capacitive Elements}
 \label{sec:capacitive}
