@@ -30,7 +30,7 @@ Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematica
 %, i.e., the local solution of the non-convex program is the global one in these cases
 ; the former is solved with \textsc{Mosek}, the latter with the local solver \textsc{Ipopt}, which limits it to~$N = 4$. Finally, the hosting capacity reduced to the individual harmonic voltage limits~\eqref{eq:reduced_hosting} equals the deterministic model at the mean angles and, for the exact~95\,\% quantile, the second-order cone program with the empirical risk factor, which confirms that these limits bind and that the reduced metrics of Section~\ref{sec:levers} describe the full model.
 
-\begin{table}[!tb]
+\begin{table}[!b]
     \centering
     \caption{Equivalence of the methods on the base network.}
     \label{tab:equivalence}
@@ -77,7 +77,7 @@ Three capacitive elements are added to the base network, each followed by the sa
 %Without compensation, the 132\,kV cables cannot be operated within the branch ratings.
  Fig.~\ref{fig:freqscan} shows the driving-point impedance at bus~30, the end of the longest 33\,kV feeder. The base network has no resonance. \removable{The bank places a parallel resonance at~$\Harmonic = 2.8$, below the characteristic harmonics, which lowers the impedance at all of them; the 33\,kV cables place resonances at~$\Harmonic = 6.6$ and~$13.8$, close to the 7th and 13th harmonic; and the compensated 132\,kV cables place resonances at~$\Harmonic = 2.5$ and~$6.5$ and stiffen the network.}
 
-\begin{figure}[!tb]
+\begin{figure}[!b]
     \centering
     \begin{tikzpicture}
         \begin{semilogyaxis}[shhc, width=0.95\columnwidth, height=2.9cm,
