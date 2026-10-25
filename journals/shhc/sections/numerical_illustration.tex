@@ -13,7 +13,59 @@
     scable/.style={densely dotted, mark=square},
     scablec/.style={dashdotted, mark=triangle}}
 
-\begin{figure}[t]
+First, the equivalence is shown between the methods of Section~\ref{sec:mathematical_framework}, and second, the levers for harmonic recombination are investigated, both on the IEEE 30-bus system. The IEEE 30-bus system has a meshed 132\,kV transmission level and a 33\,kV distribution level. Bus~1 is the only reference bus, at~$1.0\angle0^{\circ}$\,pu at the fundamental; the other generator buses are voltage-controlled buses, and no bus is an ideal harmonic ground. At the harmonics, the generators are represented by their subtransient impedance, with a short-circuit power of~2\,GVA for the generators at buses~1 and~2 and~0.2\,GVA for the others, at a reactance-to-resistance ratio of~20, as in~\cite{vanacker_impact_2025}. The line charging of the original data is removed, so that the base network is purely inductive, as the overhead-line case of~\cite{vanacker_impact_2025}: with it, the line charging forms a parallel resonance with the network inductance near~$\Harmonic = 9.4$, i.e., a capacitive element in disguise. Without line charging, the network cannot be operated within the original reactive power limits of its generators and synchronous condensers. The fundamental operating point therefore follows from an ac optimal power flow with bus~1 fixed at~1.0\,pu, the branch ratings and the original voltage limits of~0.94--1.05\,pu enforced, and the reactive power limits of all generators lifted. The harmonics~$\HarmonicSet = \{5,7,11,13\}$, characteristic of the 6-pulse converter of Section~\ref{sec:uncertainty}, are limited by the individual and total harmonic distortion planning levels and the root-mean-square voltage and current limits. The harmonic units are the first~$N$ loads, with $N = 21$ unless stated otherwise, under the absolute equality fairness criterion, at a risk level~$\varepsilon = 0.05$. All results are in pu on a 100\,MVA basis, and each subsection below has its own script in \textsc{HarmonicPowerModels.jl}.
+
+\subsection{Equivalence of the Methods}
+\label{sec:equivalence}
+
+Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematical_framework} on the base network. When every angle range collapses to its mean, the uncertainty vanishes and the second-order cone program~\eqref{eq:socp} reproduces the deterministic model of~\cite{vanacker_hosting_2026}. With uncertainty, the second-order cone program and the general quadratically constrained program agree to within~$10^{-5}$ for each risk factor, i.e., the local solution of the non-convex program is the global one in these cases; the former is solved with \textsc{Mosek}, the latter with the local solver \textsc{Ipopt}, which limits it to~$N = 4$. Finally, the hosting capacity reduced to the individual harmonic voltage limits~\eqref{eq:reduced_hosting} equals the deterministic model at the mean angles and, for the exact~95\,\% quantile, the second-order cone program with the empirical risk factor, which confirms that these limits bind and that the reduced metrics of Section~\ref{sec:levers} describe the full model.
+
+\begin{table}[!tb]
+    \centering
+    \caption{Equivalence of the methods on the base network.}
+    \label{tab:equivalence}
+    \setlength{\tabcolsep}{3pt}
+    \scriptsize
+    \begin{tabular}{l c l l r r}
+        case & $N$ & method A & method B & obj. & rel. diff. \\ \hline
+        point mass & 4 & deterministic & cone & 54.064 & $-9.4\cdot10^{-10}$ \\
+        point mass & 4 & deterministic & quadratic & 54.064 & $-3.9\cdot10^{-8}$ \\
+        Cantelli & 4 & cone & quadratic & 48.612 & $1.8\cdot10^{-7}$ \\
+        Gaussian & 4 & cone & quadratic & 52.395 & $9.9\cdot10^{-8}$ \\
+        empirical & 4 & cone & quadratic & 52.522 & $8.6\cdot10^{-8}$ \\
+        reduction & 21 & deterministic & reduced, mean & 3.255 & $3.0\cdot10^{-9}$ \\
+        reduction & 21 & cone & reduced, 95\,\% & 3.244 & $-1.3\cdot10^{-4}$ \\
+    \end{tabular}
+
+    \vspace{2pt}
+    \parbox{\columnwidth}{\scriptsize Obj.: total hosting capacity $\sum_{\Harmonic} I_{\Harmonic}$ of method A [$10^{-3}$\,pu]; rel. diff.: relative difference of method B to method A. Cone: second-order cone program~\eqref{eq:socp}; quadratic: quadratically constrained program; reduced: reduced model~\eqref{eq:reduced_hosting} at the mean angles or the exact 95\,\% quantile.}
+\end{table}
+
+\subsection{Levers for Harmonic Recombination}
+\label{sec:levers}
+
+With a single hosting capacity per harmonic and binding individual harmonic voltage limits, as in all cases below, the hosting capacity at harmonic~$\Harmonic$ is set by the tightest bus,
+\begin{IEEEeqnarray}{ r C l }
+    I_{\Harmonic} &=& \min_{\Node \in \NodeSet} \frac{U^{\text{ihd}}_{\Node,\Harmonic}\,|\ComplexVoltage_{\Node,1}|}{A_{\Node,\Harmonic}}, \qquad c_{\Node\Unit,\Harmonic} = Z_{\Harmonic,\Node\Node(\Unit)}\,e^{\im\phi_{\Unit,\Harmonic}}, \label{eq:reduced_hosting}
+\end{IEEEeqnarray}
+where~$A_{\Node,\Harmonic}$ aggregates the unit contributions~$c_{\Node\Unit,\Harmonic}$ per unit of current by one of four rules: (i)~arithmetic summation~$\sum_{\Unit}|c_{\Node\Unit,\Harmonic}|$, i.e., no recombination; (ii)~the robust bound~$\max_{\bar{\omega}}|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ over the support of the germ; (iii)~the mean angle, $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ at~$\Expectation[\bar\omega]$, as in~\cite{vanacker_hosting_2026}; and (iv)~the 95\,\% chance bound, i.e., the exact $(1-\varepsilon)$-quantile of~$|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$. The equivalent summation exponent~$\alpha^{\text{eq}}_{\Harmonic}$ is the exponent for which the summation law of IEC~61000-3-6~\cite{noauthor_iec61000-3-6_2008},
+\begin{IEEEeqnarray}{ r C l }
+    A_{\Node,\Harmonic} &=& \Big(\sum_{\Unit \in \HarmonicUnitSet} |c_{\Node\Unit,\Harmonic}|^{\alpha^{\text{eq}}_{\Harmonic}}\Big)^{1/\alpha^{\text{eq}}_{\Harmonic}}, \label{eq:summation_law}
+\end{IEEEeqnarray}
+reproduces the hosting capacity of rule~(iv); $\alpha^{\text{eq}}_{\Harmonic} = 1$ is arithmetic summation, and the indicative values of the standard are~1.4 for~$5 \leq \Harmonic \leq 10$ and~2 for~$\Harmonic > 10$.
+
+\subsubsection{Capacitive Elements}
+\label{sec:capacitive}
+
+Three capacitive elements are added to the base network, each followed by the same re-dispatch:
+\begin{enumerate*}
+    \item[(i)] \emph{bank}, a 19\,Mvar capacitor bank at bus~29, the size of the largest bank of the original data, at a location where it raises the hosting capacity;
+    \item[(ii)] \emph{cables at mv}, with all 33\,kV lines replaced by underground cables (155\,km in total); and
+    \item[(iii)] \emph{cables at hv}, with all 132\,kV lines replaced by cables (588\,km), with~80\,\% of their charging compensated by shunt reactors.
+\end{enumerate*}
+Without compensation, the 132\,kV cables cannot be operated within the branch ratings. Fig.~\ref{fig:freqscan} shows the driving-point impedance at bus~30, the end of the longest 33\,kV feeder. The base network has no resonance. The bank places a parallel resonance at~$\Harmonic = 2.8$, below the characteristic harmonics, which lowers the impedance at all of them; the 33\,kV cables place resonances at~$\Harmonic = 6.6$ and~$13.8$, close to the 7th and 13th harmonic; and the compensated 132\,kV cables place resonances at~$\Harmonic = 2.5$ and~$6.5$ and stiffen the network.
+
+\begin{figure}[!tb]
     \centering
     \begin{tikzpicture}
         \begin{semilogyaxis}[shhc, width=0.95\columnwidth, height=2.9cm,
@@ -32,7 +84,9 @@
     \label{fig:freqscan}
 \end{figure}
 
-\begin{figure*}[t]
+The capacitive elements change the hosting capacity through the network impedance, Fig.~\ref{fig:capacitive}(a): relative to the base network, the bank raises the 95\,\% hosting capacity by~43\,\%, the 33\,kV cables lower it by~48\,\% through the resonances near the 7th and 13th harmonic, and the compensated 132\,kV cables raise it by~62\,\%. Their effect on recombination is smaller, but not negligible, Fig.~\ref{fig:capacitive}(a): the 95\,\% hosting capacity lies 4\,\% above arithmetic summation in the base network, and 7\,\% with the bank, 12\,\% with the cables at mv and 7\,\% with the cables at hv. Near a resonance, the transfer impedances from the units to a bus rotate apart, which spreads their contributions. The equivalent summation exponent hardly reflects this, Fig.~\ref{fig:capacitive}(b): it stays between~1.01 and~1.05, except for the 13th harmonic with the cables at mv, at~1.14, as the exponent compresses small gains; for 21 contributions of similar size, an exponent of~1.03 already corresponds to a gain of 9\,\%, whereas the indicative~1.4 corresponds to a factor of~2.4. The 95\,\% hosting capacity also lies 3--10\,\% above the robust bound and within~1\,\% of the deterministic angle. The summation law with the indicative exponents of IEC~61000-3-6 overestimates the hosting capacity by a factor of~1.8--2.8.
+
+\begin{figure*}[!t]
     \centering
     \pgfplotsset{capplot/.style={shhc, height=2.9cm}}
     \subfloat[hosting capacity per aggregation rule]{%
@@ -127,59 +181,19 @@
     \label{fig:types}
 \end{figure*}
 
-First, the equivalence is shown between the methods of Section~\ref{sec:mathematical_framework}, and second, the levers for harmonic recombination are investigated, both on the IEEE 30-bus system. The IEEE 30-bus system has a meshed 132\,kV transmission level and a 33\,kV distribution level. Bus~1 is the only reference bus, at~$1.0\angle0^{\circ}$\,pu at the fundamental; the other generator buses are voltage-controlled buses, and no bus is an ideal harmonic ground. At the harmonics, the generators are represented by their subtransient impedance, with a short-circuit power of~2\,GVA for the generators at buses~1 and~2 and~0.2\,GVA for the others, at a reactance-to-resistance ratio of~20, as in~\cite{vanacker_impact_2025}. The line charging of the original data is removed, so that the base network is purely inductive, as the overhead-line case of~\cite{vanacker_impact_2025}: with it, the line charging forms a parallel resonance with the network inductance near~$\Harmonic = 9.4$, i.e., a capacitive element in disguise. Without line charging, the network cannot be operated within the original reactive power limits of its generators and synchronous condensers. The fundamental operating point therefore follows from an ac optimal power flow with bus~1 fixed at~1.0\,pu, the branch ratings and the original voltage limits of~0.94--1.05\,pu enforced, and the reactive power limits of all generators lifted. The harmonics~$\HarmonicSet = \{5,7,11,13\}$, characteristic of the 6-pulse converter of Section~\ref{sec:uncertainty}, are limited by the individual and total harmonic distortion planning levels and the root-mean-square voltage and current limits. The harmonic units are the first~$N$ loads, with $N = 21$ unless stated otherwise, under the absolute equality fairness criterion, at a risk level~$\varepsilon = 0.05$. All results are in pu on a 100\,MVA basis, and each subsection below has its own script in \textsc{HarmonicPowerModels.jl}.
+The size of the bank matters more than its presence, Fig.~\ref{fig:capacitive}(c). The resonance frequency scales with the inverse square root of the bank size: banks of~1--1.5\,Mvar place it near the 11th harmonic and lower the hosting capacity by~36--38\,\%, a 5\,Mvar bank places it close to the 5th harmonic and lowers it by~30\,\%, whereas banks of~15--20\,Mvar place it below the 5th harmonic and raise it by~41--47\,\%. From 2.5\,Mvar onwards, with the resonance between or below the characteristic harmonics, the gain over arithmetic summation rises from 4\,\% to~6--9\,\%. At bus~29, the end of a 33\,kV feeder, all units see the bank through a common path, which limits the rotation of their transfer impedances. Capacitive elements are therefore a strong lever on the hosting capacity, and a moderate one on recombination.
 
-\begin{table}[b!]
-    \centering
-    \caption{Equivalence of the methods on the base network.}
-    \label{tab:equivalence}
-    \setlength{\tabcolsep}{3pt}
-    \scriptsize
-    \begin{tabular}{l c l l r r}
-        case & $N$ & method A & method B & obj. & rel. diff. \\ \hline
-        point mass & 4 & deterministic & cone & 54.064 & $-9.4\cdot10^{-10}$ \\
-        point mass & 4 & deterministic & quadratic & 54.064 & $-3.9\cdot10^{-8}$ \\
-        Cantelli & 4 & cone & quadratic & 48.612 & $1.8\cdot10^{-7}$ \\
-        Gaussian & 4 & cone & quadratic & 52.395 & $9.9\cdot10^{-8}$ \\
-        empirical & 4 & cone & quadratic & 52.522 & $8.6\cdot10^{-8}$ \\
-        reduction & 21 & deterministic & reduced, mean & 3.255 & $3.0\cdot10^{-9}$ \\
-        reduction & 21 & cone & reduced, 95\,\% & 3.244 & $-1.3\cdot10^{-4}$ \\
-    \end{tabular}
+\subsubsection{Converter Types}
+\label{sec:converter_mix}
 
-    \vspace{2pt}
-    \parbox{\columnwidth}{\scriptsize Obj.: total hosting capacity $\sum_{\Harmonic} I_{\Harmonic}$ of method A [$10^{-3}$\,pu]; rel. diff.: relative difference of method B to method A. Cone: second-order cone program~\eqref{eq:socp}; quadratic: quadratically constrained program; reduced: reduced model~\eqref{eq:reduced_hosting} at the mean angles or the exact 95\,\% quantile.}
-\end{table}
+With~$T$ converter types, the units are assigned cyclically to types with mean firing delays $\alpha_{\text{f}} = 60^{\circ}(t-1)/T$, $t = 1,\ldots,T$, each with a firing-delay range of~$30^{\circ}$ and one shared random variable per type, Section~\ref{sec:harmonic_current_angle_uncertainty}; $T = 1$ is the uncontrolled converter, and $T = N = 21$ gives every unit its own firing delay. Fig.~\ref{fig:types} shows the result for the base network and the network with the bank. Mixing converter types with different mean angles is the condition under which substantial recombination occurs: the 95\,\% hosting capacity rises by~40--46\,\% for two types by~80--93\,\% for four types and by up to~129\,\% for eight types, Fig.~\ref{fig:types}(a); with the capacitor bank and eight types, it even exceeds the summation law. With one type per unit, the gain falls back to~80\,\%: the mean firing delays cover the same range, but their assignment to the buses differs, which indicates that the gain also depends on where the types connect. With more types, the mean angles~$\Harmonic\,\alpha_{\text{f}}$ cover more of the circle at every harmonic, which spreads the contributions irrespective of the network. The equivalent summation exponent rises accordingly, Fig.~\ref{fig:types}(b)--(c): for four or more types, the 5th and 7th harmonic reach~1.22--1.76, i.e., around the indicative~1.4, whereas the 11th and 13th harmonic remain at~1.19--1.47, well below the indicative~2.0.
 
-\subsection{Equivalence of the Methods}
-\label{sec:equivalence}
+\subsubsection{Choice of the Stochastic Bound}
+\label{sec:bounds}
 
-Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematical_framework} on the base network. When every angle range collapses to its mean, the uncertainty vanishes and the second-order cone program~\eqref{eq:socp} reproduces the deterministic model of~\cite{vanacker_hosting_2026}. With uncertainty, the second-order cone program and the general quadratically constrained program agree to within~$10^{-5}$ for each risk factor, i.e., the local solution of the non-convex program is the global one in these cases; the former is solved with \textsc{Mosek}, the latter with the local solver \textsc{Ipopt}, which limits it to~$N = 4$. Finally, the hosting capacity reduced to the individual harmonic voltage limits~\eqref{eq:reduced_hosting} equals the deterministic model at the mean angles and, for the exact~95\,\% quantile, the second-order cone program with the empirical risk factor, which confirms that these limits bind and that the reduced metrics of Section~\ref{sec:levers} describe the full model.
+Fig.~\ref{fig:bounds} compares the three risk factors of Section~\ref{sec:polynomial_chaos_expansion} with the exact $(1-\varepsilon)$ quantile, for one and four converter types on the base network, together with the violation probability of the binding individual harmonic voltage limit, evaluated by Monte Carlo simulation with 20\,000 samples. The distribution-free Cantelli bound never exceeds the risk level, but costs~1--8\,\% of hosting capacity for one type and~18--38\,\% for four types. The Gaussian quantile is accurate for one type, within~0.4\,\%, but for four types it overestimates the hosting capacity by up to~7\,\% and violates the limits with a probability of up to~3.5 times the risk level: the shared random variables of the types make the output distribution far from Gaussian. The empirical risk factor matches the exact quantile within~0.3\,\%, and its violation probability lies within~20\,\% of the risk level, the remainder stemming from the calibration on a separate sample set. The choice of the bound is therefore a lever of comparable order to the converter mix, and the safe choice depends on the knowledge of the output distribution.
 
-\subsection{Levers for Harmonic Recombination}
-\label{sec:levers}
-
-With a single hosting capacity per harmonic and binding individual harmonic voltage limits, as in all cases below, the hosting capacity at harmonic~$\Harmonic$ is set by the tightest bus,
-\begin{IEEEeqnarray}{ r C l }
-    I_{\Harmonic} &=& \min_{\Node \in \NodeSet} \frac{U^{\text{ihd}}_{\Node,\Harmonic}\,|\ComplexVoltage_{\Node,1}|}{A_{\Node,\Harmonic}}, \qquad c_{\Node\Unit,\Harmonic} = Z_{\Harmonic,\Node\Node(\Unit)}\,e^{\im\phi_{\Unit,\Harmonic}}, \label{eq:reduced_hosting}
-\end{IEEEeqnarray}
-where~$A_{\Node,\Harmonic}$ aggregates the unit contributions~$c_{\Node\Unit,\Harmonic}$ per unit of current by one of four rules: (i)~arithmetic summation~$\sum_{\Unit}|c_{\Node\Unit,\Harmonic}|$, i.e., no recombination; (ii)~the robust bound~$\max_{\bar{\omega}}|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ over the support of the germ; (iii)~the mean angle, $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ at~$\Expectation[\bar\omega]$, as in~\cite{vanacker_hosting_2026}; and (iv)~the 95\,\% chance bound, i.e., the exact $(1-\varepsilon)$-quantile of~$|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$. The equivalent summation exponent~$\alpha^{\text{eq}}_{\Harmonic}$ is the exponent for which the summation law of IEC~61000-3-6~\cite{noauthor_iec61000-3-6_2008},
-\begin{IEEEeqnarray}{ r C l }
-    A_{\Node,\Harmonic} &=& \Big(\sum_{\Unit \in \HarmonicUnitSet} |c_{\Node\Unit,\Harmonic}|^{\alpha^{\text{eq}}_{\Harmonic}}\Big)^{1/\alpha^{\text{eq}}_{\Harmonic}}, \label{eq:summation_law}
-\end{IEEEeqnarray}
-reproduces the hosting capacity of rule~(iv); $\alpha^{\text{eq}}_{\Harmonic} = 1$ is arithmetic summation, and the indicative values of the standard are~1.4 for~$5 \leq \Harmonic \leq 10$ and~2 for~$\Harmonic > 10$.
-
-\subsubsection{Capacitive Elements}
-\label{sec:capacitive}
-
-Three capacitive elements are added to the base network, each followed by the same re-dispatch:
-\begin{enumerate*}
-    \item[(i)] \emph{bank}, a 19\,Mvar capacitor bank at bus~29, the size of the largest bank of the original data, at a location where it raises the hosting capacity;
-    \item[(ii)] \emph{cables at mv}, with all 33\,kV lines replaced by underground cables (155\,km in total); and
-    \item[(iii)] \emph{cables at hv}, with all 132\,kV lines replaced by cables (588\,km), with~80\,\% of their charging compensated by shunt reactors.
-\end{enumerate*}
-Without compensation, the 132\,kV cables cannot be operated within the branch ratings. Fig.~\ref{fig:freqscan} shows the driving-point impedance at bus~30, the end of the longest 33\,kV feeder. The base network has no resonance. The bank places a parallel resonance at~$\Harmonic = 2.8$, below the characteristic harmonics, which lowers the impedance at all of them; the 33\,kV cables place resonances at~$\Harmonic = 6.6$ and~$13.8$, close to the 7th and 13th harmonic; and the compensated 132\,kV cables place resonances at~$\Harmonic = 2.5$ and~$6.5$ and stiffen the network.
-
-\begin{figure}[!t]
+\begin{figure}[!tb]
     \centering
     \pgfplotsset{boundplot/.style={shhc, scale only axis, width=0.27\columnwidth, height=2.0cm, xmin=0.008, xmax=0.25,
         xtick={0.01,0.05,0.2}, xticklabels={0.01,0.05,0.2}, xlabel={risk level $\varepsilon$}},
@@ -215,7 +229,12 @@ Without compensation, the 132\,kV cables cannot be operated within the branch ra
     \label{fig:bounds}
 \end{figure}
 
-\begin{figure}[!t]
+\subsubsection{Computational Tractability}
+\label{sec:tractability}
+
+Fig.~\ref{fig:tractability} shows the computation time of the second-order cone program for the cases of Sections~\ref{sec:capacitive}--\ref{sec:bounds}, i.e., the fundamental power flow, the polynomial chaos data, the precomputed scalars~$\alpha$ and the solution with \textsc{Mosek}, against the cardinality~$|\PCESet|$ of the basis. The solver itself takes at most~0.17\,s, as the program keeps two variables per harmonic and one cone per chance constraint, each with~$|\PCESet|-1$ terms. The total time stays below~2\,s in every case: from 0.02\,s for 4 units to~0.29\,s for 21 units of one type, and~1.6\,s when every unit has its own type, $|\PCESet| = 903$. By~\eqref{eq:cardinality}, $|\PCESet|$ grows quadratically with the number of independent random variables for~$\delta = 2$, i.e., the number of units plus the number of converter types, and the total time grows slightly faster than linearly with~$|\PCESet|$. This requires the multiplication tensor~$M$ to be built from univariate triple products: as the basis is a tensor product, an entry~$M_{\bar{\kappa},\PCEIndex}$ can only be nonzero when~$\PCEIndex$ is supported on the random variables of~$\bar{\kappa}$, so that only~$O(|\PCESet|^{2})$ of its~$O(|\PCESet|^{3})$ entries are evaluated, and fewer than 0.1\,\% of them are nonzero. With a multivariate quadrature of all entries and a dense copy of~$M$ instead, the same case takes~118\,s. The number of harmonics and the network enter only through the precomputed scalars: from one to four harmonics, the total time rises from~0.14\,s to~0.31\,s, and the four networks of Section~\ref{sec:capacitive} differ by less than~0.01\,s. A larger network adds one inversion of the harmonic admittance matrix per harmonic and one cone per bus and branch. The number of independent random variables therefore remains the main driver of the computation time, which favors shared random variables per converter type over random variables per unit, but even one random variable per unit remains tractable.
+
+\begin{figure}[!tb]
     \centering
     \begin{tikzpicture}
         \begin{loglogaxis}[shhc, width=0.95\columnwidth, height=2.8cm, xmin=10, xmax=1200, ymin=0.002, ymax=3,
@@ -230,25 +249,6 @@ Without compensation, the 132\,kV cables cannot be operated within the branch ra
     \caption{Computation time of the second-order cone program on the IEEE 30-bus base network against the cardinality~$|\PCESet|$ of the basis, for $N = 4$, 8, 13 and 21 units of one converter type (solid) and $T = 2$, 4, 8 and 21 types for $N = 21$ (dashed); total: fundamental power flow, polynomial chaos data, precomputation and solution; solver: \textsc{Mosek} only.}
     \label{fig:tractability}
 \end{figure}
-
-The capacitive elements change the hosting capacity through the network impedance, Fig.~\ref{fig:capacitive}(a): relative to the base network, the bank raises the 95\,\% hosting capacity by~43\,\%, the 33\,kV cables lower it by~48\,\% through the resonances near the 7th and 13th harmonic, and the compensated 132\,kV cables raise it by~62\,\%. Their effect on recombination is smaller, but not negligible, Fig.~\ref{fig:capacitive}(a): the 95\,\% hosting capacity lies 4\,\% above arithmetic summation in the base network, and 7\,\% with the bank, 12\,\% with the cables at mv and 7\,\% with the cables at hv. Near a resonance, the transfer impedances from the units to a bus rotate apart, which spreads their contributions. The equivalent summation exponent hardly reflects this, Fig.~\ref{fig:capacitive}(b): it stays between~1.01 and~1.05, except for the 13th harmonic with the cables at mv, at~1.14, as the exponent compresses small gains; for 21 contributions of similar size, an exponent of~1.03 already corresponds to a gain of 9\,\%, whereas the indicative~1.4 corresponds to a factor of~2.4. The 95\,\% hosting capacity also lies 3--10\,\% above the robust bound and within~1\,\% of the deterministic angle. The summation law with the indicative exponents of IEC~61000-3-6 overestimates the hosting capacity by a factor of~1.8--2.8.
-
-The size of the bank matters more than its presence, Fig.~\ref{fig:capacitive}(c). The resonance frequency scales with the inverse square root of the bank size: banks of~1--1.5\,Mvar place it near the 11th harmonic and lower the hosting capacity by~36--38\,\%, a 5\,Mvar bank places it close to the 5th harmonic and lowers it by~30\,\%, whereas banks of~15--20\,Mvar place it below the 5th harmonic and raise it by~41--47\,\%. From 2.5\,Mvar onwards, with the resonance between or below the characteristic harmonics, the gain over arithmetic summation rises from 4\,\% to~6--9\,\%. At bus~29, the end of a 33\,kV feeder, all units see the bank through a common path, which limits the rotation of their transfer impedances. Capacitive elements are therefore a strong lever on the hosting capacity, and a moderate one on recombination.
-
-\subsubsection{Converter Types}
-\label{sec:converter_mix}
-
-With~$T$ converter types, the units are assigned cyclically to types with mean firing delays $\alpha_{\text{f}} = 60^{\circ}(t-1)/T$, $t = 1,\ldots,T$, each with a firing-delay range of~$30^{\circ}$ and one shared random variable per type, Section~\ref{sec:harmonic_current_angle_uncertainty}; $T = 1$ is the uncontrolled converter, and $T = N = 21$ gives every unit its own firing delay. Fig.~\ref{fig:types} shows the result for the base network and the network with the bank. Mixing converter types with different mean angles is the condition under which substantial recombination occurs: the 95\,\% hosting capacity rises by~40--46\,\% for two types by~80--93\,\% for four types and by up to~129\,\% for eight types, Fig.~\ref{fig:types}(a); with the capacitor bank and eight types, it even exceeds the summation law. With one type per unit, the gain falls back to~80\,\%: the mean firing delays cover the same range, but their assignment to the buses differs, which indicates that the gain also depends on where the types connect. With more types, the mean angles~$\Harmonic\,\alpha_{\text{f}}$ cover more of the circle at every harmonic, which spreads the contributions irrespective of the network. The equivalent summation exponent rises accordingly, Fig.~\ref{fig:types}(b)--(c): for four or more types, the 5th and 7th harmonic reach~1.22--1.76, i.e., around the indicative~1.4, whereas the 11th and 13th harmonic remain at~1.19--1.47, well below the indicative~2.0.
-
-\subsubsection{Choice of the Stochastic Bound}
-\label{sec:bounds}
-
-Fig.~\ref{fig:bounds} compares the three risk factors of Section~\ref{sec:polynomial_chaos_expansion} with the exact $(1-\varepsilon)$ quantile, for one and four converter types on the base network, together with the violation probability of the binding individual harmonic voltage limit, evaluated by Monte Carlo simulation with 20\,000 samples. The distribution-free Cantelli bound never exceeds the risk level, but costs~1--8\,\% of hosting capacity for one type and~18--38\,\% for four types. The Gaussian quantile is accurate for one type, within~0.4\,\%, but for four types it overestimates the hosting capacity by up to~7\,\% and violates the limits with a probability of up to~3.5 times the risk level: the shared random variables of the types make the output distribution far from Gaussian. The empirical risk factor matches the exact quantile within~0.3\,\%, and its violation probability lies within~20\,\% of the risk level, the remainder stemming from the calibration on a separate sample set. The choice of the bound is therefore a lever of comparable order to the converter mix, and the safe choice depends on the knowledge of the output distribution.
-
-\subsubsection{Computational Tractability}
-\label{sec:tractability}
-
-Fig.~\ref{fig:tractability} shows the computation time of the second-order cone program for the cases of Sections~\ref{sec:capacitive}--\ref{sec:bounds}, i.e., the fundamental power flow, the polynomial chaos data, the precomputed scalars~$\alpha$ and the solution with \textsc{Mosek}, against the cardinality~$|\PCESet|$ of the basis. The solver itself takes at most~0.17\,s, as the program keeps two variables per harmonic and one cone per chance constraint, each with~$|\PCESet|-1$ terms. The total time stays below~2\,s in every case: from 0.02\,s for 4 units to~0.29\,s for 21 units of one type, and~1.6\,s when every unit has its own type, $|\PCESet| = 903$. By~\eqref{eq:cardinality}, $|\PCESet|$ grows quadratically with the number of independent random variables for~$\delta = 2$, i.e., the number of units plus the number of converter types, and the total time grows slightly faster than linearly with~$|\PCESet|$. This requires the multiplication tensor~$M$ to be built from univariate triple products: as the basis is a tensor product, an entry~$M_{\bar{\kappa},\PCEIndex}$ can only be nonzero when~$\PCEIndex$ is supported on the random variables of~$\bar{\kappa}$, so that only~$O(|\PCESet|^{2})$ of its~$O(|\PCESet|^{3})$ entries are evaluated, and fewer than 0.1\,\% of them are nonzero. With a multivariate quadrature of all entries and a dense copy of~$M$ instead, the same case takes~118\,s. The number of harmonics and the network enter only through the precomputed scalars: from one to four harmonics, the total time rises from~0.14\,s to~0.31\,s, and the four networks of Section~\ref{sec:capacitive} differ by less than~0.01\,s. A larger network adds one inversion of the harmonic admittance matrix per harmonic and one cone per bus and branch. The number of independent random variables therefore remains the main driver of the computation time, which favors shared random variables per converter type over random variables per unit, but even one random variable per unit remains tractable.
 
 \subsubsection{Comparison with the Summation Law and the Literature}
 \label{sec:comparison}

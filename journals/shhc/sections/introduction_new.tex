@@ -22,29 +22,7 @@ A growing body of literature presents approaches to determine the harmonic hosti
     \item [(e)] harmonic limits.
 \end{enumerate*}
 
-\subsubsection{Standards and the summation law}
-
-The standard IEC~61000-3-6 allocates planning levels over installations connected to a point of common coupling and aggregates their emissions with a general summation law, $I_{\Harmonic} = (\sum_{\Unit} I_{\Unit,\Harmonic}^{\alpha})^{1/\alpha}$, with indicative exponents $\alpha = 1$ for $\Harmonic < 5$, $1.4$ for $5 \leq \Harmonic \leq 10$ and $2$ for $\Harmonic > 10$, and compares the 95\,\% distortion values with the planning levels~\cite{noauthor_iec61000-3-6_2008}. The summation law thus carries the diversity of the harmonic phase angles into the standard, but its exponents are indicative. Santos et al.\ used the summation law to determine the harmonic hosting capacity of transmission and distribution systems, represented the upstream network by a Norton equivalent with background distortion of unknown phase, and obtained a harmonic hosting capacity between 37\,MW and 160\,MW for the in-phase and anti-phase extremes; they also cautioned that the indicative exponents may under- or overestimate the aggregate of correlated sources such as wind and photovoltaic plants~\cite{santos_considerations_2015}. Field measurements confirm this caution: Wang et al.\ analyzed synchronized measurements in North-American residential distribution systems and found that low-order harmonic currents from different homes tend to add up, i.e., the effects is much less than claimed in the literature, while recombination occurs at high orders only~\cite{wang_characteristics_2017}. Cho et al.\ compared IEC~61000-3-6 with the deterministic current limits of IEEE Standard~519, set as a function of the short-circuit ratio~\cite{noauthor_ieee519_2022}, by Monte Carlo simulation on a multi-feeder distribution model, and showed that the latter can drive the voltage distortion of distribution systems up to twice the planning levels~\cite{cho_analysis_2019}. Trelles-Molina et al.\ extended the summation law from transmission systems to individual customer facilities with few harmonic sources and analyzed the probabilities that support the exponents~\cite{trellesmolina_extension_2022}. How much recombination a given network and converter population actually allow therefore remains an open question.
-
-\subsubsection{Stochastic harmonic power flow}
-
-Probabilistic harmonic power flow quantifies the uncertainty of the harmonic emissions and the associated network response. Li et al.\ separated aleatory and epistemic uncertainty sources, defined quantitative amplification indices as ratios of transfer to driving-point impedances, and assessed them with Monte Carlo simulation~\cite{li2020}. Monte Carlo and data-driven methods have since become the standard tool for probabilistic harmonic power flow: Xie and Sun proposed a piecewise probabilistic harmonic power flow for unbalanced residential distribution systems~\cite{xie_piecewise_2022}, Xie et al.\ a data-driven approach for distribution systems with photovoltaic generation~\cite{xie2022}, and Cadena-Zarate et al.\ a simulation-based approach for low-voltage networks with distributed energy resources~\cite{cadenazarate2024}. These methods quantify uncertainty, but do not optimize the hosting capacity.
-
-\subsubsection{Stochastic harmonic hosting capacity}
-
-Early harmonic hosting capacity methods incorporated harmonic limits within deterministic frameworks. Sun et al.\ incorporated harmonic voltage constraints into an optimal power flow for distribution network capacity assessment~\cite{sun_distribution_2012} and extended it to active networks~\cite{sun_incorporating_2012}, and Sakar et al.\ analyzed the hosting capacity of large photovoltaic plants in the presence of background distortion~\cite{sakar_integration_2018}. Sun and Harrison proposed the first optimization-based stochastic harmonic hosting capacity method, with percentile-based harmonic distortion limits as chance constraints within an ac optimal power flow, and showed that relaxing the risk level increases the admissible hosting capacity~\cite{sun_distribution_2022}. Nakhodchi et al.\ included the measured emission uncertainty of a fast charging station for electric vehicles through Bayesian statistics and the correlation between harmonic orders~\cite{nakhodchi2022}, and showed that the estimated hosting capacity depends strongly on how the medium-voltage network and the remote loads are modeled~\cite{nakhodchi_impact_2023}. The present authors determined an exact lower bound for the equitable harmonic hosting capacity with a second-order cone formulation of the full network, but with fixed harmonic current angles~\cite{vanacker_hosting_2026}, and studied the impact of underground cables on it~\cite{vanacker_impact_2025}.
-
-\subsubsection{Research gaps}
-
-Table~\ref{tab:literature_review} shows that no existing method simultaneously achieves: 
-\begin{enumerate*}
-    \item [(i)] tractable network-wide optimization, 
-    \item [(ii)] explicit treatment of phase angle uncertainty, and 
-    \item [(iii)] chance-constraint enforcement of harmonic distortion limits. 
-\end{enumerate*}
-Moreover, the recombination that a network and a converter population allow has not been quantified against the summation law of IEC~61000-3-6, and the conditions under which it occurs have not been identified.
-
-\begin{table*}[t!]
+\begin{table*}[!t]
     \centering
     \caption{Literature review on harmonic hosting capacity and stochastic harmonic power flow, in order of discussion, enumerating the stochastic features~(a)--(e). The entry marked $\star$ is the deterministic predecessor of this work.}
     \label{tab:literature_review}
@@ -75,6 +53,27 @@ Moreover, the recombination that a network and a converter population allow has 
     $^{c}$Tractability expressed as the number of nodes and the solve time in minutes.}
 \end{table*}
 
+\subsubsection{Standards and the summation law}
+
+The standard IEC~61000-3-6 allocates planning levels over installations connected to a point of common coupling and aggregates their emissions with a general summation law, $I_{\Harmonic} = (\sum_{\Unit} I_{\Unit,\Harmonic}^{\alpha})^{1/\alpha}$, with indicative exponents $\alpha = 1$ for $\Harmonic < 5$, $1.4$ for $5 \leq \Harmonic \leq 10$ and $2$ for $\Harmonic > 10$, and compares the 95\,\% distortion values with the planning levels~\cite{noauthor_iec61000-3-6_2008}. The summation law thus carries the diversity of the harmonic phase angles into the standard, but its exponents are indicative. Santos et al.\ used the summation law to determine the harmonic hosting capacity of transmission and distribution systems, represented the upstream network by a Norton equivalent with background distortion of unknown phase, and obtained a harmonic hosting capacity between 37\,MW and 160\,MW for the in-phase and anti-phase extremes; they also cautioned that the indicative exponents may under- or overestimate the aggregate of correlated sources such as wind and photovoltaic plants~\cite{santos_considerations_2015}. Field measurements confirm this caution: Wang et al.\ analyzed synchronized measurements in North-American residential distribution systems and found that low-order harmonic currents from different homes tend to add up, i.e., the effects is much less than claimed in the literature, while recombination occurs at high orders only~\cite{wang_characteristics_2017}. Cho et al.\ compared IEC~61000-3-6 with the deterministic current limits of IEEE Standard~519, set as a function of the short-circuit ratio~\cite{noauthor_ieee519_2022}, by Monte Carlo simulation on a multi-feeder distribution model, and showed that the latter can drive the voltage distortion of distribution systems up to twice the planning levels~\cite{cho_analysis_2019}. Trelles-Molina et al.\ extended the summation law from transmission systems to individual customer facilities with few harmonic sources and analyzed the probabilities that support the exponents~\cite{trellesmolina_extension_2022}. How much recombination a given network and converter population actually allow therefore remains an open question.
+
+\subsubsection{Stochastic harmonic power flow}
+
+Probabilistic harmonic power flow quantifies the uncertainty of the harmonic emissions and the associated network response. Li et al.\ separated aleatory and epistemic uncertainty sources, defined quantitative amplification indices as ratios of transfer to driving-point impedances, and assessed them with Monte Carlo simulation~\cite{li2020}. Monte Carlo and data-driven methods have since become the standard tool for probabilistic harmonic power flow: Xie and Sun proposed a piecewise probabilistic harmonic power flow for unbalanced residential distribution systems~\cite{xie_piecewise_2022}, Xie et al.\ a data-driven approach for distribution systems with photovoltaic generation~\cite{xie2022}, and Cadena-Zarate et al.\ a simulation-based approach for low-voltage networks with distributed energy resources~\cite{cadenazarate2024}. These methods quantify uncertainty, but do not optimize the hosting capacity.
+
+\subsubsection{Stochastic harmonic hosting capacity}
+
+Early harmonic hosting capacity methods incorporated harmonic limits within deterministic frameworks. Sun et al.\ incorporated harmonic voltage constraints into an optimal power flow for distribution network capacity assessment~\cite{sun_distribution_2012} and extended it to active networks~\cite{sun_incorporating_2012}, and Sakar et al.\ analyzed the hosting capacity of large photovoltaic plants in the presence of background distortion~\cite{sakar_integration_2018}. Sun and Harrison proposed the first optimization-based stochastic harmonic hosting capacity method, with percentile-based harmonic distortion limits as chance constraints within an ac optimal power flow, and showed that relaxing the risk level increases the admissible hosting capacity~\cite{sun_distribution_2022}. Nakhodchi et al.\ included the measured emission uncertainty of a fast charging station for electric vehicles through Bayesian statistics and the correlation between harmonic orders~\cite{nakhodchi2022}, and showed that the estimated hosting capacity depends strongly on how the medium-voltage network and the remote loads are modeled~\cite{nakhodchi_impact_2023}. The present authors determined an exact lower bound for the equitable harmonic hosting capacity with a second-order cone formulation of the full network, but with fixed harmonic current angles~\cite{vanacker_hosting_2026}, and studied the impact of underground cables on it~\cite{vanacker_impact_2025}.
+
+\subsubsection{Research gaps}
+
+Table~\ref{tab:literature_review} shows that no existing method simultaneously achieves: 
+\begin{enumerate*}
+    \item [(i)] tractable network-wide optimization, 
+    \item [(ii)] explicit treatment of phase angle uncertainty, and 
+    \item [(iii)] chance-constraint enforcement of harmonic distortion limits. 
+\end{enumerate*}
+Moreover, the recombination that a network and a converter population allow has not been quantified against the summation law of IEC~61000-3-6, and the conditions under which it occurs have not been identified.
 
 \subsection{Contributions and Outline}
 \label{sec:contribution_and_outline}
