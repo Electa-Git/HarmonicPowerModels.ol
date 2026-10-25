@@ -1,27 +1,25 @@
 \newpage
-~
-\newpage
 
 \section{Mathematical Framework}
 \label{sec:mathematical_framework}
 
 This section presents the mathematical framework for the stochastic harmonic hosting capacity problem of a phase-balanced three-phase power system, considering uncertainty on the angle of the harmonic current injected by the connected harmonic units. To this end, the formulation for the deterministic harmonic hosting capacity presented in~\cite{vanacker_hosting_2026} is extended. For brevity, the original formulation is not repeated in this section, rather the relevant variables and constraints are highlighted and transformed to their stochastic counterpart. %For the full stochastic formulation, the reader is referred to the supplementary material.
 
-Table~\ref{tab:notation} gives an overview and generic examples of the notation used throughout the mathematical framework.
-\begin{table}[ht!]
-    \centering
-    \caption{Notation used throughout the mathematical framework.}
-    \label{tab:notation}
-    \begin{tabular}{ l l c }
-        element             & notation                  & example                           \\ \hline
-        index               & lower-case italic         & $x$                               \\
-        set                 & calligraphic              & $\mathcal{X}$                     \\
-        (random) variable   & sans serif                & $\mathsf{X}$                      \\
-        parameter           & italic                    & $X$                               \\
-        approximation       & hat notation              & $\hat{\mathsf{X}}$                \\
-        vector              & bar notation              & $\bar{\mathsf{X}}$, $\bar{X}$
-    \end{tabular}
-\end{table}
+%Table~\ref{tab:notation} gives an overview and generic examples of the notation used throughout the mathematical framework.
+%\begin{table}[ht!]
+%    \centering
+%    \caption{Notation used throughout the mathematical framework.}
+%    \label{tab:notation}
+%    \begin{tabular}{ l l c }
+%        element             & notation                  & example                           \\ \hline
+%        index               & lower-case italic         & $x$                               \\
+%        set                 & calligraphic              & $\mathcal{X}$                     \\
+%        (random) variable   & sans serif                & $\mathsf{X}$                      \\
+%        parameter           & italic                    & $X$                               \\
+%        approximation       & hat notation              & $\hat{\mathsf{X}}$                \\
+%        vector              & bar notation              & $\bar{\mathsf{X}}$, $\bar{X}$
+%    \end{tabular}
+%\end{table}
 
 \subsection{Background on Polynomial Chaos Expansion}
 \label{sec:polynomial_chaos_expansion}
@@ -135,7 +133,7 @@ The fundamental power limits~(42)--(43) in~\cite{vanacker_hosting_2026} involve 
 \end{IEEEeqnarray}
 For~$\PCEIndex = 0$ the quadratic form is positive semidefinite, but for~$\PCEIndex \neq 0$ it is indefinite and the equality must be retained: relaxing it would allow~$\RVZ_k = 0$ where the true coefficient is negative, which underestimates the variance and makes the chance constraint over-optimistic. The right-hand side becomes the chance constraint,
 \begin{IEEEeqnarray}{ l }
-    \RVZ_{0} + \lambda(\varepsilon) \sqrt{\mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \RVZ_{\PCEIndex}^{2}} \leq a^{2}, \label{eq:cc_soc}
+    \RVZ_{0} + \lambda(\varepsilon) \sqrt{ \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \RVZ_{\PCEIndex}^{2}} \leq a^{2}, \label{eq:cc_soc}
 \end{IEEEeqnarray}
 a second-order cone in~$\{\RVZ_{\PCEIndex}\}_{\PCEIndex\in\PCESet}$. With the equalities~\eqref{eq:soc_aux_eq} for~$\PCEIndex \neq 0$, the general stochastic harmonic hosting capacity problem is a non-convex quadratically constrained quadratic program.
 
@@ -152,13 +150,12 @@ For fixed weights, \eqref{eq:real_harmonic_unit_current_pce}--\eqref{eq:imag_har
 \end{IEEEeqnarray}
 where~$C^{\text{re}}$ and~$C^{\text{im}}$ follow from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network, obtained by inverting the harmonic admittance matrix, the weights~$w_{\Unit}$ and the trigonometric coefficients~\eqref{eq:trig_quadrature}; branch currents follow analogously. The admittance matrix includes the phase shift of the transformer vector groups, which is exact for the positive- and negative-sequence harmonics considered in this work; zero-sequence harmonics would additionally require the winding configuration and earthing of the transformers. The lifting then collapses to the precomputed scalars,
 \begin{IEEEeqnarray}{ l }
-\alpha_{\Node,\Harmonic,\PCEIndex} = \mkern-12mu \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-12mu M_{\bar{\kappa},\PCEIndex} \big( C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{2}} \nonumber \\
-\qquad\qquad +\: C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{2}} \big),
+\alpha_{\Node,\Harmonic,\PCEIndex} = \mkern-12mu \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-12mu M_{\bar{\kappa},\PCEIndex} \big( C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{2}} + C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{2}} \big),
 \end{IEEEeqnarray}
 i.e., the coefficients of~$|\ComplexVoltage_{\Node,\Harmonic}|^2/I_{\Harmonic}^2$. With~$g_{\Harmonic} \geq I_{\Harmonic}^{2}$, a rotated second-order cone, every chance constraint on a sum of squared harmonic quantities over a set~$\mathcal{H}_{c} \subseteq \HarmonicSet$ of harmonics becomes,
 \begin{IEEEeqnarray}{ l }
     \sum_{\Harmonic \in \mathcal{H}_{c}} \alpha_{\Node,\Harmonic,0}\, g_{\Harmonic} \leq a_{\Node,c} \nonumber \\
-    \quad -\: \lambda(\varepsilon) \sqrt{\mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \Big( \sum_{\Harmonic \in \mathcal{H}_{c}} \alpha_{\Node,\Harmonic,\PCEIndex}\, g_{\Harmonic} \Big)^{2}}, \label{eq:socp_cc}
+    \quad -\: \lambda(\varepsilon) \sqrt{ \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \Big( \sum_{\Harmonic \in \mathcal{H}_{c}} \alpha_{\Node,\Harmonic,\PCEIndex}\, g_{\Harmonic} \Big)^{2}}, \label{eq:socp_cc}
 \end{IEEEeqnarray}
 a second-order cone in~$\bar{g}$: $\mathcal{H}_{c} = \{\Harmonic\}$ for the individual harmonic voltage distortion, which reduces to a linear bound on~$g_{\Harmonic}$, and $\mathcal{H}_{c} = \HarmonicSet$ for the total harmonic distortion and the root-mean-square voltage and current limits, where~$a_{\Node,c}$ is the limit net of the fundamental. The stochastic harmonic hosting capacity is thus the second-order cone program,
 \begin{IEEEeqnarray}{ l }
@@ -167,22 +164,22 @@ a second-order cone in~$\bar{g}$: $\mathcal{H}_{c} = \{\Harmonic\}$ for the indi
 \end{IEEEeqnarray}
 with one pair of variables per harmonic, whatever the size of the network or the cardinality of the basis; the latter only enters the precomputed scalars~$\alpha$. A limit that the fundamental already exhausts, $a_{\Node,c} \leq 0$, leaves no harmonic headroom and forces the contributing~$g_{\Harmonic}$ to zero. When every angle range collapses to a point, all variances vanish and~\eqref{eq:socp} reduces exactly to the deterministic model.
 
-\subsection{Quantifying Harmonic Recombination}
-\label{sec:recombination_metrics}
+%\subsection{Quantifying Harmonic Recombination}
+%\label{sec:recombination_metrics}
 
-Harmonic recombination is the reduction of the aggregate distortion below the arithmetic sum of the individual contributions. With a single hosting capacity per harmonic, as in~\eqref{eq:socp}, and binding individual harmonic voltage limits, the hosting capacity at harmonic~$\Harmonic$ is set by the tightest bus,
-\begin{IEEEeqnarray}{ r C l }
-    I_{\Harmonic} &=& \min_{\Node \in \NodeSet} \frac{U^{\text{ihd}}_{\Node,\Harmonic}\,|\ComplexVoltage_{\Node,1}|}{A_{\Node,\Harmonic}}, \qquad c_{\Node\Unit,\Harmonic} = Z_{\Harmonic,\Node\Node(\Unit)}\,e^{\im\phi_{\Unit,\Harmonic}}, \label{eq:reduced_hosting}
-\end{IEEEeqnarray}
-where~$A_{\Node,\Harmonic}$ aggregates the unit contributions~$c_{\Node\Unit,\Harmonic}$ per unit of current. Four aggregation rules are compared:
-\begin{enumerate*}
-    \item[(i)] arithmetic summation $\sum_{\Unit}|c_{\Node\Unit,\Harmonic}|$, i.e., no recombination;
-    \item[(ii)] the robust bound $\max_{\bar{\omega}}|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ over the support of the germ, evaluated exactly through the support function of the angle box;
-    \item[(iii)] the deterministic angle $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}(\Expectation[\bar\omega])|$, as in~\cite{vanacker_hosting_2026}; and
-    \item[(iv)] the $(1-\varepsilon)$-quantile of $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$, i.e., the exact per-constraint chance bound.
-\end{enumerate*}
-The uplift of~(iv) over~(ii) is the hosting capacity a chance constraint gains over a safe deterministic bound. To relate the result to IEC~61000-3-6~\cite{noauthor_iec61000-3-6_2008}, the equivalent summation exponent~$\alpha^{\text{eq}}_{\Harmonic}$ is defined as the exponent for which the general summation law,
-\begin{IEEEeqnarray}{ r C l }
-    A_{\Node,\Harmonic} &=& \Big(\sum_{\Unit \in \HarmonicUnitSet} |c_{\Node\Unit,\Harmonic}|^{\alpha^{\text{eq}}_{\Harmonic}}\Big)^{1/\alpha^{\text{eq}}_{\Harmonic}}, \label{eq:summation_law}
-\end{IEEEeqnarray}
-reproduces the network hosting capacity~\eqref{eq:reduced_hosting} of rule~(iv); $\alpha^{\text{eq}}_{\Harmonic} = 1$ is arithmetic summation, and the standard's indicative values are~$1.4$ for~$5 \leq \Harmonic \leq 10$ and~$2$ for~$\Harmonic > 10$.
+%Harmonic recombination is the reduction of the aggregate distortion below the arithmetic sum of the individual contributions. With a single hosting capacity per harmonic, as in~\eqref{eq:socp}, and binding individual harmonic voltage limits, the hosting capacity at harmonic~$\Harmonic$ is set by the tightest bus,
+%\begin{IEEEeqnarray}{ r C l }
+%    I_{\Harmonic} &=& \min_{\Node \in \NodeSet} \frac{U^{\text{ihd}}_{\Node,\Harmonic}\,|\ComplexVoltage_{\Node,1}|}{A_{\Node,\Harmonic}}, \qquad c_{\Node\Unit,\Harmonic} = Z_{\Harmonic,\Node\Node(\Unit)}\,e^{\im\phi_{\Unit,\Harmonic}}, \label{eq:reduced_hosting}
+%\end{IEEEeqnarray}
+%where~$A_{\Node,\Harmonic}$ aggregates the unit contributions~$c_{\Node\Unit,\Harmonic}$ per unit of current. Four aggregation rules are compared:
+%\begin{enumerate*}
+%    \item[(i)] arithmetic summation $\sum_{\Unit}|c_{\Node\Unit,\Harmonic}|$, i.e., no recombination;
+%    \item[(ii)] the robust bound $\max_{\bar{\omega}}|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ over the support of the germ, evaluated exactly through the support function of the angle box;
+%    \item[(iii)] the deterministic angle $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}(\Expectation[\bar\omega])|$, as in~\cite{vanacker_hosting_2026}; and
+%    \item[(iv)] the $(1-\varepsilon)$-quantile of $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$, i.e., the exact per-constraint chance bound.
+%\end{enumerate*}
+%The uplift of~(iv) over~(ii) is the hosting capacity a chance constraint gains over a safe deterministic bound. To relate the result to IEC~61000-3-6~\cite{noauthor_iec61000-3-6_2008}, the equivalent summation exponent~$\alpha^{\text{eq}}_{\Harmonic}$ is defined as the exponent for which the general summation law,
+%\begin{IEEEeqnarray}{ r C l }
+%    A_{\Node,\Harmonic} &=& \Big(\sum_{\Unit \in \HarmonicUnitSet} |c_{\Node\Unit,\Harmonic}|^{\alpha^{\text{eq}}_{\Harmonic}}\Big)^{1/\alpha^{\text{eq}}_{\Harmonic}}, \label{eq:summation_law}
+%\end{IEEEeqnarray}
+%reproduces the network hosting capacity~\eqref{eq:reduced_hosting} of rule~(iv); $\alpha^{\text{eq}}_{\Harmonic} = 1$ is arithmetic summation, and the standard's indicative values are~$1.4$ for~$5 \leq \Harmonic \leq 10$ and~$2$ for~$\Harmonic > 10$.
