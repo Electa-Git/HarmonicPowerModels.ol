@@ -1,254 +1,118 @@
+% ------------------------------------------------------------------------------
+% PROPOSED NOTATION (not in nomenclature.tex; pending Tom's approval, then move):
+%   \ParamVec      p         physical parameter vector of the uncertain branches
+%   \ParamSet      P         parameter box (Section II)
+%   \Latent        zeta      latent coordinates in [-1,1]^d (as in the earlier rhhc draft)
+%   \LatentSet     Z         latent box [-1,1]^d
+%   \Scenarios     Z_c^(n)   scenario set of constraint c at iteration n
+%   \MeanVec       mu_c      PCE mean of constraint c per unit g
+%   \GramMat       Sigma_c   PCE Gram matrix of constraint c per unit g
+%   \Violation     nu        largest normalized violation found by the oracle
+%   \Eig, \EigVec  eta_m, tau_m   eigenvalue / eigenvector of the reduced admittance
+%   \mathcal{C}    set of limits (constraints) c; a_c its limit net of the fundamental
+%                  (the SHHC paper writes a_{i,c}; here c identifies bus or branch and kind)
+%   \Gamma^ub/lb   upper / lower bound on the robust hosting capacity
+%   z'_b, y'_b     per-unit-length series impedance / shunt admittance of branch b
+%   gamma_b, z^c_b propagation constant / characteristic impedance; ell_b length
+% Avoided on purpose: t (transform), xi (quadrature nodes), M (Galerkin tensor),
+% k (PCE index), v (angle range), ell is the length only.
+% ------------------------------------------------------------------------------
+\newcommand{\ParamVec}{\bar{p}}
+\newcommand{\ParamSet}{\mathcal{P}}
+\newcommand{\Latent}{\bar{\zeta}}
+\newcommand{\LatentSet}{\mathcal{Z}}
+\newcommand{\MeanVec}{\bar{\mu}}
+\newcommand{\GramMat}{\Sigma}
+\newcommand{\Violation}{\nu}
+\newcommand{\Eig}{\eta}
+\newcommand{\EigVec}{\bar{\tau}}
+
 \section{Mathematical Framework}
 \label{sec:mathematical_framework}
 
-This section extends the second-order cone model of the harmonic hosting capacity problem for phase-balanced three-phase power systems presented in~\cite{} to an robust optimization problem, hedging against four distinct sources of uncertainty:
+This section presents the robust counterpart of the stochastic harmonic hosting capacity problem of~\cite{vanacker_shhc} for a phase-balanced three-phase power system. The angles of the harmonic currents remain random variables, handled through polynomial chaos expansion and chance constraints, whereas the cable and overhead-line parameters of Section~\ref{sec:parameter_uncertainty} are only known to lie in a set: the hosting capacity must comply with the chance constraints for every realization of the network in that set. The formulation of~\cite{vanacker_shhc} is first recalled in a form that exposes its dependence on the network, after which the robust counterpart, its solution by a cutting-set method, the bounds it provides and the sampling of the parameter set are presented.
+
+\subsection{Stochastic Harmonic Hosting Capacity}
+\label{sec:shhc_recap}
+
+For a fairness criterion with fixed allocation ratios, unit~$\Unit \in \HarmonicUnitSet$ hosts~$w_{\Unit} I_{\Harmonic}$ at harmonic~$\Harmonic \in \HarmonicSet$, and every voltage and current coefficient is linear in the single hosting capacity~$I_{\Harmonic}$. With~$g_{\Harmonic} \geq I_{\Harmonic}^{2}$, the squared harmonic quantities have the polynomial chaos coefficients~$\alpha_{c,\Harmonic,\PCEIndex}\,g_{\Harmonic}$, where~$\alpha$ follows from the harmonic transfer impedances~$Z_{\Harmonic}$, the weights and the projected trigonometric functions of the angles~\cite{vanacker_shhc}. Every limit~$c \in \mathcal{C}$, i.e., the individual and total harmonic voltage distortion and the root-mean-square voltage per bus and the root-mean-square current per branch, constrains a sum over a set~$\HarmonicSet_{c} \subseteq \HarmonicSet$ of harmonics. Its chance constraint reads,
+\begin{IEEEeqnarray}{ r C l }
+    F_{c}(\bar{g}) &=& \MeanVec_{c}^{\text{T}} \bar{g} + \lambda(\varepsilon) \sqrt{\bar{g}^{\text{T}} \GramMat_{c}\, \bar{g}} \;\leq\; a_{c}, \label{eq:cc_compact}
+\end{IEEEeqnarray}
+with the mean vector and the Gram matrix over the harmonics of~$\HarmonicSet_{c}$,
+\begin{IEEEeqnarray}{ r C l }
+    \mu_{c,\Harmonic} &=& \alpha_{c,\Harmonic,0}, \label{eq:mean_vector} \\
+    \GramMat_{c,\Harmonic\Harmonic'} &=& \mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \alpha_{c,\Harmonic,\PCEIndex}\, \alpha_{c,\Harmonic',\PCEIndex}, \label{eq:gram_matrix}
+\end{IEEEeqnarray}
+and~$a_{c}$ the limit net of the fundamental. Expression~\eqref{eq:cc_compact} is the chance constraint of~\cite{vanacker_shhc} with the variance written as a quadratic form; it needs~$|\HarmonicSet| + |\HarmonicSet|^{2}$ numbers per constraint, whatever the cardinality of the basis. The stochastic harmonic hosting capacity is the second-order cone program,
+\begin{IEEEeqnarray}{ l }
+    \max_{\bar{I},\,\bar{g}} \; \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) I_{\Harmonic} \nonumber \\
+    \text{s.t.} \quad (\bar{I},\bar{g}) \in \mathcal{G},\;\; F_{c}(\bar{g}) \leq a_{c},~\forall c \in \mathcal{C}, \label{eq:shhc}
+\end{IEEEeqnarray}
+with~$\mathcal{G}$ the set defined by~$I_{\Harmonic}^{2} \leq g_{\Harmonic}$ and the unit ratings on~$I_{\Harmonic}$ and~$g_{\Harmonic}$. Two properties of~\eqref{eq:cc_compact} carry the remainder of this section: it is convex in~$\bar{g}$, and it is positively homogeneous of degree one, $F_{c}(s\bar{g}) = s\,F_{c}(\bar{g})$ for all~$s \geq 0$.
+
+\subsection{Parametric Network Model}
+\label{sec:parametric_network}
+
+The parameters of Section~\ref{sec:parameter_uncertainty} are collected in the vector~$\ParamVec \in \ParamSet$, the box of physical inputs of the cables and overhead lines. To share one scale across inputs of very different magnitude, the box is parametrized by latent coordinates~$\Latent \in \LatentSet = [-1,1]^{d}$, affine in the input or in its logarithm for inputs that span orders of magnitude, e.g., the earth resistivity. For every branch~$\Line$ with uncertain parameters, the per-unit-length series impedance~$\bar{z}'_{\Line}(\Frequency;\ParamVec)$ and shunt admittance~$\bar{y}'_{\Line}(\Frequency;\ParamVec)$ follow from Section~\ref{sec:parameter_uncertainty} at the frequency~$\Frequency = \Harmonic\,\FundamentalFrequency$. Its length~$\ell_{\Line}$ enters through the exact $\pi$-model of a uniform line,
+\begin{IEEEeqnarray}{ r C l }
+    \SeriesImpedance{\Line,\Harmonic} &=& \bar{z}^{\text{c}}_{\Line} \sinh(\gamma_{\Line} \ell_{\Line}), \label{eq:pi_series} \\
+    \tfrac{1}{2} \ShuntAdmittance{\Line,\Harmonic} &=& \tanh(\gamma_{\Line} \ell_{\Line}/2)/\bar{z}^{\text{c}}_{\Line}, \label{eq:pi_shunt}
+\end{IEEEeqnarray}
+with the propagation constant~$\gamma_{\Line} = \sqrt{\bar{z}'_{\Line}\bar{y}'_{\Line}}$ and the characteristic impedance~$\bar{z}^{\text{c}}_{\Line} = \sqrt{\bar{z}'_{\Line}/\bar{y}'_{\Line}}$, both at~$(\Frequency;\ParamVec)$. The length scales the series and shunt terms non-linearly, so it is a parameter of the network model rather than of the per-unit-length data. The resulting harmonic admittance matrix~$Y_{\Harmonic}(\ParamVec)$, reduced to the buses that are not ideal harmonic grounds, gives the transfer impedances~$Z_{\Harmonic}(\ParamVec) = Y_{\Harmonic}(\ParamVec)^{-1}$ and, through~\cite{vanacker_shhc}, the moments~$\alpha(\ParamVec)$, the mean vectors~$\MeanVec_{c}(\ParamVec)$ and the Gram matrices~$\GramMat_{c}(\ParamVec)$. Only positive- and negative-sequence harmonics are considered, for which the positive-sequence data apply.
+
+The fundamental operating point, and with it the limits~$a_{c}$ and the angle reference of the units, is taken at the nominal parameters. The fundamental power flow is far less sensitive to the cable parameters than the harmonic impedances near a resonance, and keeping it fixed preserves the decoupling of the fundamental and the harmonic problems.
+
+\subsection{Robust Counterpart}
+\label{sec:robust_counterpart}
+
+The robust harmonic hosting capacity requires every chance constraint to hold for every network in~$\ParamSet$,
+\begin{IEEEeqnarray}{ l }
+    \max_{\bar{I},\,\bar{g}} \; \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) I_{\Harmonic} \nonumber \\
+    \text{s.t.} \quad (\bar{I},\bar{g}) \in \mathcal{G},\;\; \sup_{\ParamVec \in \ParamSet} F_{c}(\bar{g};\ParamVec) \leq a_{c},~\forall c \in \mathcal{C}. \label{eq:rhhc}
+\end{IEEEeqnarray}
+The resulting problem is hybrid: the angles are treated in probability, through the chance constraints, and the network parameters in the worst case. The worst-case constraint function is a supremum of functions convex in~$\bar{g}$, so~\eqref{eq:rhhc} is a convex semi-infinite program. Its difficulty lies in the supremum: $F_{c}$ depends on~$\ParamVec$ through the inverse of~$Y_{\Harmonic}(\ParamVec)$, which is far from concave near a parallel resonance, so the worst case may lie in the interior of~$\ParamSet$ rather than at one of its vertices, and no tractable reformulation of the robust counterpart exists.
+
+The robust counterpart requires a risk factor~$\lambda(\varepsilon)$ that holds for every network in~$\ParamSet$. The distribution-free Cantelli factor and the Gaussian factor of~\cite{vanacker_shhc} are constants and qualify. The empirical factor~$\lambda^{*}$ of~\cite{vanacker_shhc} does not: it is calibrated per constraint on samples of the output of the nominal network and, through the transfer impedances, depends on the network itself, so the calibration does not carry over to another point of~$\ParamSet$. Recalibrating it at every point would make the factor part of the worst case, and the program is no longer a semi-infinite second-order cone program.
+
+\subsection{Cutting-Set Method}
+\label{sec:cutting_set}
+
+Problem~\eqref{eq:rhhc} is solved by the cutting-set method of~\cite{mutapcic_cutting-set_2009}, which alternates between optimization over finite scenario sets and worst-case analysis, or pessimization. Let~$\LatentSet^{(n)}_{c} \subset \LatentSet$ denote the scenario set of constraint~$c$ at iteration~$n$, initialized with the nominal point,~$\LatentSet^{(0)}_{c} = \{\bar{0}\}$. Each iteration
 \begin{enumerate}
-    \item [\S\ref{sec:reference_bus_harmonic_voltage})] reference bus harmonic voltage,
-    \item [\S\ref{sec:bus_fundamental_voltage})] bus fundamental voltage,
-    \item [\S\ref{sec:bus_shunt_impedance})] bus shunt impedance, and
-    \item [\S\ref{sec:edge_impedance})] edge impedance. 
+    \item solves the master problem, i.e., \eqref{eq:rhhc} with the supremum replaced by the maximum over~$\LatentSet^{(n)}_{c}$, a second-order cone program; the first master is the stochastic problem~\eqref{eq:shhc} of the nominal network;
+    \item evaluates, at its solution~$(\bar{I}^{(n)},\bar{g}^{(n)})$, the normalized violation of every constraint over the box with the oracle of Section~\ref{sec:sampling}, at~$g_{\Harmonic} = (I^{(n)}_{\Harmonic})^{2}$, the hosting capacity actually allocated,
+    \begin{IEEEeqnarray}{ r C l }
+        \Violation_{c} &=& \max_{\Latent \in \LatentSet} \; F_{c}\big(\bar{g};\ParamVec(\Latent)\big)/a_{c} - 1, \label{eq:violation}
+    \end{IEEEeqnarray}
+    and appends, for every constraint with~$\Violation_{c} > \Violation^{\text{tol}}$, its worst point to~$\LatentSet^{(n+1)}_{c}$;
+    \item stops when~$\Violation = \max_{c} \Violation_{c} \leq \Violation^{\text{tol}}$, after repeating the worst-case analysis at maximum effort.
 \end{enumerate}
+Every scenario adds one linear constraint, for an individual harmonic distortion limit, or one second-order cone of dimension~$|\HarmonicSet|+1$, by~\eqref{eq:cc_compact}, so the master problem remains small. With an exact oracle, a bounded feasible set, which the ratings provide, and constraints Lipschitz in~$\bar{g}$, the method terminates after a finite number of iterations~\cite{mutapcic_cutting-set_2009}.
 
-To this end, only the original constraints affected by the aforementioned uncertainties are highlighted and their robust counterparts are presented. The full model is presented in Appendix~\ref{sec:optimization_model}.
+\subsection{Bounds}
+\label{sec:bounds}
 
-
-short explenation on min\_box approach
-\begin{IEEEeqnarray}{0 l}
-    \leq \min_{x\in [-1,1]^{n}} c^{T} x  \\
-    \min(c,-c) \\
-    = -\max(-c,c) = -|c| 
+The master problem relaxes~\eqref{eq:rhhc}, so its value is an upper bound~$\Gamma^{\text{ub}}$ on the robust harmonic hosting capacity~\cite{mutapcic_cutting-set_2009}. A feasible point, and thus a lower bound, follows from a Slater point: when every limit is positive, $a_{c} > 0$, the point~$\bar{g} = \bar{0}$ is strictly feasible, and~\cite{mutapcic_cutting-set_2009} constructs a feasible point as a convex combination of the Slater point and the master solution. Homogeneity of~\eqref{eq:cc_compact} gives a tighter point. For~$s = 1/(1+\Violation)$, every evaluated constraint satisfies
+\begin{IEEEeqnarray}{ r C l }
+    F_{c}(s\,\bar{g};\ParamVec) &=& s\, F_{c}(\bar{g};\ParamVec) \;\leq\; s\,(1 + \Violation)\, a_{c} \;=\; a_{c}, \label{eq:homogeneity}
 \end{IEEEeqnarray}
-
-TODO (BL) : Swapping min_L,C always give upper bound because of min-max thm. Explain that is also exact for individual harmonic
-
-\newpage
-
-\subsection{Reference Bus Harmonic Voltage}
-\label{sec:reference_bus_harmonic_voltage}
-
-\noindent
-Purpose: evaluate the impact of background harmonic distortion.
-
-\noindent
-Uncertain Parameters:~$\RealRefVoltage_{\Node,\Harmonic},~\ImaginaryRefVoltage_{\Node,\Harmonic}~\forall \Node \in \RefNodeSet, \Harmonic \in \HarmonicSet$
-
-\noindent
-Constraints:
-\begin{IEEEeqnarray}{ 0 l }
-    \text{reference bus voltage --~} \forall \Node \in \RefNodeSet, \Harmonic \in \HarmonicSet: \nonumber\\
-    \quad \RealVoltage_{\Node,\Harmonic} = \RealRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_a} \\ 
-    \quad \ImaginaryVoltage_{\Node,\Harmonic} = \ImaginaryRefVoltage_{\Node,\Harmonic}, \label{eq_ref_bus_volt_source_b}
+while~$\sqrt{s}\,I_{\Harmonic}$ satisfies~$(\sqrt{s}\,I_{\Harmonic})^{2} \leq s\,g_{\Harmonic}$ and the ratings. The scaled solution~$\bar{I}/\sqrt{1+\Violation}$ is therefore robustly feasible and gives the lower bound and the relative gap,
+\begin{IEEEeqnarray}{ r C l }
+    \Gamma^{\text{lb}} &=& \Gamma^{\text{ub}}/\sqrt{1+\Violation}, \label{eq:bounds} \\
+    1 - \Gamma^{\text{lb}}/\Gamma^{\text{ub}} &=& 1 - 1/\sqrt{1+\Violation}, \label{eq:gap}
 \end{IEEEeqnarray}
+where the generic convex combination of~\cite{mutapcic_cutting-set_2009} would scale~$\bar{I}$ by~$1/(1+\Violation)$. The reported hosting capacity is the scaled solution. A limit that the fundamental exhausts, $a_{c} \leq 0$, has no Slater point and forces the contributing~$g_{\Harmonic}$ to zero, as in~\cite{vanacker_shhc}.
 
-\noindent
-Perturbation Set: 
-\begin{IEEEeqnarray}{ 0 r C l }
-    \mathcal{Z} = \{ \zeta \in \mathbb{R}^{L}: \exists u \in \mathbb{R}^{K}: P\zeta + Qu + p \in \bold{K}\} (?).
+The worst-case analysis is approximate: the oracle returns points of~$\ParamSet$ but does not guarantee the maximum in~\eqref{eq:violation}. Its estimate of~$\Violation$ is then a lower estimate, and the bounds~\eqref{eq:bounds} hold with respect to the points the oracle evaluated~\cite{mutapcic_cutting-set_2009}. Two measures limit this: the final worst-case analysis runs at maximum effort, and the reported hosting capacity is checked a posteriori on an independent sample of~$\ParamSet$ that the method did not use.
+
+\subsection{Sampling the Parameter Set}
+\label{sec:sampling}
+
+The oracle evaluates~\eqref{eq:violation} from a dictionary of points of~$\LatentSet$ that is independent of the hosting capacity and is built once. For every point, the mean vectors~$\MeanVec_{c}$ and Gram matrices~$\GramMat_{c}$ are stored, so the violation of every constraint at every point costs a few inner products. The dictionary holds the nominal point, the vertices of~$\LatentSet$ when the dimension is small, seeds from a modal analysis of the nominal network, and a quasi-random Sobol background. At each iteration, the oracle evaluates the dictionary, refines the best points of the most violated constraints by projected-gradient ascent on~$F_{c}$ itself, and appends the refined points to the dictionary. The number of constraints refined, the starting points per constraint and the ascent steps set its effort.
+
+The seeds target the parallel resonances, where the worst case is sharpest. Since~$Y_{\Harmonic}$ is complex symmetric, its eigenvectors, normalized as~$\EigVec_{m}^{\text{T}}\EigVec_{m} = 1$, give the modal expansion of the transfer impedances~\cite{xu_harmonic_2005},
+\begin{IEEEeqnarray}{ r C l }
+    Z_{\Harmonic,\Node\AltNode} &=& \sum_{m} \tau_{m,\Node}\,\tau_{m,\AltNode}/\Eig_{m}, \label{eq:modal}
 \end{IEEEeqnarray}
-
-A robust approach hedges against the worst-case realisation of the uncertainty, the worst-case realisation of the uncertainty will always occur on the edge of the circle.
-
-\begin{figure}[b!]
-    \centering
-    \begin{tikzpicture}
-        % fill
-        \fill[gray!40] (0.0,0.0) -- (-0.5,0.86603) --(-0.48481,0.87462) --(-0.46947,0.88295) --(-0.45399,0.89101) --(-0.43837,0.89879) --(-0.42262,0.90631) --(-0.40674,0.91355) --(-0.39073,0.9205) --(-0.37461,0.92718) --(-0.35837,0.93358) --(-0.34202,0.93969) --(-0.32557,0.94552) --(-0.30902,0.95106) --(-0.29237,0.9563) --(-0.27564,0.96126) --(-0.25882,0.96593) --(-0.24192,0.9703) --(-0.22495,0.97437) --(-0.20791,0.97815) --(-0.19081,0.98163) --(-0.17365,0.98481) --(-0.15643,0.98769) --(-0.13917,0.99027) --(-0.12187,0.99255) --(-0.10453,0.99452) --(-0.08716,0.99619) --(-0.06976,0.99756) --(-0.05234,0.99863) --(-0.0349,0.99939) --(-0.01745,0.99985) --(0.0,1.0) --(0.01745,0.99985) --(0.0349,0.99939) --(0.05234,0.99863) --(0.06976,0.99756) --(0.08716,0.99619) --(0.10453,0.99452) --(0.12187,0.99255) --(0.13917,0.99027) --(0.15643,0.98769) --(0.17365,0.98481) --(0.19081,0.98163) --(0.20791,0.97815) --(0.22495,0.97437) --(0.24192,0.9703) --(0.25882,0.96593) --(0.27564,0.96126) --(0.29237,0.9563) --(0.30902,0.95106) --(0.32557,0.94552) --(0.34202,0.93969) --(0.35837,0.93358) --(0.37461,0.92718) --(0.39073,0.9205) --(0.40674,0.91355) --(0.42262,0.90631) --(0.43837,0.89879) --(0.45399,0.89101) --(0.46947,0.88295) --(0.48481,0.87462) --(0.5,0.86603) -- cycle;
-        % axis
-        \draw [-latex] (-1.25,0.00) -- (1.25,0.0) node [right] {\footnotesize $\ImaginaryRefVoltage_{\Node,\Harmonic}$};
-        \draw [-latex] (0.00,-1.25) -- (0.00,1.25) node [above] {\footnotesize $\RealRefVoltage_{\Node,\Harmonic}$};
-        % p = 2
-        \draw (0.00,0.00) circle (1.00);
-        \draw (0.00,0.00) -- (-0.75,1.25);
-        \draw (0.00,0.00) -- ( 0.75,1.25);
-    \end{tikzpicture}
-    \caption{Illustration of uncertainty set of the reference bus harmonic voltage.}
-    \label{fig:reference bus harmonic voltage}
-\end{figure}
-
-\newpage
-
-\subsection{Bus Fundamental Voltage}
-\label{sec:bus_fundamental_voltage}
-
-\noindent
-Purpose: evaluate the impact of power system operation, i.e, fundamental voltage magnitude.
-
-\noindent
-Uncertain Parameters:~$\FundamentalVoltageMagnitude{\Node},~\forall \Node \in \NodeSet$
-
-\noindent
-Constraints:
-\begin{IEEEeqnarray}{ 0 l } 
-    \text{root mean square voltage --~} \forall \Node \in \NodeSet: \nonumber \\
-    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\MaximumVoltage_{\Node})^{2} - (\FundamentalVoltageMagnitude{\Node})^{2}, \label{eq:soc_rms} \\
-    \text{total harmonic voltage --~} \forall \Node \in \NodeSet: \nonumber \\
-    \quad \sum_{\Harmonic \in \HarmonicSet} (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\textit{THD}_{\Node}^{\text{u}})^2\,(\FundamentalVoltageMagnitude{\Node})^{2},  \label{eq:soc_thd} \\
-    \text{individual harmonic voltage --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
-    \quad (\RealVoltage_{\Node,\Harmonic})^{2} + (\ImaginaryVoltage_{\Node,\Harmonic})^{2} \leq (\textit{IHD}^{\text{u}}_{\Node,\Harmonic}\,\FundamentalVoltageMagnitude{\Node})^{2},
-    \label{eq:soc_ihd}
-\end{IEEEeqnarray}
-
-\noindent
-Perturbation Set:
-\begin{IEEEeqnarray}{ 0 r C l }
-    \mathcal{Z} = \text{Box}_{1} \equiv \{ \zeta \in \mathbb{R}:~\|\zeta\|_{\infty} \leq 1 \}.
-\end{IEEEeqnarray}
-
-Even better would be to split this up into two random parameter, one global fundamental voltage parameter~$\VoltageParameter^{\text{mag,fund,global}}$ and a local fundamental voltage parameter~$\VoltageParameter^{\text{mag,fund,local}}_{\Node}$, such that:
-\begin{IEEEeqnarray}{ 0 r C l }
-    \FundamentalVoltageMagnitude{\Node} &=& \VoltageParameter^{\text{mag,fund,global}} + \VoltageParameter^{\text{mag,fund,local}}_{\Node}
-\end{IEEEeqnarray}
-Both random parameters would have a perturbation set as illustrated in Fig.~\ref{fig:bus_fundamental_voltage}.
-
-\begin{figure}[b!]
-    \centering
-    \begin{tikzpicture}
-        % axis
-        \draw (0.00,-0.10) -- (0.00,0.10);
-        \draw [-latex] (-1.25,0.00) -- (1.25,0.0) node [right] {\footnotesize $\FundamentalVoltageMagnitude{\Node}$};
-        % p = inf
-        % \draw (0.00,0.00) circle (1.00);
-        \draw [gray, line width=1mm] (-1.00,0.00) -- (1.00,0.00);
-        % \draw (0.00,0.00) -- ( 0.75,1.25);
-    \end{tikzpicture}
-    \caption{Illustration of uncertainty set of the bus fundamental voltage.}
-    \label{fig:bus_fundamental_voltage}
-\end{figure}
-
-\newpage
-
-\subsection{Bus Shunt Impedance}
-\label{sec:bus_shunt_impedance}
-
-\noindent
-Purpose: Evaluate the impact of shunt compensation and (a)synchronous motor load parameter uncertainty.
-
-\noindent:
-Uncertainty sources: power of connected load, $\cos(\varphi)$, start vs nominal current-ratio, RX-ratio, etc.
-
-\noindent
-Uncertain Parameters:~$\ShuntConductance{\Node,\Harmonic},~\ShuntSusceptance{\Node,\Harmonic},~\forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet$
-
-\noindent
-Constraints:
-\begin{IEEEeqnarray}{ 0 l }
-    \text{Kirchhoff's current law --~} \forall \Node \in \NodeSet, \Harmonic \in \HarmonicSet: \nonumber \\
-    \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \RealCurrent_{\Edge\Node\AltNode,\Harmonic} + \mkern-9mu
-    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \RealCurrent_{\UnitTuple,\Harmonic}  + \ShuntConductance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic} -\ShuntSusceptance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic}  = 0, \label{eq:kcl_node_real} \\
-    \quad \sum_{\Edge\Node\AltNode \in \EdgeTupleSet} \mkern-6mu \ImaginaryCurrent_{\Edge\Node\AltNode,\Harmonic} + \mkern-9mu
-    \sum_{\UnitTuple \in \UnitTupleSet} \mkern-6mu \ImaginaryCurrent_{\UnitTuple,\Harmonic} + \ShuntConductance{\Node,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + \ShuntSusceptance{\Node,\Harmonic} \RealVoltage_{\Node,\Harmonic}= 0, \label{eq:kcl_node_imag} \\
-\end{IEEEeqnarray}
-
-\noindent
-Perturbation Set:
-\begin{IEEEeqnarray}{ 0 r C l }
-    \mathcal{Z} = \text{Box}_{1} \equiv \{ \zeta \in \mathbb{R}^{2}:~\|\zeta\|_{\infty} \leq 1 \}.
-\end{IEEEeqnarray}
-
-Even more accurate would be a rectangle shape rather than a square. 
-
-\begin{figure}[b!]
-    \centering
-    \begin{tikzpicture}
-        % axis
-        \draw [-latex] (-1.25,0.00) -- (1.25,0.0) node [right] {\footnotesize $\ShuntSusceptance{\Node,\Harmonic}$};
-        \draw [-latex] (0.00,-1.25) -- (0.00,1.25) node [above] {\footnotesize $\ShuntConductance{\Node,\Harmonic}$};
-        % p = inf
-        \draw [fill=gray!40] (0.75,0.75) rectangle (-0.75,-0.75);
-    \end{tikzpicture}
-    \caption{Illustration of uncertainty set of the nodal shunt admittance.}
-    \label{fig:nodal_shunt_admittance}
-\end{figure}
-
-\newpage
-
-\subsection{Edge Impedance}
-\label{sec:edge_impedance}
-
-\noindent
-Purpose: Evaluate the impact of cable, overhead-line and transformer parameter uncertainty. 
-
-\noindent
-Uncertainty sources: geometry and positioning of a cable, engineering data of a transformer.
-
-\noindent
-Uncertain Parameters:~$\SeriesResistance{\Line,\Harmonic},~\SeriesReactance{\Line,\Harmonic},~\ShuntConductance{\LineTuple,\Harmonic},~\ShuntSusceptance{\LineTuple,\Harmonic},~\forall \LineTuple \in \LineTupleSet, \Harmonic \in \HarmonicSet$
-
-\noindent
-Constraints:
-\begin{IEEEeqnarray}{ 0 l } 
-\text{Ohm's law --~} \forall \LineTuple \in \LineTupleSetFr, \Harmonic \in \HarmonicSet: \nonumber\\
-    \quad \RealVoltage_{\AltNode,\Harmonic} = \RealVoltage_{\Node,\Harmonic} - 
-    \SeriesResistance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic} +
-    \SeriesReactance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_real} \\
-    \quad \ImaginaryVoltage_{\AltNode,\Harmonic} = \ImaginaryVoltage_{\Node,\Harmonic} - 
-    \SeriesResistance{\Line,\Harmonic} \ImaginarySeriesCurrent_{\LineTuple,\Harmonic} -
-    \SeriesReactance{\Line,\Harmonic} \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:ol_imag} \\
-    \text{branch total current --~} \forall \LineTuple \in \LineTupleSet, \Harmonic \in \HarmonicSet: \nonumber \\
-    \quad \RealCurrent_{\LineTuple,\Harmonic} =
-    \ShuntConductance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} - 
-    \ShuntSusceptance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} +
-    \RealSeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_real} \\
-    \quad \ImaginaryCurrent_{\LineTuple,\Harmonic} =
-    \ShuntConductance{\LineTuple,\Harmonic} \ImaginaryVoltage_{\Node,\Harmonic} + 
-    \ShuntSusceptance{\LineTuple,\Harmonic} \RealVoltage_{\Node,\Harmonic} +
-    \ImaginarySeriesCurrent_{\LineTuple,\Harmonic}, \label{eq:btc_imag} 
-\end{IEEEeqnarray}
-
-\noindent
-Perturbation Set:
-\begin{IEEEeqnarray}{ 0 r C l }
-    \mathcal{Z} = \text{Box}_{1} \equiv \{ \zeta \in \mathbb{R}^{4}:~\|\zeta\|_{\infty} \leq 1 \}.
-\end{IEEEeqnarray}
-
-\newpage
-
-\subsection{Minimal Example}
-
-Consider a single purely-inductive branch, i.e.,~$R=0$, with a generator setting a clean voltage at node one, i.e.,~$\bar{U}_{1}=0$, and a shunt capacitance at node two. In this minimal example, the maximum harmonic real unit current, i.e.,~$\mathfrak{I}(\bar{I}_{h}^{u})=0$ is determined that can be injected at node two for the third and fifth harmonic~$h$, considering independent box uncertainty on the inductance and capacitance, without the voltage at node two exceeding~$U^{max}$. 
-
-As a consequence of the branch resistance being zero and the harmonic imaginary current being zero, the induced voltage at node two is purely imaginary, i.e.,~$\mathfrak{R}(\bar{U}_{2,h})=0$.
-
-This results in a minimal example of three non-zero variables for each harmonic~, i.e.,~$\mathfrak{R}(\bar{I}^{u}_{h})$,~$\mathfrak{R}(\bar{I}^{g}_{h})$, and~$\mathfrak{I}(\bar{U}_{2,h})$, subsequently, for brevity, denoted as~$I^{u}_{h}$,~$I^{g}_{h}$, and~$U_{h}$, respectively.
-
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=0.5\linewidth]{figures/minimal_example_robust.png}
-\end{figure}
-
-Sets:\newline
-$h \in \{3,5\}$
-
-Deterministic parameters:\newline
-$U^{max} = 0.01$\newline
-$w=2 \pi f \approx 314.1592$
-
-Robust parameters:\newline
-$0.2\cdot10^{-3} \leq C \leq 0.4\cdot10^{-3}$\newline
-$1.0\cdot10^{-3} \leq L \leq 2.0\cdot10^{-3}$,\newline
-where~$L$ and~$C$ are independent
-
-The problem is expressed as a robust linear problem in the form:~$\{\min~c^{T}x,~\text{s.t.}~Ax \leq b\}.$
-
-Variables:\newline
-$x = [I^{u}_{3},I^{u}_{5},I^{g}_{3},I^{g}_{3},U_{3},U_{5}]$\newline
-$c = [-1,-1,0,0,0,0]$\newline
-$A = \begin{bmatrix}
-        -1      & 0     & 1     & 0     & 3wC   & 0     \\
-        0       & -1    & 0     & 1     & 0     & 5wC   \\
-        1       & 0     & -1    & 0     & -3wC  & 0     \\
-        0       & 1     & 0     & -1    & 0     & -5wC  \\
-        0       & 0     & 3wL   & 0     & 1     & 0     \\
-        0       & 0     & 0     & 5wL   & 0     & 1     \\
-        0       & 0     & -3wL  & 0     & -1    & 0     \\
-        0       & 0     & 0     & -5wL  & 0     & -1    \\
-        0       & 0     & 0     & 0     & -1    & 0     \\
-        0       & 0     & 0     & 0     & 0     & -1    \\
-        0       & 0     & 0     & 0     & 1     & 0     \\
-        0       & 0     & 0     & 0     & 0     & 1     \\  
-\end{bmatrix}$, \newline where lines 1-4 are reformulated equality constraints representing Kirchhoff's current law, lines 5-8 are reformulated equality constraints representing Ohm's law, and lines 9-12 are inequality constraints on the harmonic voltage at node two. 
-$b = [0,0,0,0,0,0,0,0,0,0,U^{max},U^{max}]$
-
-\newpage
-~
-\newpage
+so a parallel resonance is a local minimum of an eigenvalue magnitude~$|\Eig_{m}(\Frequency)|$ over a continuous frequency scan. Its sensitivity to a parameter is~$\partial \Eig_{m}/\partial p = \EigVec_{m}^{\text{T}} (\partial Y/\partial p)\, \EigVec_{m}$~\cite{huang_application_2007}; the shift of the resonance frequency per latent coordinate, which admittance-based modal analysis does not provide~\cite{huang_application_2007}, is obtained by finite differences. When a harmonic lies within the first-order range of a resonance over~$\LatentSet$, the seed is the point that moves the resonance onto the harmonic, refined by minimizing~$|\Eig_{m}|$; otherwise, it is the vertex that moves the resonance towards the harmonic. Each seed is scored by~$|\tau_{m,\Node}\,\tau_{m,\Node(\Unit)}|/|\Eig_{m}|$ over the buses~$\Node$ and the units~$\Unit$, i.e., by how strongly the mode is excited at the buses of the units and observed at the other buses. Under damping, the peak of the transfer impedance does not coincide with the minimum of~$|\Eig_{m}|$~\cite{xu_harmonic_2005}, so the seeds are starting points for the ascent on~$F_{c}$, not worst cases. As admittance eigenvalues only reveal parallel resonance, the background also covers series resonance and, with it, the branch currents.
