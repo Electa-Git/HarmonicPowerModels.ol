@@ -94,7 +94,7 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
 \providecommand{\Harmonic}{h}
 \begin{figure*}[!t]
     \centering
-    \pgfplotsset{phasorplot/.style={shhc, width=0.18\textwidth, ymin=0,
+    \pgfplotsset{phasorplot/.style={shhc, width=0.2\textwidth, ymin=0,
         xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
         yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt, /pgf/number format/1000 sep={}},
         every axis plot/.append style={line join=round}},
@@ -104,7 +104,7 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
         meanphasor/.style={-latex, black, line width=1pt, mark=none}}
     \subfloat[$\Harmonic = 1$]{%
     \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=3200, ytick={1000,2000}, yticklabels={1k,2k}]
+        \begin{polaraxis}[phasorplot, ymax=3200, ytick={2000}, yticklabels={1k,2k}]
             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h1.dat};
             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h1.dat};
             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h1.dat};
@@ -113,7 +113,7 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
     \end{tikzpicture}}%
     \subfloat[$\Harmonic = 5$]{%
     \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=700, ytick={300,600}]
+        \begin{polaraxis}[phasorplot, ymax=700, ytick={300}]
             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h5.dat};
             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h5.dat};
             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h5.dat};
@@ -122,7 +122,7 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
     \end{tikzpicture}}%
     \subfloat[$\Harmonic = 7$]{%
     \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=370, ytick={150,300}, yticklabels={150,}]
+        \begin{polaraxis}[phasorplot, ymax=370, ytick={150}]
             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h7.dat};
             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h7.dat};
             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h7.dat};
@@ -131,7 +131,7 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
     \end{tikzpicture}}%
     \subfloat[$\Harmonic = 11$]{%
     \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=230, ytick={100,200}]
+        \begin{polaraxis}[phasorplot, ymax=230, ytick={100}]
             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h11.dat};
             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h11.dat};
             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h11.dat};
@@ -140,7 +140,7 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
     \end{tikzpicture}}%
     \subfloat[$\Harmonic = 13$]{%
     \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=170, ytick={50,100}]
+        \begin{polaraxis}[phasorplot, ymax=170, ytick={50}]
             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h13.dat};
             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h13.dat};
             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h13.dat};
@@ -300,7 +300,7 @@ The comparison plots between the empirical histograms and the denormalized share
         beta/.style={solid, black, line width=0.9pt}}
     \subfloat[$h = 1$]{%
     \begin{tikzpicture}
-        \begin{axis}[phaseplot, xtick={-106,-103,-100}, ylabel={PDF [1/deg]}]
+        \begin{axis}[phaseplot, xtick={-106,-103,-100}, ylabel style={align=center}, ylabel={probability\\density\\{[1/deg]}}]
             \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h1.dat};
             \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h1.dat};
         \end{axis}
@@ -333,7 +333,7 @@ The comparison plots between the empirical histograms and the denormalized share
             \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h13.dat};
         \end{axis}
     \end{tikzpicture}}
-    \caption{Distribution of harmonic current phase angles, histograms of 5000 Monte Carlo samples (gray, 50 bins) against the denormalized shared Beta probability density functions (balck) with parameters listed in Table~\ref{tab:beta_phase_params}: (a) $h = 1$; (b) $h = 5$; (c) $h = 7$; (d) $h = 11$; (e) $h = 13$.}
+    \caption{Distribution of harmonic current phase angles, histograms of 5000 Monte Carlo samples (gray, 50 bins) against the denormalized shared Beta probability density functions (black) with parameters listed in Table~\ref{tab:beta_phase_params}: (a) $h = 1$; (b) $h = 5$; (c) $h = 7$; (d) $h = 11$; (e) $h = 13$.}
     \label{fig:Shared_Beta_Fit}
 \end{figure*}
 
