@@ -62,13 +62,15 @@ with the expectation and variance of an approximated random variable~$\ApproxRVX
     \Expectation[\ApproxRVX]   &=& \CoefficientX_{0}, \label{eq:gpc_expectation} \\
     \Variance[\ApproxRVX]      &=& \mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \CoefficientX_{\PCEIndex}^{2}, \label{eq:gpc_variance}
 \end{IEEEeqnarray}
-so that~\eqref{eq:cc_constraint} is a second-order cone constraint in the coefficients~$\{\CoefficientX_{\PCEIndex}\}_{\PCEIndex \in \PCESet}$. Three choices of the risk factor~$\lambda(\varepsilon)$ are considered:
-\begin{enumerate*}
-    \item[(i)] the distribution-free Cantelli bound $\lambda(\varepsilon) = \sqrt{(1-\varepsilon)/\varepsilon}$, which guarantees the chance constraint for any distribution of finite variance;
-    \item[(ii)] the Gaussian quantile $\lambda(\varepsilon) = \Phi^{-1}(1-\varepsilon)$; and
-    \item[(iii)] an empirical, per-constraint factor $\lambda^{*} = (q_{1-\varepsilon}(\RVX)-\Expectation(\RVX))/\sqrt{\Variance(\RVX)}$, calibrated from samples of the constrained quantity and updated with the hosting capacity until convergence.
-\end{enumerate*}
-The Cantelli bound is the safe choice when nothing is known about the output distribution; the empirical factor targets the risk level~$\varepsilon$ exactly.
+so that~\eqref{eq:cc_constraint} is a second-order cone constraint in the coefficients~$\{\CoefficientX_{\PCEIndex}\}_{\PCEIndex \in \PCESet}$. The risk factor~$\lambda(\varepsilon)$ is calibrated per constraint as $\lambda^{*} = (q_{1-\varepsilon}(\RVX)-\Expectation[\ApproxRVX])/\sqrt{\Variance[\ApproxRVX]}$, with the $(1-\varepsilon)$ quantile~$q_{1-\varepsilon}$ of samples of the constrained quantity and the moments~\eqref{eq:gpc_expectation}--\eqref{eq:gpc_variance} of its expansion, and is updated with the hosting capacity until convergence. As it is calibrated on the moments of the expansion, the bound equals the sampled quantile irrespective of the truncation of the basis, i.e., it targets the risk level~$\varepsilon$ exactly.
+%Three choices of the risk factor~$\lambda(\varepsilon)$ are considered:
+%\begin{enumerate*}
+%    \item[(i)] the distribution-free Cantelli bound $\lambda(\varepsilon) = \sqrt{(1-\varepsilon)/\varepsilon}$, which guarantees the chance constraint for any distribution of finite variance;
+%    \item[(ii)] the Gaussian quantile $\lambda(\varepsilon) = \Phi^{-1}(1-\varepsilon)$; and
+%%    \item[(iii)] an empirical, per-constraint factor $\lambda^{*} = (q_{1-\varepsilon}(\RVX)-\Expectation(\RVX))/\sqrt{\Variance(\RVX)}$, calibrated from samples of the constrained quantity and updated with the hosting capacity until convergence.
+%    \item[(iii)] an empirical, per-constraint factor $\lambda^{*} = (q_{1-\varepsilon}(\RVX)-\Expectation[\ApproxRVX])/\sqrt{\Variance[\ApproxRVX]}$, with the $(1-\varepsilon)$ quantile~$q_{1-\varepsilon}$ of samples of the constrained quantity and the moments~\eqref{eq:gpc_expectation}--\eqref{eq:gpc_variance} of its expansion, updated with the hosting capacity until convergence. As it is calibrated on the moments of the expansion, the bound equals the sampled quantile irrespective of the truncation of the basis.
+%\end{enumerate*}
+%The Cantelli bound is the safe choice when nothing is known about the output distribution; the empirical factor targets the risk level~$\varepsilon$ exactly.
 
 \subsection{Uncertainty on Angle of Harmonic Current Injection}
 \label{sec:harmonic_current_angle_uncertainty}
@@ -80,18 +82,18 @@ As shown in Section~\ref{sec:uncertainty}, the phase angles of a converter acros
 \begin{IEEEeqnarray}{ r C l }
     \phi_{\Unit,\Harmonic} &=& v^{\text{min}}_{\Harmonic} + (v^{\text{max}}_{\Harmonic} - v^{\text{min}}_{\Harmonic})\,\omega_{\Unit} + \Harmonic\,\theta_{\Node(\Unit)}, \label{eq:angle_affine}
 \end{IEEEeqnarray}
-while the random variables of different units are independent.
+while the random variables of different units are independent. For a mix of converter technologies, the shape parameters~$\hat{\alpha}$, $\hat{\beta}$ and the angle ranges~$[v^{\text{min}}_{\Harmonic}, v^{\text{max}}_{\Harmonic}]$ are those of the technology of unit~$\Unit$, Section~\ref{sec:uncertainty}, and the basis is the tensor product of the univariate bases of the units.
 
 \subsubsection{Local Angle Reference}
 The angle ranges of Section~\ref{sec:uncertainty} result from a converter model driven by its own terminal voltage, i.e., they are defined relative to the fundamental voltage at the bus~$\Node(\Unit)$ the unit connects to. A shift of the fundamental by its angle~$\theta_{\Node}$ rotates the $\Harmonic$-th harmonic phasor by~$\Harmonic\,\theta_{\Node}$, which gives the last term of~\eqref{eq:angle_affine}. The fundamental angles follow from the fundamental power flow, which is solved first. Since~$\theta_{\Node}$ depends on the operating point and not only on the network topology, units of the same type at different buses inject at different absolute angles: the local angle reference is a physically required source of angle diversity, and it is the reference used throughout this work.
 
-\subsubsection{Converter Types and Shared Random Variables}
-Units of different converter types differ in their mean angle. For a phase-controlled converter, a firing delay~$\alpha_{\text{f}}$ delays the current waveform and rotates the $\Harmonic$-th harmonic phasor by~$-\Harmonic\,\alpha_{\text{f}}$. The firing delay follows the operating point, which is common to all units of a type. Each converter type~$t \in \mathcal{T}$ is therefore assigned one additional random variable~$\omega_{t}$, shared by all its units,
-\begin{IEEEeqnarray}{ r C l }
-    \phi_{\Unit,\Harmonic} &=& v^{\text{min}}_{\Harmonic} + (v^{\text{max}}_{\Harmonic} - v^{\text{min}}_{\Harmonic})\,\omega_{\Unit} + \Harmonic\,\theta_{\Node(\Unit)} \nonumber \\
-    && +\: s^{\text{min}}_{t,\Harmonic} + (s^{\text{max}}_{t,\Harmonic} - s^{\text{min}}_{t,\Harmonic})\,\omega_{t}, \label{eq:angle_affine_type}
-\end{IEEEeqnarray}
-where the type shift~$[s^{\text{min}}_{t,\Harmonic}, s^{\text{max}}_{t,\Harmonic}]$ maps the firing-delay range of type~$t$ onto harmonic~$\Harmonic$. The germ then has dimension~$|\HarmonicUnitSet| + |\mathcal{T}|$, which by~\eqref{eq:cardinality} adds little to the cardinality; an independent firing delay per unit is the special case of one type per unit. The shared random variable preserves the inter-harmonic dependence, as the same~$\omega_{t}$ drives all harmonics.
+%\subsubsection{Converter Types and Shared Random Variables}
+%Units of different converter types differ in their mean angle. For a phase-controlled converter, a firing delay~$\alpha_{\text{f}}$ delays the current waveform and rotates the $\Harmonic$-th harmonic phasor by~$-\Harmonic\,\alpha_{\text{f}}$. The firing delay follows the operating point, which is common to all units of a type. Each converter type~$t \in \mathcal{T}$ is therefore assigned one additional random variable~$\omega_{t}$, shared by all its units,
+%\begin{IEEEeqnarray}{ r C l }
+%    \phi_{\Unit,\Harmonic} &=& v^{\text{min}}_{\Harmonic} + (v^{\text{max}}_{\Harmonic} - v^{\text{min}}_{\Harmonic})\,\omega_{\Unit} + \Harmonic\,\theta_{\Node(\Unit)} \nonumber \\
+%    && +\: s^{\text{min}}_{t,\Harmonic} + (s^{\text{max}}_{t,\Harmonic} - s^{\text{min}}_{t,\Harmonic})\,\omega_{t}, \label{eq:angle_affine_type}
+%\end{IEEEeqnarray}
+%where the type shift~$[s^{\text{min}}_{t,\Harmonic}, s^{\text{max}}_{t,\Harmonic}]$ maps the firing-delay range of type~$t$ onto harmonic~$\Harmonic$. The germ then has dimension~$|\HarmonicUnitSet| + |\mathcal{T}|$, which by~\eqref{eq:cardinality} adds little to the cardinality; an independent firing delay per unit is the special case of one type per unit. The shared random variable preserves the inter-harmonic dependence, as the same~$\omega_{t}$ drives all harmonics.
 
 \subsubsection{Exact Projection of the Trigonometric Functions}
 In the deterministic formulation~\cite{vanacker_hosting_2026}, the harmonic current magnitude~$\CurrentMagnitude_{\Unit,\Harmonic}$ is related to its rectangular components through the angle~$\phi_{\Unit,\Harmonic}$,
@@ -105,7 +107,9 @@ Since the angle~\eqref{eq:angle_affine} is affine in a single random variable, $
 \begin{IEEEeqnarray}{ r C l }
     \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} &=& \frac{1}{\langle \Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle} \sum_{q} w_{q} \cos\big(\phi_{\Unit,\Harmonic}(\xi_{q})\big)\,\Polynoom_{\PCEIndex}(\xi_{q}), \label{eq:trig_quadrature}
 \end{IEEEeqnarray}
-with nodes~$\xi_{q}$ and weights~$w_{q}$, and analogously for the sine. For the type angle~\eqref{eq:angle_affine_type}, the identities $\cos(a+b) = \cos a\cos b - \sin a \sin b$ and $\sin(a+b) = \sin a\cos b + \cos a \sin b$ split the functions into products of functions of the independent random variables~$\omega_{\Unit}$ and~$\omega_{t}$. As the basis is a tensor product, their coefficients are the products of the univariate projections~\eqref{eq:trig_quadrature}, truncated to total degree~$\delta$. In both cases~$\cos(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ and~$\sin(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ are parameters, not optimization variables.
+with nodes~$\xi_{q}$ and weights~$w_{q}$, and analogously for the sine.
+% For the type angle~\eqref{eq:angle_affine_type}, the identities $\cos(a+b) = \cos a\cos b - \sin a \sin b$ and $\sin(a+b) = \sin a\cos b + \cos a \sin b$ split the functions into products of functions of the independent random variables~$\omega_{\Unit}$ and~$\omega_{t}$. As the basis is a tensor product, their coefficients are the products of the univariate projections~\eqref{eq:trig_quadrature}, truncated to total degree~$\delta$. In both cases
+The coefficients~$\cos(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ and~$\sin(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ are parameters, not optimization variables.
 
 \subsection{General Stochastic Harmonic Hosting Capacity}
 \label{sec:stochastic_harmonic_hosting_capacity}
@@ -123,7 +127,9 @@ which are linear in the decision variables. Any variables related to the fairnes
 
 \subsubsection{Reformulation of Linear Constraints}
 \label{sec:reformulation_of_linear_constraints}
-The network equations of the current-voltage formulation in~\cite{vanacker_hosting_2026}, i.e., the reference bus, Kirchhoff's current law, Ohm's law, branch current and transformer constraints~(10)--(31), are linear, as are the fairness constraints~(34), (36) and~(38)--(39) and the harmonic current injection constraints~(40)--(41), of which the latter are treated above. Supported by~\eqref{eq:gp_sum}, a generic linear constraint $a\,\RVX + b\,\RVY = c$ with deterministic parameters is repeated over all indices, $a\,\RVX_{k} + b\,\RVY_{k} = c_{k}$, $\forall \PCEIndex \in \PCESet$, where $c_{k} = c$ for $k=0$ and $c_{k}=0$ otherwise. Since each voltage and current coefficient is then linear in the injected current coefficients, the physical variables are non-zero only on the indices supported by a single random variable, or by the pair of the random variables of a unit and its type, which reduces the number of variables.
+The network equations of the current-voltage formulation in~\cite{vanacker_hosting_2026}, i.e., the reference bus, Kirchhoff's current law, Ohm's law, branch current and transformer constraints~(10)--(31), are linear, as are the fairness constraints~(34), (36) and~(38)--(39) and the harmonic current injection constraints~(40)--(41), of which the latter are treated above. Supported by~\eqref{eq:gp_sum}, a generic linear constraint $a\,\RVX + b\,\RVY = c$ with deterministic parameters is repeated over all indices, $a\,\RVX_{k} + b\,\RVY_{k} = c_{k}$, $\forall \PCEIndex \in \PCESet$, where $c_{k} = c$ for $k=0$ and $c_{k}=0$ otherwise. Since each voltage and current coefficient is then linear in the injected current coefficients, the physical variables are non-zero only on the indices supported by a single random variable%
+%, or by the pair of the random variables of a unit and its type
+, which reduces the number of variables.
 
 \subsubsection{Reformulation of Quadratic Constraints and Problem Class}
 \label{sec:reformulation_of_quadratic_constraints}
