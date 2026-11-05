@@ -1,18 +1,20 @@
 \subsection{Second Converter Type: Phase-Controlled Rectifier}
 \label{sec:converter_types}
 
-\placeholder{To be completed after the Harmonic Meeting of 30/10: harmonic state-space analysis of the phase-controlled converter over its firing delay, joint Monte Carlo sampling of $L_{ac}$, $L_{dc}$ and $\alpha_{\text{f}}$, the resulting angle distributions and their dependence on the firing delay, and the reference convention of the angles (relative to the terminal phase-$a$ voltage, cosine-referenced).}
+% \placeholder{To be completed after the Harmonic Meeting of 30/10: harmonic state-space analysis of the phase-controlled converter over its firing delay, joint Monte Carlo sampling of $L_{ac}$, $L_{dc}$ and $\alpha_{\text{f}}$, the resulting angle distributions and their dependence on the firing delay, and the reference convention of the angles (relative to the terminal phase-$a$ voltage, cosine-referenced).}
+
+% \placeholder{Working assumption, to be replaced: the firing delay has a mean of~$30^{\circ}$ and a Beta-distributed support of~$30^{\circ}$ width, with the shape parameters of Table~\ref{tab:beta_phase_params}, and the overlap angle is independent of the firing delay. The resulting angle model, with one random variable shared by all units of the type, is given in Section~\ref{sec:harmonic_current_angle_uncertainty}.}
 
 % Real networks host a mix of converter technologies, whose harmonic current angles differ in their mean. As a second type, a phase-controlled version of the same 6-pulse converter is considered, i.e., a thyristor rectifier operated at a firing delay~$\alpha_{\text{f}}$. Delaying the firing delays the whole current waveform, which rotates the $\Harmonic$-th harmonic phasor of phase~$a$ by~$-\Harmonic\,\alpha_{\text{f}}$ relative to the uncontrolled converter, while the dispersion caused by the uncertain inductances is retained. The firing delay is set by the operating point, e.g., the demanded dc voltage, and is therefore common to all units of this type and uncertain at the planning stage.
 
-\placeholder{Working assumption, to be replaced: the firing delay has a mean of~$30^{\circ}$ and a Beta-distributed support of~$30^{\circ}$ width, with the shape parameters of Table~\ref{tab:beta_phase_params}, and the overlap angle is independent of the firing delay. The resulting angle model, with one random variable shared by all units of the type, is given in Section~\ref{sec:harmonic_current_angle_uncertainty}.}
-
-Real networks host a mix of converter technologies, whose harmonic current angles differ in their mean. As a second type, the same 6-pulse converter unit is equipped with thyristors and operated at phase-controlled mode, resulting a firing delay~$\alpha_{\text{f}}$. Each unit controls its dc current to a reference that is needed for the load and is therefore common to all units of this type and uncertain at the planning stage. The reference is expressed as the firing delay~$\alpha_{\text{op}}$ of a unit with the mean commutation inductance~$\bar{L}_{ac}$, so that $\alpha_{\text{f}} = \alpha_{\text{op}}$ for $L_{ac} = \bar{L}_{ac}$. As no operating data are available, $\alpha_{\text{op}}$ is sampled, like $L_{ac}$ and $L_{dc}$, from a normal distribution centred in its range $[15^{\circ}, 45^{\circ}]$, truncated at the bounds. Each unit then fires at
+Real networks host a mix of converter technologies. As a second type, the same line-commutated converter unit is equipped with thyristors and operated in phase-controlled mode, resulting in firing delay~$\alpha_{\text{f}}$. Each unit regulates its dc current to a load-dependent reference, assumed common to all units of this type but uncertain at the planning stage from a operator perspective. The reference is expressed as the firing delay~$\alpha_{\text{op}}$ of a unit with the mean commutation inductance~$\bar{L}_{ac}$, so that $\alpha_{\text{f}} = \alpha_{\text{op}}$ for $L_{ac} = \bar{L}_{ac}$. In the absence of operating data, $\alpha_{\text{op}}$ is sampled, as $L_{ac}$ and $L_{dc}$, from a normal distribution with mean of $30^{\circ}$ and standard deviation of $5^{\circ}$, truncated to $[15^{\circ}, 45^{\circ}]$. The firing delay at each sample is determined by,
 \begin{equation}
-    \cos\alpha_{\text{f}} = \frac{I_{dc}^{\text{ref}}\left(R_{dc} + \frac{3}{\pi}\omega_1 L_{ac}\right)}{V_{d0}}, \quad
+    \cos\alpha_{\text{f}} = \frac{I_{dc}^{\text{ref}}\left(R_{dc} + \frac{3}{\pi}\omega_1 L_{ac}\right)}{V_{d0}}, 
     I_{dc}^{\text{ref}} = \frac{V_{d0}\cos\alpha_{\text{op}}}{R_{dc} + \frac{3}{\pi}\omega_1 \bar{L}_{ac}},
 \end{equation}
-with $V_{d0} = 3\sqrt{2}\,V_{LL}/\pi$, i.e., a larger $L_{ac}$ is compensated by an earlier firing. Sampling $L_{ac}$, $L_{dc}$ and $\alpha_{\text{op}}$ jointly ($N = 5000$) increases the lag of the fundamental current behind~$v_a$ from $9.4^{\circ}$--$16.7^{\circ}$ to $20.2^{\circ}$--$47.8^{\circ}$. Delaying the firing delays the current waveform, so the $\Harmonic$-th angle decreases with~$\alpha_{\text{f}}$. A shared Beta distribution, with parameters listed in Table~\ref{tab:beta_phase_params_pc}, still describes them well.
+where $V_{d0} = 3\sqrt{2}\,V_{LL}/\pi$ and $V_{LL}$ is the line-to-line voltage at ac terminal. At a given current reference, a larger $L_{ac}$ therefore requires earlier firing to compensate for the increased commutation voltage drop.
+
+Joint Monte Carlo sampling of $L_{ac}$, $L_{dc}$ and $\alpha_{\text{op}}$ ($N = 5000$) yields the harmonic current phase angle distributions for the phase-controlled converter. Following the same uncertainty quantification procedure as for the diode-based converter, the simulated angles are unwrapped about their respective circular means and normalized, and a shared Beta distribution is fitted to the pooled normalized samples. The resulting shared shape parameters, harmonic-specific locations and scales, and fit errors are listed in Table~\ref{tab:beta_phase_params_pc}. The histograms from the Monte Carlo simulation and the fitted probability densities are compared in~Fig.~\ref{fig:Shared_Beta_Fit_pc}. As summarized in Table~\ref{tab:fund_angle},the lag of the fundamental current behind the terminal reference voltage~$v_a$ ($v_a = V_a\cos(\omega_1 t - 90^{\circ})$) increases from $9.43^{\circ}$-$16.70^{\circ}$ for the diode-based converter to $20.15^{\circ}$-$47.26^{\circ}$ for the phase-controlled converter. The firing delay~$\alpha_{\text{f}}$ shifts the current waveform later in time and introduces a phase shift of~$-h\alpha_{\text{f}}$ to the $h$-th harmonic. Since uncertainty in operating reference introduces additional order-dependent spread in harmonic phase angles of the phase-controlled converter, the distribution ranges are wider than those of the diode-based converter for every harmonic considered, as indicated in~Fig.~\ref{fig:Shared_Beta_Fit} and~Fig.~\ref{fig:Shared_Beta_Fit_pc}.
 
 \begin{table}[!t]
     \centering
@@ -22,30 +24,79 @@ with $V_{d0} = 3\sqrt{2}\,V_{LL}/\pi$, i.e., a larger $L_{ac}$ is compensated by
     \begin{tabular}{l c c c c}
     Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max} - v_{\min}$ [deg] & error \\
     \hline
-    1st  & $-137.82$ & $-110.24$  & 27.58  & 0.0081 \\
-    5th  & $-138.23$ & $-10.87$   & 127.37 & 0.0011 \\
-    7th  & $-265.07$ & $-48.90$   & 216.17 & 0.0013 \\
-    11th & $-240.99$ & 44.65      & 285.64 & 0.0005 \\
-    13th & $-337.52$ & 20.25      & 357.76 & 0.0007 \\
+    1st  & $-137.26$ & $-110.15$ & 27.11  & 0.0066 \\
+    5th  & $-141.74$ & $-11.33$  & 130.41 & 0.0013 \\
+    7th  & $-262.58$ & $-49.81$  & 212.77 & 0.0011 \\
+    11th & $-245.62$ & 47.96     & 293.58 & 0.0005 \\
+    13th & $-338.03$ & 20.48     & 358.51 & 0.0007 \\
     \end{tabular}
     
     \vspace{2pt}
-    \parbox{\columnwidth}{\scriptsize All harmonics share the same shape parameters ($\hat{\alpha} = 4.139$, $\hat{\beta} = 3.659$).\\
-    Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific. Angles are unwrapped about their circular mean.}
+    \parbox{\columnwidth}{\scriptsize All harmonics share the same shape parameters ($\hat{\alpha}=4.120$ and $\hat{\beta}=3.622$).\\
+    Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific. Angles are unwrapped about their respective circular means.}
 \end{table}
 
-\placeholder{Angle Convention. Can be Removed after Discussion.
-All phase angles in this section, including those of Tables~\ref{tab:beta_phase_params} and~\ref{tab:beta_phase_params_pc}, are the angles~$\varphi_{\Harmonic}$ of the cosine-based phasors $I_{\Harmonic}\cos(\Harmonic\omega_1 t + \varphi_{\Harmonic})$. The terminal phase-$a$ voltage is set to $v_a = V_a\sin(\omega_1 t) = V_a\cos(\omega_1 t - 90^{\circ})$, so its phasor lies at~$-90^{\circ}$, and the fundamental current lags~$v_a$ by $-(\varphi_1 + 90^{\circ})$. As listed in Table~\ref{tab:fund_angle}, the firing delay increases the lag of the fundamental current from $9.4^{\circ}$-$16.7^{\circ}$ for the diode-based converter to $20.2^{\circ}$-$47.8^{\circ}$ for the phase-controlled converter.
-}
+% RMSE compares the 50-bin histogram density with the fitted density evaluated at the bin centers.
+
+\begin{figure*}[!t]
+    \centering
+    \pgfplotsset{phaseplotpc/.style={shhc, width=0.205\textwidth, height=3cm, ymin=0,
+        xlabel={phase [deg]}, scaled y ticks=false,
+        yticklabel style={/pgf/number format/fixed},
+        every axis plot/.append style={mark=none}},
+        mcspc/.style={ybar interval, fill=gray!30, draw=gray!70, line width=0.2pt},
+        betapc/.style={solid, black, line width=0.9pt}}
+    \subfloat[$h = 1$]{%
+    \begin{tikzpicture}
+        \begin{axis}[phaseplotpc, xtick={-135,-125,-115},
+            ylabel style={align=center}, ylabel={probability\\density\\{[1/deg]}}]
+            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h1.dat};
+            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h1.dat};
+        \end{axis}
+    \end{tikzpicture}}%
+    \subfloat[$h = 5$]{%
+    \begin{tikzpicture}
+        \begin{axis}[phaseplotpc, xtick={-140,-80,-20}]
+            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h5.dat};
+            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h5.dat};
+        \end{axis}
+    \end{tikzpicture}}%
+    \subfloat[$h = 7$]{%
+    \begin{tikzpicture}
+        \begin{axis}[phaseplotpc, xtick={-250,-150,-50}]
+            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h7.dat};
+            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h7.dat};
+        \end{axis}
+    \end{tikzpicture}}%
+    \subfloat[$h = 11$]{%
+    \begin{tikzpicture}
+        \begin{axis}[phaseplotpc, xtick={-200,-100,0}]
+            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h11.dat};
+            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h11.dat};
+        \end{axis}
+    \end{tikzpicture}}%
+    \subfloat[$h = 13$]{%
+    \begin{tikzpicture}
+        \begin{axis}[phaseplotpc, xtick={-300,-150,0}]
+            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h13.dat};
+            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h13.dat};
+        \end{axis}
+    \end{tikzpicture}}
+    \caption{Distribution of harmonic current phase angles of the phase-controlled converter, histograms of 5000 Monte Carlo samples (gray, 50 bins) against the denormalized shared Beta probability density functions (black), with parameters listed in Table~\ref{tab:beta_phase_params_pc}: (a) $h = 1$; (b) $h = 5$; (c) $h = 7$; (d) $h = 11$; (e) $h = 13$.}
+    \label{fig:Shared_Beta_Fit_pc}
+\end{figure*}
+
 \begin{table}[!t]
     \centering
-    \caption{Angle of the fundamental current and displacement factor}
+    \caption{The fundamental current angle and displacement of converter types}
     \label{tab:fund_angle}
     \scriptsize
     \begin{tabular}{l c c c}
     Converter & $\varphi_{1,\min}$ [deg] & $\varphi_{1,\max}$ [deg] & lag behind $v_a$ [deg]  \\
     \hline
-    Uncontrolled     & $-106.70$ & $-99.43$  & 9.43--16.70   \\
-    Phase-controlled & $-137.82$ & $-110.24$ & 20.24--47.82  \\
+    Diode-based     & $-106.70$ & $-99.43$  & 9.43--16.70   \\
+    Phase-controlled & $-137.26$ & $-110.15$ & 20.15--47.26  \\
     \end{tabular}
 \end{table}
+
+% \placeholder{Angle Convention. Can be Removed after Discussion. All phase angles in this section, including those of Tables~\ref{tab:beta_phase_params} and~\ref{tab:beta_phase_params_pc}, are the angles~$\varphi_{\Harmonic}$ of the cosine-based phasors $I_{\Harmonic}\cos(\Harmonic\omega_1 t + \varphi_{\Harmonic})$. The terminal phase-$a$ voltage is set to $v_a = V_a\sin(\omega_1 t) = V_a\cos(\omega_1 t - 90^{\circ})$, so its phasor lies at~$-90^{\circ}$, and the fundamental current lags~$v_a$ by $-(\varphi_1 + 90^{\circ})$. As summarized in Table~\ref{tab:fund_angle},the lag of the fundamental current behind the terminal reference voltage~$v_a$ increases from $9.48^{\circ}$-$16.70^{\circ}$ for the diode-based converter to $20.15^{\circ}$-$47.26^{\circ}$ for the phase-controlled converter.}

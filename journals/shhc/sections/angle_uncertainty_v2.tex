@@ -13,10 +13,9 @@
     scable/.style={densely dotted, mark=square},
     scablec/.style={dashdotted, mark=triangle}}
 
-This section addresses the uncertainty of harmonic current phasors, especially phase angles, related to the typical industrial load with a 6-pulse line-commutated converter as shown in Fig. \ref{fig:topo_indust_LCC}.
+This section addresses the uncertainty of harmonic current phasors, especially phase angles, related to the typical industrial load with a diode-based line-commutated converter as shown in Fig. \ref{fig:topo_indust_LCC}.
 % The Monte Carlo simulation is applied to the steady-state harmonic state-space model of the converter to assess the uncertainty propagation from key circuit parameters to harmonic phase angles.
 First, a steady-state harmonic state-space model of the line-commutated converter is established, which captures the mutual coupling among the harmonic phasors and their dependence on key passive parameters.
-% namely the commutation inductance $L_{ac}$ on the ac side and the smoothing inductance $L_{dc}$ on the dc side.
 Then, the parameterized model is integrated into a stochastic assessment framework. The key parameters are modeled as random variables with realistic bounds. Monte Carlo simulation is applied to generate probability distributions of harmonic phasors.
 % Finally, the marginal probability density functions are fitted using the best-fit method, and the Gaussian copula correlation matrix of harmonic phase angles is obtained to indicate the inter-harmonic correlation.
 Finally, the Gaussian copula correlation matrix of harmonic phase angles is obtained to indicate the inter-harmonic correlation, and the shared probability density function is obtained.
@@ -24,7 +23,7 @@ Finally, the Gaussian copula correlation matrix of harmonic phase angles is obta
 \begin{figure}[!t]
 \centering
 \includegraphics[width=0.6\columnwidth]{figures/topo_indust_LCC.pdf}
-\caption{6-pulse line-commutated converter with ac-side commutation inductance~$L_{ac}$, dc-side smoothing inductance~$L_{dc}$ and dc load.}
+\caption{Diode-based line-commutated converter with ac-side commutation inductance~$L_{ac}$, dc-side smoothing inductance~$L_{dc}$ and dc load.}
 \label{fig:topo_indust_LCC} 
 \end{figure}
 
@@ -38,7 +37,7 @@ The steady-state harmonic state-space model is used here to accurately capture t
     % L_{ac} \frac{di_{ac}^a}{dt} - S_{dc,ac}^{a} L_{ac} \frac{di_{dc}}{dt} = \nonumber \\ S_{ac}^{a,a} v_{ac}^a + S_{ac}^{a,b} v_{ac}^b + S_{ac}^{a,c} v_{ac}^c, \label{eq:iac_t} \\
     L_{ac} \frac{di_{ac}^i}{dt} - S_{dc,ac}^{i} L_{ac} \frac{di_{dc}}{dt} = \nonumber \\ S_{ac}^{i,a} v_{ac}^a + S_{ac}^{i,b} v_{ac}^b + S_{ac}^{i,c} v_{ac}^c, \label{eq:iac_t}
 \end{IEEEeqnarray}
-where $v_{ac}^{i}$ and $i_{ac}^{i}$ denote ac-side voltage and current, $v_{dc}$ and $i_{dc}$ are dc-side voltage and current, the superscript $i,j \in \{a, b, c\}$ represents the three phases, $S_{dc,ac}^{i}(t)$, $S_{dc}(t)$, and $S_{ac}^{i,j}(t)$ are the piecewise switching functions reflecting the topology states.
+where $v_{ac}^{i}$ and $i_{ac}^{i}$ are ac-side voltage and current, $v_{dc}$ and $i_{dc}$ are dc-side voltage and current, the superscript $i,j \in \{a, b, c\}$ represents the three phases, $S_{dc,ac}^{i}$, $S_{dc}$, and $S_{ac}^{i,j}$ are the piecewise switching functions reflecting the topology states.
 
 The periodic equations in time-domain can be transformed into the harmonic state-space model in harmonic-domain through three operations: (i) Fourier series expansion of state variables $x(t) \leftrightarrow \sum_{h=-N_h}^{N_h} X_h e^{jh\omega_1 t}$ with truncated order $N_h$, (ii) frequency-domain differentiation $dx/dt \leftrightarrow \mathbf{Z}_{\Omega}\mathbf{X}$ where $\mathbf{Z}_{\Omega} = j\omega_1 \cdot \text{diag}(h)$, and (iii) Toeplitz convolution matrices representing time-domain multiplication: $y(t) = S(t)x(t) \leftrightarrow \mathbf{Y} = \mathbf{S}_{conv}\mathbf{X}$. The resulting unified system relates current harmonics $\mathbf{I} = [\mathbf{I}_{ac}^a, \mathbf{I}_{ac}^b, \mathbf{I}_{ac}^c]^T$ to voltage harmonics $\mathbf{U} = [\mathbf{V}_{ac}^a, \mathbf{V}_{ac}^b, \mathbf{V}_{ac}^c]^T$ through:
 
@@ -46,7 +45,7 @@ The periodic equations in time-domain can be transformed into the harmonic state
 \mathbf{A}\mathbf{I} = \mathbf{B}\mathbf{U},
 \label{eq:HSS}
 \end{equation}
-where matrices $\mathbf{A}$ and $\mathbf{B}$ contain Toeplitz convolution structures that explicitly capture frequency coupling. The model is parameterized by commutation overlap angle $\mu$, and the circuit inductances ($L_{ac}$, $L_{dc}$), providing a foundation for subsequent Monte Carlo simulation and uncertainty quantification.
+where matrices $\mathbf{A}$ and $\mathbf{B}$ contain Toeplitz convolution structures that explicitly capture frequency coupling. The model is parameterized by firing delay $\alpha_{\text{f}}$ (equal to $0$ for diode-based converter) and commutation overlap angle $\mu_{\text{c}}$, and inductances ($L_{ac}$, $L_{dc}$), providing a foundation for subsequent Monte Carlo simulation and uncertainty quantification.
 
 \subsection{Methodology for Uncertainty Quantification}
 In the planning stage, the uncertainty on key parameters comes from limited knowledge about the future integrated device, as well as manufacturing tolerances and operational variances. Therefore, inductance parameters $L_{ac}$ and $L_{dc}$ are modeled as random variables, and Monte Carlo simulation is used to assess the propagation of uncertainty.
@@ -78,7 +77,7 @@ Monte Carlo simulation is then implemented, by which 5000 pairs of random sample
 % \end{itemize}
 
 \subsection{Dependency Analysis and Probability Density Function}
-A case study is conducted based on a representative 6-pulse line-commutated converter unit, with nominal capacity of 1.25 MW and nominal voltage of 380 V, which is connected to the 35 kV bus through a rectifier transformer with a ratio of 35 kV/400 V. 
+A case study is conducted based on a representative diode-based line-commutated converter unit, with nominal capacity of 1.25 MW and nominal voltage of 380 V, which is connected to the 35 kV bus through a rectifier transformer with a ratio of 35 kV/400 V. 
 For the ac-side commutation inductance, the truncation bounds are $L_{ac,\min} = 0.01$ mH and $L_{ac,\max} = 0.03$ mH, corresponding to transformer short-circuit voltage ranging from $U_k = 5\%$ to $15\%$. For the dc-side smoothing inductance, the truncation bounds are $L_{dc,\min} = 0.05$ mH and $L_{dc,\max} = 0.35$ mH.
 
 Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution of each characteristic harmonic. In each harmonic phasor distribution plot, the black arrow represent the phasors with mean magnitude and mean phase angle, while the dark gray represent the phasors within the 95\% confidence intervals. The results indicate that (i) the harmonic phasors at different frequencies exhibit mutual dependency; (ii) harmonics at higher orders display progressively larger angle variations and uncertainties. 
@@ -94,61 +93,126 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
 \providecommand{\Harmonic}{h}
 \begin{figure*}[!t]
     \centering
-    \pgfplotsset{phasorplot/.style={shhc, width=0.2\textwidth, ymin=0,
-        xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
-        yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt, /pgf/number format/1000 sep={}},
-        every axis plot/.append style={line join=round}},
-        outside/.style={only marks, mark=*, mark size=0.5pt, gray!35},
-        inside/.style={only marks, mark=*, mark size=0.5pt, black!70},
-        ci/.style={densely dashed, black, line width=0.5pt, mark=none},
-        meanphasor/.style={-latex, black, line width=1pt, mark=none}}
-    \subfloat[$\Harmonic = 1$]{%
-    \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=3200, ytick={2000}, yticklabels={1k,2k}]
-            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h1.dat};
-            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h1.dat};
-            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h1.dat};
-            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h1.dat};
-        \end{polaraxis}
-    \end{tikzpicture}}%
-    \subfloat[$\Harmonic = 5$]{%
-    \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=700, ytick={300}]
-            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h5.dat};
-            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h5.dat};
-            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h5.dat};
-            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h5.dat};
-        \end{polaraxis}
-    \end{tikzpicture}}%
-    \subfloat[$\Harmonic = 7$]{%
-    \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=370, ytick={150}]
-            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h7.dat};
-            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h7.dat};
-            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h7.dat};
-            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h7.dat};
-        \end{polaraxis}
-    \end{tikzpicture}}%
-    \subfloat[$\Harmonic = 11$]{%
-    \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=230, ytick={100}]
-            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h11.dat};
-            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h11.dat};
-            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h11.dat};
-            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h11.dat};
-        \end{polaraxis}
-    \end{tikzpicture}}%
-    \subfloat[$\Harmonic = 13$]{%
-    \begin{tikzpicture}
-        \begin{polaraxis}[phasorplot, ymax=170, ytick={50}]
-            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h13.dat};
-            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h13.dat};
-            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h13.dat};
-            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h13.dat};
-        \end{polaraxis}
-    \end{tikzpicture}}
-    \caption{Phasors of characteristic harmonic currents, 1000 of the 5000 Monte Carlo samples, inside (dark gray) and outside (light gray) the 95\,\% confidence region of magnitude and phase angle (dashed), with the mean phasor (black arrow): (a) $\Harmonic = 1$; (b) $\Harmonic = 5$; (c) $\Harmonic = 7$; (d) $\Harmonic = 11$; (e) $\Harmonic = 13$.}
+    \includegraphics[width=0.7\textwidth]{journals/shhc/data/phasor_ci/harmonic_phasors_diode.pdf}
+    % \pgfplotsset{phasorplot/.style={shhc, width=0.18\textwidth, ymin=0,
+    %     xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
+    %     yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt, /pgf/number format/1000 sep={}},
+    %     every axis plot/.append style={line join=round}},
+    %     outside/.style={only marks, mark=*, mark size=0.5pt, gray!35},
+    %     inside/.style={only marks, mark=*, mark size=0.5pt, black!70},
+    %     ci/.style={densely dashed, black, line width=0.5pt, mark=none},
+    %     meanphasor/.style={-latex, black, line width=1pt, mark=none}}
+    % \subfloat[$\Harmonic = 1$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplot, ymax=3200, ytick={2000}]
+    %         \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h1.dat};
+    %         \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h1.dat};
+    %         \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h1.dat};
+    %         \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h1.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}%
+    % \subfloat[$\Harmonic = 5$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplot, ymax=700, ytick={300}]
+    %         \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h5.dat};
+    %         \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h5.dat};
+    %         \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h5.dat};
+    %         \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h5.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}%
+    % \subfloat[$\Harmonic = 7$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplot, ymax=370, ytick={150}]
+    %         \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h7.dat};
+    %         \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h7.dat};
+    %         \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h7.dat};
+    %         \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h7.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}%
+    % \subfloat[$\Harmonic = 11$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplot, ymax=230, ytick={100}]
+    %         \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h11.dat};
+    %         \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h11.dat};
+    %         \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h11.dat};
+    %         \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h11.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}%
+    % \subfloat[$\Harmonic = 13$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplot, ymax=170, ytick={50}]
+    %         \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h13.dat};
+    %         \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h13.dat};
+    %         \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h13.dat};
+    %         \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h13.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}
+    \caption{Phasors of characteristic harmonic currents of the diode-based converter, showing 1000 of the 5000 Monte Carlo samples, with samples inside (dark gray) and outside (light gray) the 95\,\% confidence region of magnitude and phase angle (dashed), and the mean phasor (black arrow): (a) $\Harmonic = 1$; (b) $\Harmonic = 5$; (c) $\Harmonic = 7$; (d) $\Harmonic = 11$; (e) $\Harmonic = 13$.}
     \label{fig:harmonic_phasors_CI_LacLdc}
+\end{figure*}
+
+
+\usepgfplotslibrary{polar}
+\providecommand{\Harmonic}{h}
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=0.7\textwidth]{journals/shhc/data/type2_phasor_ci/harmonic_phasors_pc.pdf}
+    % \pgfplotsset{phasorplotpc/.style={shhc, width=0.2\textwidth, ymin=0,
+    %     xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
+    %     yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt,
+    %         /pgf/number format/1000 sep={}},
+    %     every axis plot/.append style={line join=round}},
+    %     outsidepc/.style={only marks, mark=*, mark size=0.5pt, gray!35},
+    %     insidepc/.style={only marks, mark=*, mark size=0.5pt, black!70},
+    %     cipc/.style={densely dashed, black, line width=0.5pt, mark=none},
+    %     meanphasorpc/.style={-latex, black, line width=1pt, mark=none}}
+    % \subfloat[$\Harmonic = 1$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplotpc, ymax=3200, ytick={2000}]
+    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h1.dat};
+    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h1.dat};
+    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h1.dat};
+    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h1.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}%
+    % \subfloat[$\Harmonic = 5$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplotpc, ymax=800, ytick={300}]
+    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h5.dat};
+    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h5.dat};
+    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h5.dat};
+    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h5.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}%
+    % \subfloat[$\Harmonic = 7$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplotpc, ymax=370, ytick={150}]
+    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h7.dat};
+    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h7.dat};
+    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h7.dat};
+    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h7.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}%
+    % \subfloat[$\Harmonic = 11$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplotpc, ymax=300, ytick={100}]
+    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h11.dat};
+    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h11.dat};
+    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h11.dat};
+    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h11.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}%
+    % \subfloat[$\Harmonic = 13$]{%
+    % \begin{tikzpicture}
+    %     \begin{polaraxis}[phasorplotpc, ymax=200, ytick={50}]
+    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h13.dat};
+    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h13.dat};
+    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h13.dat};
+    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h13.dat};
+    %     \end{polaraxis}
+    % \end{tikzpicture}}
+    \caption{Phasors of characteristic harmonic currents of the phase-controlled converter, showing 1000 of the 5000 Monte Carlo samples, with samples inside (dark gray) and outside (light gray) the 95\,\% confidence region of magnitude and phase angle (dashed), and the mean phasor (black arrow): (a) $\Harmonic = 1$; (b) $\Harmonic = 5$; (c) $\Harmonic = 7$; (d) $\Harmonic = 11$; (e) $\Harmonic = 13$. \placeholder{For visualization. To be commented out before submit.}}
+    \label{fig:harmonic_phasors_CI_LacLdc_pc}
 \end{figure*}
 
 \subsubsection{Inter-Harmonic Dependency Analysis}
@@ -175,19 +239,20 @@ As shown by the phase angle correlation matrix $\mathbf{R}_{\text{phase}}$ in Fi
         nodes near coords={\pgfmathprintnumber[fixed, fixed zerofill, precision=2]{\pgfplotspointmeta}},
         every node near coord/.append style={font=\tiny, black, anchor=center}},
         corrcells/.style={matrix plot*, mesh/cols=5, point meta=explicit, draw=white, line width=0.4pt}}
-    \subfloat[magnitude]{%
-    \begin{tikzpicture}
-        \begin{axis}[corrplot, ylabel={harmonic order $\Harmonic$}]
-            \addplot[corrcells] table[x=col, y=row, meta=rho] {journals/shhc/data/copula_corr/corr_mag.dat};
-        \end{axis}
-    \end{tikzpicture}}%
-    \subfloat[phase angle]{%
+    % \subfloat[magnitude]{%
+    % \begin{tikzpicture}
+    %     \begin{axis}[corrplot, ylabel={harmonic order $\Harmonic$}]
+    %         \addplot[corrcells] table[x=col, y=row, meta=rho] {journals/shhc/data/copula_corr/corr_mag.dat};
+    %     \end{axis}
+    % \end{tikzpicture}}%
+    % \subfloat[phase angle]{%
     \begin{tikzpicture}
         \begin{axis}[corrplot]
             \addplot[corrcells] table[x=col, y=row, meta=rho] {journals/shhc/data/copula_corr/corr_phase.dat};
         \end{axis}
-    \end{tikzpicture}}
-    \caption{Dependence between the harmonic currents of the industrial load, Gaussian copula correlation matrices with parameters $\rho_{ij}^{Gauss}$ obtained from Kendall's rank correlation~$\tau$ of 5000 Monte Carlo samples, darker cells for stronger correlation: (a) magnitudes; (b) phase angles.}
+    \end{tikzpicture}
+    % }
+    \caption{Dependence between harmonic current phase angles of the diode-based converter, Gaussian copula correlation matrices with parameters $\rho_{ij}^{Gauss}$ obtained from Kendall's rank correlation~$\tau$ of 5000 Monte Carlo samples, darker cells for stronger correlation.}
     \label{fig:Correlation_Matrix_Copula}
 \end{figure}
 
@@ -333,7 +398,7 @@ The comparison plots between the empirical histograms and the denormalized share
             \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h13.dat};
         \end{axis}
     \end{tikzpicture}}
-    \caption{Distribution of harmonic current phase angles, histograms of 5000 Monte Carlo samples (gray, 50 bins) against the denormalized shared Beta probability density functions (black) with parameters listed in Table~\ref{tab:beta_phase_params}: (a) $h = 1$; (b) $h = 5$; (c) $h = 7$; (d) $h = 11$; (e) $h = 13$.}
+    \caption{Distribution of harmonic current phase angles of the diode-based converter, histograms of 5000 Monte Carlo samples (gray, 50 bins) against the denormalized shared Beta probability density functions (black) with parameters listed in Table~\ref{tab:beta_phase_params}: (a) $h = 1$; (b) $h = 5$; (c) $h = 7$; (d) $h = 11$; (e) $h = 13$.}
     \label{fig:Shared_Beta_Fit}
 \end{figure*}
 
