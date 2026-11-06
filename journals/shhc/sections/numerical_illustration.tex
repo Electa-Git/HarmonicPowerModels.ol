@@ -51,7 +51,7 @@ Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematica
     \end{tabular}
 
     \vspace{2pt}
-    \parbox{\columnwidth}{\scriptsize Obj.: total hosting capacity $\sum_{\Harmonic} I_{\Harmonic}$ of method A [$10^{-3}$\,pu]; rel. diff.: relative difference of method B to method A. Cone: second-order cone program~\eqref{eq:socp}; quadratic: quadratically constrained program; reduced: reduced model~\eqref{eq:reduced_hosting} at the mean angles or the exact 95\,\% quantile.}
+    \parbox{\columnwidth}{\scriptsize Obj.: total hosting capacity $\sum_{\Harmonic} \HostingCapacity_{\Harmonic}$ of method A [$10^{-3}$\,pu]; rel. diff.: relative difference of method B to method A. Cone: second-order cone program~\eqref{eq:socp}; quadratic: quadratically constrained program; reduced: reduced model~\eqref{eq:reduced_hosting} at the mean angles or the exact 95\,\% quantile.}
 \end{table}
 
 \subsection{Levers for Harmonic Recombination}
@@ -59,7 +59,7 @@ Table~\ref{tab:equivalence} compares the methods of Section~\ref{sec:mathematica
 
 With a single hosting capacity per harmonic and binding individual harmonic voltage limits, as in all cases below, the hosting capacity at harmonic~$\Harmonic$ is set by the tightest bus,
 \begin{IEEEeqnarray}{ r C l }
-    I_{\Harmonic} &=& \min_{\Node \in \NodeSet} \frac{U^{\text{ihd}}_{\Node,\Harmonic}\,|\ComplexVoltage_{\Node,1}|}{A_{\Node,\Harmonic}}, \qquad c_{\Node\Unit,\Harmonic} = Z_{\Harmonic,\Node\Node(\Unit)}\,e^{\im\phi_{\Unit,\Harmonic}}, \label{eq:reduced_hosting}
+    \HostingCapacity_{\Harmonic} &=& \min_{\Node \in \NodeSet} \frac{U^{\text{ihd}}_{\Node,\Harmonic}\,|\ComplexVoltage_{\Node,1}|}{A_{\Node,\Harmonic}}, \qquad c_{\Node\Unit,\Harmonic} = Z_{\Harmonic,\Node\Node(\Unit)}\,e^{\im\phi_{\Unit,\Harmonic}}, \label{eq:reduced_hosting}
 \end{IEEEeqnarray}
 where~$A_{\Node,\Harmonic}$ aggregates the unit contributions~$c_{\Node\Unit,\Harmonic}$ per unit of current by one of four rules: (i)~arithmetic summation~$\sum_{\Unit}|c_{\Node\Unit,\Harmonic}|$, i.e., no recombination; (ii)~the robust bound~$\max_{\bar{\omega}}|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ over the support of the germ; (iii)~the mean angle, $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ at~$\Expectation[\bar\omega]$, as in~\cite{vanacker_hosting_2026}; and (iv)~the 95\,\% chance bound, i.e., the exact $(1-\varepsilon)$-quantile of~$|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$. The equivalent summation exponent~$\alpha^{\text{eq}}_{\Harmonic}$ is the exponent for which the summation law of IEC~61000-3-6~\cite{noauthor_iec61000-3-6_2008},
 \begin{IEEEeqnarray}{ r C l }
@@ -121,7 +121,7 @@ The aggregation rule matters as much as the population. The robust bound, rule~(
     \begin{tikzpicture}
         \begin{axis}[popplot, width=0.42\textwidth, ybar=0pt, bar width=3pt, ymin=0, ymax=8, ytick={0,2,4,6}, clip=false,
             xtick={1,2,3,4,5,6}, xticklabels={diode, thyristor, mix, diode, thyristor, mix}, xmin=0.5, xmax=6.5, xticklabel style={font=\scriptsize},
-            ylabel style={align=center}, ylabel={$\sum_{\Harmonic} I_{\Harmonic}$\\{[$10^{-3}$\,pu]}}, legend columns=2, legend style={/tikz/every even column/.append style={column sep=3pt}},
+            ylabel style={align=center}, ylabel={$\sum_{\Harmonic} \HostingCapacity_{\Harmonic}$\\{[$10^{-3}$\,pu]}}, legend columns=2, legend style={/tikz/every even column/.append style={column sep=3pt}},
             every axis plot/.append style={mark=none}]
             \addplot[fill=white] table[x=x, y=arith] {journals/shhc/data/paper_conv_hosting.dat};
 %            \addplot[fill=gray!30] table[x=x, y=rob] {journals/shhc/data/paper_conv_hosting.dat};
