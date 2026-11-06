@@ -9,8 +9,8 @@
 %   \GramMat       Sigma_c   PCE Gram matrix of constraint c per unit g
 %   \Violation     nu        largest normalized violation found by the oracle
 %   \Eig, \EigVec  eta_m, tau_m   eigenvalue / eigenvector of the reduced admittance
-%   \mathcal{C}    set of limits (constraints) c; a_c its limit net of the fundamental
-%                  (the SHHC paper writes a_{i,c}; here c identifies bus or branch and kind)
+%   \mathcal{C}    set of limits (constraints) c; a_c, alpha_{c,h,k} stand for a_{i,c}, alpha_{i,h,k}
+%                  of the SHHC paper (here c identifies kind and bus or branch)
 %   \Gamma^ub/lb   upper / lower bound on the robust hosting capacity
 %   z'_b, y'_b     per-unit-length series impedance / shunt admittance of branch b
 %   gamma_b, z^c_b propagation constant / characteristic impedance; ell_b length
@@ -30,26 +30,29 @@
 \section{Mathematical Framework}
 \label{sec:mathematical_framework}
 
-This section presents the robust counterpart of the stochastic harmonic hosting capacity problem of~\cite{vanacker_shhc} for a phase-balanced three-phase power system. The angles of the harmonic currents remain random variables, handled through polynomial chaos expansion and chance constraints, whereas the cable and overhead-line parameters of Section~\ref{sec:parameter_uncertainty} are only known to lie in a set: the hosting capacity must comply with the chance constraints for every realization of the network in that set. The formulation of~\cite{vanacker_shhc} is first recalled in a form that exposes its dependence on the network, after which the robust counterpart, its solution by a cutting-set method, the bounds it provides and the sampling of the parameter set are presented.
+This section presents the robust counterpart of the stochastic harmonic hosting capacity problem of~\cite{vanacker_shhc} for a phase-balanced three-phase power system. The angles~$\phi_{\Unit,\Harmonic}$ of the harmonic currents injected by the harmonic units~$\Unit \in \HarmonicUnitSet$ remain random variables, handled through polynomial chaos expansion and chance constraints, whereas the cable and overhead-line parameters of Section~\ref{sec:parameter_uncertainty} are only known to lie in a set: the hosting capacity must comply with the chance constraints for every realization of the network in that set. For brevity, the stochastic formulation is not repeated; the second-order cone program of~\cite{vanacker_shhc} is first recalled in a form that exposes its dependence on the network, after which the robust counterpart, its solution by a cutting-set method, the bounds it provides and the sampling of the parameter set are presented.
 
 \subsection{Stochastic Harmonic Hosting Capacity}
 \label{sec:shhc_recap}
 
-For a fairness criterion with fixed allocation ratios, unit~$\Unit \in \HarmonicUnitSet$ hosts~$w_{\Unit} I_{\Harmonic}$ at harmonic~$\Harmonic \in \HarmonicSet$, and every voltage and current coefficient is linear in the single hosting capacity~$I_{\Harmonic}$. With~$g_{\Harmonic} \geq I_{\Harmonic}^{2}$, the squared harmonic quantities have the polynomial chaos coefficients~$\alpha_{c,\Harmonic,\PCEIndex}\,g_{\Harmonic}$, where~$\alpha$ follows from the harmonic transfer impedances~$Z_{\Harmonic}$, the weights and the projected trigonometric functions of the angles~\cite{vanacker_shhc}. Every limit~$c \in \mathcal{C}$, i.e., the individual and total harmonic voltage distortion and the root-mean-square voltage per bus and the root-mean-square current per branch, constrains a sum over a set~$\HarmonicSet_{c} \subseteq \HarmonicSet$ of harmonics. Its chance constraint reads,
+For a fairness criterion that fixes the ratios between the allocations of the harmonic units, the injected current magnitude is~$\CurrentMagnitude_{\Unit,\Harmonic,0} = w_{\Unit}\,\HostingCapacity_{\Harmonic}$, with fixed positive weights~$w_{\Unit}$ and a single hosting capacity~$\HostingCapacity_{\Harmonic}$ per harmonic~$\Harmonic \in \HarmonicSet$, and every voltage and current coefficient is linear in~$\HostingCapacity_{\Harmonic}$~\cite{vanacker_shhc}. With the lifted variable~$\LiftedHostingCapacity_{\Harmonic} \geq \HostingCapacity_{\Harmonic}^{2}$, a squared harmonic quantity has the polynomial chaos coefficients~$\alpha_{c,\Harmonic,\PCEIndex}\,\LiftedHostingCapacity_{\Harmonic}$, $\PCEIndex \in \PCESet$, where the precomputed scalars~$\alpha$ follow from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network, the weights~$w_{\Unit}$ and the projected trigonometric functions of the angles~\cite{vanacker_shhc}. Every limit~$c \in \mathcal{C}$, i.e., the individual and total harmonic voltage distortion and the root-mean-square voltage per bus and the root-mean-square current per branch, constrains a sum over a set~$\mathcal{H}_{c} \subseteq \HarmonicSet$ of harmonics: $\mathcal{H}_{c} = \{\Harmonic\}$ for the individual harmonic voltage distortion and~$\mathcal{H}_{c} = \HarmonicSet$ otherwise. The index~$c$ thus combines the kind of limit with its bus or branch, i.e., $\alpha_{c,\Harmonic,\PCEIndex}$ and~$a_{c}$ stand for~$\alpha_{\Node,\Harmonic,\PCEIndex}$ and~$a_{\Node,c}$ in~\cite{vanacker_shhc}. Its chance constraint reads,
 \begin{IEEEeqnarray}{ r C l }
-    F_{c}(\bar{g}) &=& \MeanVec_{c}^{\text{T}} \bar{g} + \lambda(\varepsilon) \sqrt{\bar{g}^{\text{T}} \GramMat_{c}\, \bar{g}} \;\leq\; a_{c}, \label{eq:cc_compact}
+    F_{c}(\bar{\LiftedHostingCapacity}) &=& \MeanVec_{c}^{\text{T}} \bar{\LiftedHostingCapacity} + \lambda(\varepsilon) \sqrt{\bar{\LiftedHostingCapacity}^{\text{T}} \GramMat_{c}\, \bar{\LiftedHostingCapacity}} \;\leq\; a_{c}, \label{eq:cc_compact}
 \end{IEEEeqnarray}
-with the mean vector and the Gram matrix over the harmonics of~$\HarmonicSet_{c}$,
+with the mean vector and the Gram matrix over the harmonics of~$\mathcal{H}_{c}$,
 \begin{IEEEeqnarray}{ r C l }
     \mu_{c,\Harmonic} &=& \alpha_{c,\Harmonic,0}, \label{eq:mean_vector} \\
     \GramMat_{c,\Harmonic\Harmonic'} &=& \mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \alpha_{c,\Harmonic,\PCEIndex}\, \alpha_{c,\Harmonic',\PCEIndex}, \label{eq:gram_matrix}
 \end{IEEEeqnarray}
-and~$a_{c}$ the limit net of the fundamental. Expression~\eqref{eq:cc_compact} is the chance constraint of~\cite{vanacker_shhc} with the variance written as a quadratic form; it needs~$|\HarmonicSet| + |\HarmonicSet|^{2}$ numbers per constraint, whatever the cardinality of the basis. The stochastic harmonic hosting capacity is the second-order cone program,
-\begin{IEEEeqnarray}{ l }
-    \max_{\bar{I},\,\bar{g}} \; \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) I_{\Harmonic} \nonumber \\
-    \text{s.t.} \quad (\bar{I},\bar{g}) \in \mathcal{G},\;\; F_{c}(\bar{g}) \leq a_{c},~\forall c \in \mathcal{C}, \label{eq:shhc}
+and~$a_{c}$ the limit net of the fundamental. Expression~\eqref{eq:cc_compact} is the chance constraint of~\cite{vanacker_shhc} with the variance written as a quadratic form; it needs~$|\mathcal{H}_{c}| + |\mathcal{H}_{c}|^{2}$ numbers per constraint, whatever the cardinality of the basis. The stochastic harmonic hosting capacity is the second-order cone program,
+\begin{IEEEeqnarray}{ l l l }
+    \max_{\bar{\HostingCapacity},\,\bar{\LiftedHostingCapacity}} & \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) \HostingCapacity_{\Harmonic} & \nonumber \\
+    \text{subject to} \quad & \HostingCapacity_{\Harmonic}^{2} \leq \LiftedHostingCapacity_{\Harmonic}, & \forall \Harmonic \in \HarmonicSet, \nonumber \\
+    & w_{\Unit}\,\HostingCapacity_{\Harmonic} \leq \RatedCurrent_{\Unit}, & \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \nonumber \\
+    & w_{\Unit}^{2}\,\LiftedHostingCapacity_{\Harmonic} \leq (\RatedCurrent_{\Unit})^{2}, \quad & \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \nonumber \\
+    & F_{c}(\bar{\LiftedHostingCapacity}) \leq a_{c}, & \forall c \in \mathcal{C}, \label{eq:shhc}
 \end{IEEEeqnarray}
-with~$\mathcal{G}$ the set defined by~$I_{\Harmonic}^{2} \leq g_{\Harmonic}$ and the unit ratings on~$I_{\Harmonic}$ and~$g_{\Harmonic}$. Two properties of~\eqref{eq:cc_compact} carry the remainder of this section: it is convex in~$\bar{g}$, and it is positively homogeneous of degree one, $F_{c}(s\bar{g}) = s\,F_{c}(\bar{g})$ for all~$s \geq 0$.
+i.e., problem~(31) of~\cite{vanacker_shhc}, in which the relaxation~$\HostingCapacity_{\Harmonic}^{2} \leq \LiftedHostingCapacity_{\Harmonic}$ is exact and the rating is imposed on~$\LiftedHostingCapacity_{\Harmonic}$ as well. Two properties of~\eqref{eq:cc_compact} carry the remainder of this section: it is convex in~$\bar{\LiftedHostingCapacity}$, and it is positively homogeneous of degree one, $F_{c}(s\,\bar{\LiftedHostingCapacity}) = s\,F_{c}(\bar{\LiftedHostingCapacity})$ for all~$s \geq 0$.
 
 \subsection{Parametric Network Model}
 \label{sec:parametric_network}
@@ -61,19 +64,20 @@ The parameters of Section~\ref{sec:parameter_uncertainty} are collected in the v
 \end{IEEEeqnarray}
 with the propagation constant~$\gamma_{\Line} = \sqrt{\bar{z}'_{\Line}\bar{y}'_{\Line}}$ and the characteristic impedance~$\bar{z}^{\text{c}}_{\Line} = \sqrt{\bar{z}'_{\Line}/\bar{y}'_{\Line}}$, both at~$(\Frequency;\ParamVec)$. The length scales the series and shunt terms non-linearly, so it is a parameter of the network model rather than of the per-unit-length data. The resulting harmonic admittance matrix~$Y_{\Harmonic}(\ParamVec)$, reduced to the buses that are not ideal harmonic grounds, gives the transfer impedances~$Z_{\Harmonic}(\ParamVec) = Y_{\Harmonic}(\ParamVec)^{-1}$ and, through~\cite{vanacker_shhc}, the moments~$\alpha(\ParamVec)$, the mean vectors~$\MeanVec_{c}(\ParamVec)$ and the Gram matrices~$\GramMat_{c}(\ParamVec)$. Only positive- and negative-sequence harmonics are considered, for which the positive-sequence data apply.
 
-The fundamental operating point, and with it the limits~$a_{c}$ and the angle reference of the units, is taken at the nominal parameters. The fundamental power flow is far less sensitive to the cable parameters than the harmonic impedances near a resonance, and keeping it fixed preserves the decoupling of the fundamental and the harmonic problems.
+The fundamental operating point, and with it the limits~$a_{c}$ and the local angle reference~$\Harmonic\,\theta_{\Node(\Unit)}$ of the units~\cite{vanacker_shhc}, is taken at the nominal parameters. The fundamental power flow is far less sensitive to the cable parameters than the harmonic impedances near a resonance, and keeping it fixed preserves the decoupling of the fundamental and the harmonic problems.
 
 \subsection{Robust Counterpart}
 \label{sec:robust_counterpart}
 
 The robust harmonic hosting capacity requires every chance constraint to hold for every network in~$\ParamSet$,
-\begin{IEEEeqnarray}{ l }
-    \max_{\bar{I},\,\bar{g}} \; \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) I_{\Harmonic} \nonumber \\
-    \text{s.t.} \quad (\bar{I},\bar{g}) \in \mathcal{G},\;\; \sup_{\ParamVec \in \ParamSet} F_{c}(\bar{g};\ParamVec) \leq a_{c},~\forall c \in \mathcal{C}. \label{eq:rhhc}
+\begin{IEEEeqnarray}{ l l l }
+    \max_{\bar{\HostingCapacity},\,\bar{\LiftedHostingCapacity}} & \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) \HostingCapacity_{\Harmonic} & \nonumber \\
+    \text{subject to} \quad & \text{the constraints of~\eqref{eq:shhc} on~$\bar{\HostingCapacity}$ and~$\bar{\LiftedHostingCapacity}$ alone}, & \nonumber \\
+    & \sup_{\ParamVec \in \ParamSet} F_{c}(\bar{\LiftedHostingCapacity};\ParamVec) \leq a_{c}, \quad & \forall c \in \mathcal{C}. \label{eq:rhhc}
 \end{IEEEeqnarray}
-The resulting problem is hybrid: the angles are treated in probability, through the chance constraints, and the network parameters in the worst case. The worst-case constraint function is a supremum of functions convex in~$\bar{g}$, so~\eqref{eq:rhhc} is a convex semi-infinite program. Its difficulty lies in the supremum: $F_{c}$ depends on~$\ParamVec$ through the inverse of~$Y_{\Harmonic}(\ParamVec)$, which is far from concave near a parallel resonance, so the worst case may lie in the interior of~$\ParamSet$ rather than at one of its vertices, and no tractable reformulation of the robust counterpart exists.
+The resulting problem is hybrid: the angles are treated in probability, through the chance constraints, and the network parameters in the worst case. The worst-case constraint function is a supremum of functions convex in~$\bar{\LiftedHostingCapacity}$, so~\eqref{eq:rhhc} is a convex semi-infinite program. Its difficulty lies in the supremum: $F_{c}$ depends on~$\ParamVec$ through the inverse of~$Y_{\Harmonic}(\ParamVec)$, which is far from concave near a parallel resonance, so the worst case may lie in the interior of~$\ParamSet$ rather than at one of its vertices, and no tractable reformulation of the robust counterpart exists.
 
-The robust counterpart requires a risk factor~$\lambda(\varepsilon)$ that holds for every network in~$\ParamSet$. The distribution-free Cantelli factor and the Gaussian factor of~\cite{vanacker_shhc} are constants and qualify. The empirical factor~$\lambda^{*}$ of~\cite{vanacker_shhc} does not: it is calibrated per constraint on samples of the output of the nominal network and, through the transfer impedances, depends on the network itself, so the calibration does not carry over to another point of~$\ParamSet$. Recalibrating it at every point would make the factor part of the worst case, and the program is no longer a semi-infinite second-order cone program.
+The robust counterpart requires a risk factor~$\lambda(\varepsilon)$ that holds for every network in~$\ParamSet$. The factor~$\lambda^{*}$ of~\cite{vanacker_shhc} does not: it is calibrated per constraint on the sampled quantile and the moments of the constrained quantity of the nominal network and, through the transfer impedances, depends on the network itself, so the calibration does not carry over to another point of~$\ParamSet$. Recalibrating it at every point would make the factor part of the worst case, and the program would no longer be a semi-infinite second-order cone program. A constant factor is therefore used: the distribution-free Cantelli bound~$\lambda(\varepsilon) = \sqrt{(1-\varepsilon)/\varepsilon}$, which guarantees the chance constraint for any output distribution of finite variance, or the Gaussian quantile~$\lambda(\varepsilon) = \Phi^{-1}(1-\varepsilon)$.
 
 \subsection{Cutting-Set Method}
 \label{sec:cutting_set}
@@ -81,28 +85,28 @@ The robust counterpart requires a risk factor~$\lambda(\varepsilon)$ that holds 
 Problem~\eqref{eq:rhhc} is solved by the cutting-set method of~\cite{mutapcic_cutting-set_2009}, which alternates between optimization over finite scenario sets and worst-case analysis, or pessimization. Let~$\LatentSet^{(n)}_{c} \subset \LatentSet$ denote the scenario set of constraint~$c$ at iteration~$n$, initialized with the nominal point,~$\LatentSet^{(0)}_{c} = \{\bar{0}\}$. Each iteration
 \begin{enumerate}
     \item solves the master problem, i.e., \eqref{eq:rhhc} with the supremum replaced by the maximum over~$\LatentSet^{(n)}_{c}$, a second-order cone program; the first master is the stochastic problem~\eqref{eq:shhc} of the nominal network;
-    \item evaluates, at its solution~$(\bar{I}^{(n)},\bar{g}^{(n)})$, the normalized violation of every constraint over the box with the oracle of Section~\ref{sec:sampling}, at~$g_{\Harmonic} = (I^{(n)}_{\Harmonic})^{2}$, the hosting capacity actually allocated,
+    \item evaluates, at its solution~$(\bar{\HostingCapacity}^{(n)},\bar{\LiftedHostingCapacity}^{(n)})$, the normalized violation of every constraint over the box with the oracle of Section~\ref{sec:sampling}, at~$\LiftedHostingCapacity_{\Harmonic} = (\HostingCapacity^{(n)}_{\Harmonic})^{2}$, the hosting capacity actually allocated,
     \begin{IEEEeqnarray}{ r C l }
-        \Violation_{c} &=& \max_{\Latent \in \LatentSet} \; F_{c}\big(\bar{g};\ParamVec(\Latent)\big)/a_{c} - 1, \label{eq:violation}
+        \Violation_{c} &=& \max_{\Latent \in \LatentSet} \; F_{c}\big(\bar{\LiftedHostingCapacity};\ParamVec(\Latent)\big)/a_{c} - 1, \label{eq:violation}
     \end{IEEEeqnarray}
     and appends, for every constraint with~$\Violation_{c} > \Violation^{\text{tol}}$, its worst point to~$\LatentSet^{(n+1)}_{c}$;
     \item stops when~$\Violation = \max_{c} \Violation_{c} \leq \Violation^{\text{tol}}$, after repeating the worst-case analysis at maximum effort.
 \end{enumerate}
-Every scenario adds one linear constraint, for an individual harmonic distortion limit, or one second-order cone of dimension~$|\HarmonicSet|+1$, by~\eqref{eq:cc_compact}, so the master problem remains small. With an exact oracle, a bounded feasible set, which the ratings provide, and constraints Lipschitz in~$\bar{g}$, the method terminates after a finite number of iterations~\cite{mutapcic_cutting-set_2009}.
+Every scenario adds one linear constraint, for an individual harmonic distortion limit, or one second-order cone of dimension~$|\HarmonicSet|+1$, by~\eqref{eq:cc_compact}, so the master problem remains small. With an exact oracle, a bounded feasible set, which the ratings provide, and constraints Lipschitz in~$\bar{\LiftedHostingCapacity}$, the method terminates after a finite number of iterations~\cite{mutapcic_cutting-set_2009}.
 
 \subsection{Bounds}
 \label{sec:bounds}
 
-The master problem relaxes~\eqref{eq:rhhc}, so its value is an upper bound~$\Gamma^{\text{ub}}$ on the robust harmonic hosting capacity~\cite{mutapcic_cutting-set_2009}. A feasible point, and thus a lower bound, follows from a Slater point: when every limit is positive, $a_{c} > 0$, the point~$\bar{g} = \bar{0}$ is strictly feasible, and~\cite{mutapcic_cutting-set_2009} constructs a feasible point as a convex combination of the Slater point and the master solution. Homogeneity of~\eqref{eq:cc_compact} gives a tighter point. For~$s = 1/(1+\Violation)$, every evaluated constraint satisfies
+The master problem relaxes~\eqref{eq:rhhc}, so its value is an upper bound~$\Gamma^{\text{ub}}$ on the robust harmonic hosting capacity~\cite{mutapcic_cutting-set_2009}. A feasible point, and thus a lower bound, follows from a Slater point: when every limit is positive, $a_{c} > 0$, the point~$\bar{\LiftedHostingCapacity} = \bar{0}$ is strictly feasible, and~\cite{mutapcic_cutting-set_2009} constructs a feasible point as a convex combination of the Slater point and the master solution. Homogeneity of~\eqref{eq:cc_compact} gives a tighter point. For~$s = 1/(1+\Violation)$, every evaluated constraint satisfies
 \begin{IEEEeqnarray}{ r C l }
-    F_{c}(s\,\bar{g};\ParamVec) &=& s\, F_{c}(\bar{g};\ParamVec) \;\leq\; s\,(1 + \Violation)\, a_{c} \;=\; a_{c}, \label{eq:homogeneity}
+    F_{c}(s\,\bar{\LiftedHostingCapacity};\ParamVec) &=& s\, F_{c}(\bar{\LiftedHostingCapacity};\ParamVec) \;\leq\; s\,(1 + \Violation)\, a_{c} \;=\; a_{c}, \label{eq:homogeneity}
 \end{IEEEeqnarray}
-while~$\sqrt{s}\,I_{\Harmonic}$ satisfies~$(\sqrt{s}\,I_{\Harmonic})^{2} \leq s\,g_{\Harmonic}$ and the ratings. The scaled solution~$\bar{I}/\sqrt{1+\Violation}$ is therefore robustly feasible and gives the lower bound and the relative gap,
+while~$\sqrt{s}\,\HostingCapacity_{\Harmonic}$ satisfies~$(\sqrt{s}\,\HostingCapacity_{\Harmonic})^{2} \leq s\,\LiftedHostingCapacity_{\Harmonic}$ and both ratings. The scaled solution~$\bar{\HostingCapacity}/\sqrt{1+\Violation}$ is therefore robustly feasible and gives the lower bound and the relative gap,
 \begin{IEEEeqnarray}{ r C l }
     \Gamma^{\text{lb}} &=& \Gamma^{\text{ub}}/\sqrt{1+\Violation}, \label{eq:bounds} \\
     1 - \Gamma^{\text{lb}}/\Gamma^{\text{ub}} &=& 1 - 1/\sqrt{1+\Violation}, \label{eq:gap}
 \end{IEEEeqnarray}
-where the generic convex combination of~\cite{mutapcic_cutting-set_2009} would scale~$\bar{I}$ by~$1/(1+\Violation)$. The reported hosting capacity is the scaled solution. A limit that the fundamental exhausts, $a_{c} \leq 0$, has no Slater point and forces the contributing~$g_{\Harmonic}$ to zero, as in~\cite{vanacker_shhc}.
+where the generic convex combination of~\cite{mutapcic_cutting-set_2009} would scale~$\bar{\HostingCapacity}$ by~$1/(1+\Violation)$. The reported hosting capacity is the scaled solution. A limit that the fundamental exhausts, $a_{c} \leq 0$, has no Slater point and forces the contributing~$\LiftedHostingCapacity_{\Harmonic}$ to zero, as in~\cite{vanacker_shhc}.
 
 The worst-case analysis is approximate: the oracle returns points of~$\ParamSet$ but does not guarantee the maximum in~\eqref{eq:violation}. Its estimate of~$\Violation$ is then a lower estimate, and the bounds~\eqref{eq:bounds} hold with respect to the points the oracle evaluated~\cite{mutapcic_cutting-set_2009}. Two measures limit this: the final worst-case analysis runs at maximum effort, and the reported hosting capacity is checked a posteriori on an independent sample of~$\ParamSet$ that the method did not use.
 
