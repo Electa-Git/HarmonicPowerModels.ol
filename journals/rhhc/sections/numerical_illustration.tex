@@ -3,6 +3,65 @@
 
 This section presents the numerical illustration of the robust harmonic hosting capacity problem of a phase-balanced three-phase power system. All results are presented in per-unit using a 100\,MVA basis.
 
+\pgfplotsset{rhhc/.style={
+    axis lines=left, xmajorgrids=true, ymajorgrids=true, grid style={gray!10},
+    label style={font=\footnotesize}, tick label style={font=\footnotesize},
+    every axis plot/.append style={line width=0.6pt, mark size=1.5pt, black},
+    legend style={draw=none, font=\scriptsize, legend columns=-1, at={(0.5,1.02)}, anchor=south},
+    legend cell align=left},
+    reference/.style={gray!60, line width=1.2pt, mark=none}}
+
+\subsection{Choice of the Risk Factor}
+\label{sec:risk_factor_results}
+
+The three risk factors of Section~\ref{sec:risk_factor} are compared on the nominal network, i.e., without parameter uncertainty, where the exact~$(1-\varepsilon)$ quantile of every constrained quantity follows from Monte Carlo simulation. The case is the purely inductive IEEE 30-bus system of~\cite{vanacker_shhc}, with the harmonics~$\HarmonicSet = \{5,7,11,13\}$, the first~$N = 21$ loads as harmonic units under the absolute equality fairness criterion, and three converter populations: all diode bridges, all thyristor bridges, and a mix of both, alternating over the units, i.e., 11 diode and 10 thyristor bridges, with the angle distributions of~\cite{vanacker_shhc}. For every risk factor, population and risk level~$\varepsilon \in \{0.01, 0.02, 0.05, 0.1, 0.2\}$, Fig.~\ref{fig:risk_factor} gives (a) the total hosting capacity relative to the one that makes the exact~$(1-\varepsilon)$ quantile of the binding limit equal to its limit, and (b) the violation probability of the binding individual harmonic voltage limit, by Monte Carlo simulation with 20\,000 samples.
+
+The Cantelli bound never exceeds the risk level, with violation probabilities of at most a quarter of~$\varepsilon$, but costs~1.2--8.4\,\% of hosting capacity for the diode bridges, 6.5--27\,\% for the thyristor bridges and~11.5--35\,\% for the mix, the cost growing as~$\varepsilon$ decreases. The Gaussian quantile is accurate for the diode bridges, within~0.4\,\% of the exact quantile and with a violation probability of at most~1.04 times the risk level. For the mix, it overestimates the hosting capacity by up to~3.5\,\% and violates the limit with a probability of up to~3.2 times the risk level: the opposing mean angles of both technologies make the output distribution far from normal. For the thyristor bridges, the Gaussian quantile lies within~1.6\,\% of the exact quantile, yet violates the limit with a probability of up to~2.3 times the risk level. Their angle ranges, of up to~358$^{\circ}$ at the 13th harmonic, are truncated by the basis of degree~$\delta = 2$, which captures~91--99.9\,\% of the variance of the cosine and sine of the angle, so that the variance of the output is underestimated. The empirical factor, calibrated on the moments of the expansion, compensates both effects: it matches the exact quantile within~0.35\,\% and its violation probability lies within~17\,\% of the risk level for all populations.
+
+The empirical factor is therefore the most accurate, but its gain over the Gaussian quantile is at most about~4\,\% of hosting capacity, at~$\varepsilon = 0.01$ for the mix, whereas Section~\ref{sec:risk_factor} shows that it gives up the convexity and the upper bound of the robust counterpart. The Cantelli bound is safe but costs up to~35\,\%, an order of magnitude more. The Gaussian quantile is therefore used in the remainder of this section, with the understanding that it is optimistic with respect to the angles by a factor of up to about three in violation probability.
+
+\begin{figure}[!tb]
+    \centering
+    \pgfplotsset{rfplot/.style={rhhc, scale only axis, width=0.3\columnwidth, height=2.0cm, xmin=0.008, xmax=0.25,
+        xtick={0.01,0.05,0.2}, xticklabels={0.01,0.05,0.2}, xlabel={risk level $\varepsilon$}},
+        can/.style={solid}, gau/.style={densely dashed}, emp/.style={densely dotted, line width=0.9pt},
+        dio/.style={mark=o}, thy/.style={mark=square*}, mix/.style={mark=triangle*}}
+    \pgfplotslegendfromname{rflegend}\\[-2pt]
+    \subfloat[hosting capacity relative to the exact $(1-\varepsilon)$ quantile]{%
+    \begin{tikzpicture}
+        \begin{semilogxaxis}[rfplot, ymin=-36, ymax=5, ylabel={difference [\%]},
+            legend columns=3, legend to name=rflegend, legend style={font=\scriptsize, /tikz/every even column/.append style={column sep=4pt}}]
+            \addplot[can, dio] table[x=eps, y=ddcan] {journals/rhhc/data/risk_factor.dat};
+            \addplot[gau, dio] table[x=eps, y=ddgau] {journals/rhhc/data/risk_factor.dat};
+            \addplot[emp, dio] table[x=eps, y=ddemp] {journals/rhhc/data/risk_factor.dat};
+            \addplot[can, thy] table[x=eps, y=dtcan] {journals/rhhc/data/risk_factor.dat};
+            \addplot[gau, thy] table[x=eps, y=dtgau] {journals/rhhc/data/risk_factor.dat};
+            \addplot[emp, thy] table[x=eps, y=dtemp] {journals/rhhc/data/risk_factor.dat};
+            \addplot[can, mix] table[x=eps, y=dmcan] {journals/rhhc/data/risk_factor.dat};
+            \addplot[gau, mix] table[x=eps, y=dmgau] {journals/rhhc/data/risk_factor.dat};
+            \addplot[emp, mix] table[x=eps, y=dmemp] {journals/rhhc/data/risk_factor.dat};
+            \legend{Cantelli diode, Gaussian diode, empirical diode, Cantelli thyristor, Gaussian thyristor, empirical thyristor, Cantelli mix, Gaussian mix, empirical mix}
+        \end{semilogxaxis}
+    \end{tikzpicture}}\hfill
+    \subfloat[violation probability of the binding limit]{%
+    \begin{tikzpicture}
+        \begin{loglogaxis}[rfplot, ymin=0.005, ymax=0.3, ylabel={probability [-]}]
+            \addplot[reference] coordinates {(0.008,0.008) (0.25,0.25)};
+            \addplot[can, dio] table[x=eps, y=vdcan] {journals/rhhc/data/risk_factor.dat};
+            \addplot[gau, dio] table[x=eps, y=vdgau] {journals/rhhc/data/risk_factor.dat};
+            \addplot[emp, dio] table[x=eps, y=vdemp] {journals/rhhc/data/risk_factor.dat};
+            \addplot[can, thy] table[x=eps, y=vtcan] {journals/rhhc/data/risk_factor.dat};
+            \addplot[gau, thy] table[x=eps, y=vtgau] {journals/rhhc/data/risk_factor.dat};
+            \addplot[emp, thy] table[x=eps, y=vtemp] {journals/rhhc/data/risk_factor.dat};
+            \addplot[can, mix] table[x=eps, y=vmcan] {journals/rhhc/data/risk_factor.dat};
+            \addplot[gau, mix] table[x=eps, y=vmgau] {journals/rhhc/data/risk_factor.dat};
+            \addplot[emp, mix] table[x=eps, y=vmemp] {journals/rhhc/data/risk_factor.dat};
+        \end{loglogaxis}
+    \end{tikzpicture}}
+    \caption{Choice of the risk factor, nominal IEEE 30-bus system, $N = 21$, all diode bridges, all thyristor bridges and a mix of both: (a) total hosting capacity with the Cantelli, Gaussian and empirical risk factor relative to the exact $(1-\varepsilon)$ quantile, and (b) violation probability of the binding individual harmonic voltage limit by Monte Carlo simulation with 20\,000 samples, against the risk level~$\varepsilon$ (gray: probability equal to~$\varepsilon$). Violation probabilities of zero are not shown.}
+    \label{fig:risk_factor}
+\end{figure}
+
 % To this end, a large-scale transmission system is considered to show \textit{the scalability of the proposed second-order cone formulation}. 
 
 % \subsection{Transmission Power System}
