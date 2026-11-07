@@ -73,3 +73,61 @@ The empirical factor is therefore the most accurate, but its gain over the Gauss
 % \begin{enumerate*}
 %     \item xxx
 % \end{enumerate*}
+
+\subsection{IEEE 30-Bus System with Physical Cable and Line Inputs}
+\label{sec:ieee30_physical}
+
+The robust hosting capacity is computed for the IEEE 30-bus system of~\cite{vanacker_shhc}, with the same harmonics, units, fairness criterion and risk level~$\varepsilon = 0.05$, the Gaussian factor of Section~\ref{sec:risk_factor_results}, and the per-unit-length parameters of Section~\ref{sec:parameter_uncertainty} computed with \textsc{LineCableModels.jl}~\cite{lcm_2026} in the exact $\pi$-model~\eqref{eq:pi_series}--\eqref{eq:pi_shunt}. The 33\,kV lines are replaced by 22 underground cables of four sizes, 400 to 800\,mm$^{2}$ copper, 18/30(36)\,kV, in touching trefoil at 0.8\,m depth, assigned per branch by the smallest buried rating above the branch current. The twelve 132\,kV lines are aluminum conductors steel reinforced of four sizes on a delta tower under one steel earth wire. Cable screens are solidly bonded at both ends, the earth wire is grounded at every tower, and all circuits are ideally transposed. The 34 branches share eight designs. The transformers carry their vector groups, i.e., YNyn0 for the 132/33\,kV units and YNd11 for the condenser step-up units. Four cases are compared:
+\begin{enumerate*}
+    \item[(i)] \emph{placeholder}, a single 630\,mm$^{2}$ aluminum cable design for all 33\,kV links, with four uncertain inputs, and the 132\,kV lines of~\cite{vanacker_shhc} without line charging;
+    \item[(ii)] \emph{cables}, the four cable sizes with four uncertain inputs, i.e., resistance, insulation thickness, permittivity and earth resistivity, and the same 132\,kV lines;
+    \item[(iii)] \emph{cables and lines}, case~(ii) with the 132\,kV lines modeled physically, including their charging; and
+    \item[(iv)] \emph{full}, case~(iii) with all 23 physical inputs of Section~\ref{sec:parameter_uncertainty}.
+\end{enumerate*}
+The fundamental operating point is that of the nominal parameters, Section~\ref{sec:parametric_network}. Table~\ref{tab:ieee30_physical} gives the results, and Table~\ref{tab:ieee30_harmonics} the robust hosting capacity per harmonic relative to the nominal stochastic one. Every case converges in two or three iterations to a relative gap below~$5\cdot10^{-4}$ and shows no violation on 1024 independent random points of~$\ParamSet$.
+
+\begin{table}[!tb]
+    \centering
+    \caption{Nominal stochastic and robust harmonic hosting capacity of the IEEE 30-bus system, Gaussian factor, $\varepsilon = 0.05$, 10 threads.}
+    \label{tab:ieee30_physical}
+    \footnotesize\setlength{\tabcolsep}{2.5pt}
+    \begin{tabular}{ l r r r r r l }
+        case & $d$ & nominal & robust & ratio & time & resonances \\
+             &     & [pu]    & [pu]   & [-]   & [s]  & $\Harmonic$ \\ \hline
+        (i) placeholder         & 4  & 0.0521 & 0.0452 & 0.868 & 7  & 6.86 \\
+        (ii) cables             & 4  & 0.0518 & 0.0443 & 0.855 & 13 & 6.95 \\
+        (iii) cables and lines  & 4  & 0.0556 & 0.0438 & 0.787 & 21 & 6.27, 12.32 \\
+        (iv) full               & 23 & 0.0556 & 0.0421 & 0.757 & 69 & 6.27, 12.32
+    \end{tabular}
+\end{table}
+
+\begin{table}[!tb]
+    \centering
+    \caption{Robust harmonic hosting capacity per harmonic relative to the nominal stochastic one, IEEE 30-bus system.}
+    \label{tab:ieee30_harmonics}
+    \footnotesize\setlength{\tabcolsep}{4pt}
+    \begin{tabular}{ l r r r r }
+        case & $\Harmonic = 5$ & $\Harmonic = 7$ & $\Harmonic = 11$ & $\Harmonic = 13$ \\ \hline
+        (i) placeholder         & 0.834 & 0.896 & 0.865 & 0.899 \\
+        (ii) cables             & 0.906 & 0.966 & 0.782 & 0.850 \\
+        (iii) cables and lines  & 0.884 & 0.483 & 0.884 & 0.623 \\
+        (iv) full               & 0.826 & 0.448 & 0.874 & 0.581
+    \end{tabular}
+\end{table}
+
+\subsubsection{Line Charging Moves the Resonances}
+With cables only, case~(ii), the first parallel resonance lies at~$\Harmonic = 6.95$. Modeling the 132\,kV lines physically restores the line charging that~\cite{vanacker_shhc} removes, which moves the resonance to~$\Harmonic = 6.27$ and adds a second one at~$\Harmonic = 12.32$, case~(iii). The robust hosting capacity relative to the nominal one halves at the 7th harmonic, from 0.966 to 0.483, and drops from 0.850 to 0.623 at the 13th harmonic, i.e., at the harmonics next to the resonances. The total robust hosting capacity changes less, by~$-1.1$\,\%, as the nominal one rises by~7.4\,\% at the same time. The network data that enter the robust problem thus matter as much as their uncertainty: a simplified network places the resonances, and with them the worst cases, at other harmonics.
+
+\subsubsection{Dimension of the Parameter Set}
+Extending the parameter set from 4 to 23 physical inputs, case~(iv), lowers the robust hosting capacity by a further~3.9\,\%, mostly at the 5th, 7th and 13th harmonic. The uncertainty of the inputs beyond the four dominant ones is therefore not negligible, but it is second order. With~$d = 23$, the dictionary holds 88 sign-predicted corners in place of the~$2^{23}$ vertices. Without them, an earlier run with the Cantelli factor signed off after five iterations at a solution that violates the individual harmonic distortion limit at the 5th harmonic at bus~30 by~0.29\,\% at a sign-predicted corner, whereas 1024 independent random points found no violation. With the corners, the method converges in two iterations with a third of the evaluations of the network model. In high dimension, random sampling, including the a-posteriori check, does not certify robustness; the corners do, to first order. % Cantelli run of Amauri Martins, before the corners were added
+At the worst predicted corner of the binding constraint, the cables are at their lowest temperature, 10\,$^{\circ}$C, with core and screen resistance at their lower bounds, i.e., the least damped cable. % binding constraint: individual distortion at the 11th harmonic, bus 7, Cantelli run; to be confirmed for the Gaussian factor
+
+\subsubsection{Reallocation over the Harmonics}
+The robust hosting capacity per harmonic is not bounded by the nominal one. On a three-unit test network with cables and one parallel resonance at~$\Harmonic = 7.03$, the robust problem allocates~1.76 times the nominal current at the 7th harmonic, while the total falls by~17\,\%. The objective weighs the harmonics together, and where the parameter set detunes the resonance, current moves towards the 7th harmonic from the harmonics that the worst case penalizes. A robust budget is therefore a new allocation, not a uniform derating of the nominal one.
+
+\subsubsection{Frequency Scaling of the Fundamental Parameters}
+A common simplification scales the fundamental $\pi$-model with the harmonic order, i.e., the resistance with~$\sqrt{\Harmonic}$ and the reactance and susceptance with~$\Harmonic$. Applied to the nominal parameters of case~(iv), it lowers the nominal hosting capacity by~24\,\%, and its robust solution, over intervals of the scaling factors derived from the same physical inputs, violates the limits of the physical model at~10--12\,\% of random points of~$\ParamSet$. % numbers of Amauri Martins with the Cantelli factor; script in his fork, to be added
+The frequency dependence of the cable parameters, through skin and proximity effects in the conductor, screen and earth return, is therefore part of the robust problem, and a box on scaling factors does not contain the physical uncertainty.
+
+\subsubsection{Computational Effort}
+One evaluation of \textsc{LineCableModels.jl} takes about~1.5\,ms per cable design and~2.8--3.6\,ms per overhead-line design, per parameter point and frequency, so the physical model can sit inside the oracle. The full case, with 23 inputs, requires about 231\,000 such evaluations and solves in 69\,s on 10 threads.

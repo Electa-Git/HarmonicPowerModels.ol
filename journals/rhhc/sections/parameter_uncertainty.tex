@@ -1,6 +1,27 @@
 % Section II (Amauri Martins): to be written. The mathematical framework refers to this
 % section for the parameter box P of the cable and overhead-line inputs and for the
 % per-unit-length series impedance z'_b(f; p) and shunt admittance y'_b(f; p).
+% Findings of the IEEE 30-bus study (HarmonicPowerModels.jl pull request 35) to report here:
+% - Inputs: register of 173 rows with a source and class for every nominal value and interval;
+%   39 candidate inputs, one coordinate per physical family (e.g., one conductor temperature
+%   for all 22 cables); a candidate is admitted when moving it alone to either end of its
+%   interval changes some sequence z or y by at least 0.1 % at 50 or 650 Hz; 23 admitted
+%   (cables 10, ACSR phase conductors 8, earth wire 4, earth resistivity 1, log scale,
+%   10--1000 Ohm m). Largest single effects: cable conductor temperature 26 % on z0, earth
+%   resistivity 14.6 % on z0, ACSR temperature 6.9 % on z1. Of the 16 dropped inputs, 9 have
+%   no effect (e.g., insulation resistivity, XLPE loss tangent) and 7 change z or y by at most
+%   0.036 %. The endpoint screening does not test interactions between coordinates.
+% - Coupled inputs: each box point is mapped onto the physical set (phase temperature at least
+%   ambient; wire-diameter deviations scaled back to the EN 50182 diameter (+-1 %) and mass
+%   (+-2 %) limits); the maps are the identity on feasible points and continuous.
+% - Uncertainty belongs on the physical inputs: boxing the flattened LCM equivalents (each
+%   conductor as one tube, each insulation as layers) needs 35 coordinates for guaranteed
+%   containment, against 23 physical inputs, as one physical input moves every size of its
+%   family by a slightly different law (study in Amauri's fork).
+% - Bonding and transposition: screens solidly bonded at both ends, earth wire grounded at each
+%   tower, ideal transposition, no cross-bonding.
+% - Installed length: one coordinate per link through the length of the exact pi-model
+%   (supported by HarmonicPowerModels.jl; to be offered as an option in the study).
 \section{Cable and Overhead-Line Parameter Uncertainty}
 \label{sec:parameter_uncertainty}
 
