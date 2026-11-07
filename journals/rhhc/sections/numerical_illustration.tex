@@ -131,3 +131,45 @@ The frequency dependence of the cable parameters, through skin and proximity eff
 
 \subsubsection{Computational Effort}
 One evaluation of \textsc{LineCableModels.jl} takes about~1.5\,ms per cable design and~2.8--3.6\,ms per overhead-line design, per parameter point and frequency, so the physical model can sit inside the oracle. The full case, with 23 inputs, requires about 231\,000 such evaluations and solves in 69\,s on 10 threads.
+
+\subsection{Zero-Sequence Harmonics and Transformer Earthing}
+\label{sec:zero_sequence_results}
+
+Case~(iii) is extended to every harmonic order from 2 to 50, including the 16 zero-sequence orders, without recombination, Section~\ref{sec:no_recombination}, so that no angle model of the units is needed. The 50th harmonic, at 2.5\,kHz, lies within the frequency range in which the cable and line model of Section~\ref{sec:parameter_uncertainty} is validated. Bus~9 is the star point of the three-winding unit, and each generator is taken to connect through a YNd step-up with a leakage reactance of 0.12\,pu on a rating of 0.2 times its short-circuit power, at~$X/R = 40$; the synchronous condensers at buses~11 and~13 sit behind their own step-up units, whose delta windings block the zero sequence. % generator zero-sequence data are an assumption, to be confirmed
+Five variants differ only in the windings and earthing of the transformers with a 33\,kV winding, Table~\ref{tab:zero_sequence}:
+\begin{enumerate*}
+    \item[(a)] YNyn0 with solidly earthed 33\,kV stars;
+    \item[(b)] YNyn0 with the 33\,kV stars earthed through 19.05\,$\Omega$, which limits an earth fault to 1\,kA, i.e., case~(iii);
+    \item[(c)] Dyn11, with the delta on the 132\,kV side and the 33\,kV stars as in~(b);
+    \item[(d)] YNd11, with the delta on the 33\,kV side and the 33\,kV star of the condenser step-up unearthed; and
+    \item[(e)] YNy0 with every 33\,kV star unearthed.
+\end{enumerate*}
+The clock numbers keep the same phase shift on every 132/33\,kV path.
+
+\begin{table}[!tb]
+    \centering
+    \caption{Zero-sequence hosting capacity~$\sum_{\Harmonic} \HostingCapacity_{\Harmonic}$ over the zero-sequence harmonics without recombination, nominal and robust, and the harmonic with the lowest robust-to-nominal ratio, IEEE 30-bus system, case~(iii), $d = 4$.}
+    \label{tab:zero_sequence}
+    \footnotesize\setlength{\tabcolsep}{3pt}
+    \begin{tabular}{ l r r r r }
+        variant & nominal & robust & ratio & weakest \\
+                & [pu]    & [pu]   & [-]   & $\Harmonic$ (ratio) \\ \hline
+        (a) YNyn0, solid          & 0.00489 & 0.00444 & 0.907 & 24 (0.57) \\
+        (b) YNyn0, 19.05\,$\Omega$ & 0.00355 & 0.00310 & 0.873 & 30 (0.66) \\
+        (c) Dyn11                 & 0.00375 & 0.00322 & 0.859 & 30 (0.67) \\
+        (d) YNd11                 & 0.00344 & 0.00289 & 0.841 & 24 (0.58) \\
+        (e) YNy0, unearthed       & 0.00344 & 0.00294 & 0.854 & 30 (0.66)
+    \end{tabular}
+\end{table}
+
+\subsubsection{The Earthing Acts on the Zero Sequence Only}
+The robust hosting capacity summed over the positive- and negative-sequence harmonics is the same in all five variants, 0.00344 and 0.00644\,pu, to within~$10^{-6}$\,pu, and so are their weakest harmonics, the 7th and the 13th at 0.48 and 0.62 of the nominal hosting capacity, as in Section~\ref{sec:ieee30_physical}. Without recombination, the phase shift of the vector groups does not change the magnitudes of the transfer impedances along paths with equal shifts, and the earthing does not enter the positive and negative sequence. Every difference between the variants therefore stems from the zero-sequence network.
+
+\subsubsection{Earthing Practice}
+Solid earthing of the 33\,kV stars hosts~43\,\% more zero-sequence current than the earthing through 19.05\,$\Omega$ after robustness, and 38\,\% more at the nominal parameters. With~$3 \times 19.05\,\Omega$ in every zero-sequence path to earth, the resistance already decouples the 33\,kV network to a large extent: removing the earthing altogether, variants~(d) and~(e), lowers the robust zero-sequence hosting capacity by only a further 5--7\,\%, and a delta on the 132\,kV side, variant~(c), raises it by 4\,\%. The earthing practice of the distribution network is thus a lever on the zero-sequence hosting capacity of the order of the uncertainty of the network itself.
+
+\subsubsection{Robustness at the Zero Sequence}
+The uncertain cable parameters cost 9--16\,\% of the zero-sequence hosting capacity, against 6--15\,\% for the positive- and negative-sequence harmonics. The loss concentrates at a few high orders, the 24th and 30th harmonic, where the robust hosting capacity falls to 0.57--0.67 of the nominal one, and the earthing moves it from one order to the other: the 24th harmonic is the weakest with solid earthing and with a delta on the 33\,kV side, the 30th in the other variants. The zero-sequence parameters of the cables, through the earth return and the screen bonding, and the earthing path together place the zero-sequence resonances, so a deterministic study of the zero-sequence harmonics with nominal cable data misses the harmonics that are most at risk.
+
+\subsubsection{Computational Effort}
+With 49 harmonics, each variant solves in 8.5--9.5 minutes on 10 threads, in two iterations, to a relative gap below~$10^{-4}$, with no violation on 256 independent random points of~$\ParamSet$.
