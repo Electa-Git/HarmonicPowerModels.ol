@@ -51,19 +51,26 @@ The IEEE 30-bus system has a meshed 132\,kV transmission level and a 33\,kV dist
     \centering
     \pgfplotsset{popplot/.style={shhc, height=2.9cm},
         expplot/.style={shhc, height=2.9cm, ymin=0.95, ymax=2.1, legend columns=2,
-        xtick={1,2,3,4}, xticklabels={5,7,11,13}, xmin=0.7, xmax=4.3, xlabel={harmonic order $\Harmonic$}}}
+%        xtick={1,2,3,4}, xticklabels={5,7,11,13}, xmin=0.7, xmax=4.3, xlabel={harmonic order $\Harmonic$}}}
+        xtick={1,...,8}, xticklabels={5,7,11,13,17,19,23,25}, xmin=0.6, xmax=8.4, xticklabel style={font=\scriptsize}, xlabel={harmonic order $\Harmonic$}}}
     \subfloat[hosting capacity per aggregation rule]{%
     \begin{tikzpicture}
-        \begin{axis}[popplot, width=0.42\textwidth, ybar=0pt, bar width=3pt, ymin=0, ymax=8, ytick={0,2,4,6}, clip=false,
+%        \begin{axis}[popplot, width=0.42\textwidth, ybar=0pt, bar width=3pt, ymin=0, ymax=8, ytick={0,2,4,6}, clip=false,
+        \begin{axis}[popplot, width=0.42\textwidth, ybar=0pt, bar width=3pt, ymin=0, ymax=11, ytick={0,2,4,6,8,10}, clip=false,
             xtick={1,2,3,4,5,6}, xticklabels={diode, thyristor, mix, diode, thyristor, mix}, xmin=0.5, xmax=6.5, xticklabel style={font=\scriptsize},
             ylabel style={align=center}, ylabel={$\sum_{\Harmonic} \HostingCapacity_{\Harmonic}$\\{[$10^{-3}$\,pu]}}, legend columns=2, legend style={/tikz/every even column/.append style={column sep=3pt}},
             every axis plot/.append style={mark=none}]
-            \addplot[fill=white] table[x=x, y=arith] {journals/shhc/data/paper_conv_hosting.dat};
+%            \addplot[fill=white] table[x=x, y=arith] {journals/shhc/data/paper_conv_hosting.dat};
+            \addplot[fill=white] table[x=x, y=arith] {journals/shhc/data/paper_conv_hosting_h25.dat};
 %            \addplot[fill=gray!30] table[x=x, y=rob] {journals/shhc/data/paper_conv_hosting.dat};
-            \addplot[fill=gray!60] table[x=x, y=q95] {journals/shhc/data/paper_conv_hosting.dat};
-            \addplot[fill=black] table[x=x, y=det] {journals/shhc/data/paper_conv_hosting.dat};
-            \addplot[pattern=north east lines] table[x=x, y=iec] {journals/shhc/data/paper_conv_hosting.dat};
-            \draw[gray] (axis cs:3.5,0) -- (axis cs:3.5,8);
+%            \addplot[fill=gray!60] table[x=x, y=q95] {journals/shhc/data/paper_conv_hosting.dat};
+            \addplot[fill=gray!60] table[x=x, y=q95] {journals/shhc/data/paper_conv_hosting_h25.dat};
+%            \addplot[fill=black] table[x=x, y=det] {journals/shhc/data/paper_conv_hosting.dat};
+            \addplot[fill=black] table[x=x, y=det] {journals/shhc/data/paper_conv_hosting_h25.dat};
+%            \addplot[pattern=north east lines] table[x=x, y=iec] {journals/shhc/data/paper_conv_hosting.dat};
+            \addplot[pattern=north east lines] table[x=x, y=iec] {journals/shhc/data/paper_conv_hosting_h25.dat};
+%            \draw[gray] (axis cs:3.5,0) -- (axis cs:3.5,8);
+            \draw[gray] (axis cs:3.5,0) -- (axis cs:3.5,11);
             \node[font=\scriptsize, anchor=north] at ([yshift=-11pt]axis cs:2,0) {base};
             \node[font=\scriptsize, anchor=north] at ([yshift=-11pt]axis cs:5,0) {cables at mv};
             \legend{arithmetic sum ($\alpha{=}1$), 95\,\% chance bound, mean angle, IEC summation law}
@@ -71,25 +78,36 @@ The IEEE 30-bus system has a meshed 132\,kV transmission level and a 33\,kV dist
     \end{tikzpicture}}%
     \subfloat[exponent, base]{%
     \begin{tikzpicture}
-        \begin{axis}[expplot, width=0.22\textwidth, ylabel={$\alpha^{\text{eq}}_{\Harmonic}$ [-]}]
-            \addplot[iec] coordinates {(0.7,1.4) (2.5,1.4) (2.5,2.0) (4.3,2.0)};
-            \addplot[pdiode] table[x=x, y=diode] {journals/shhc/data/paper_conv_alpha_base.dat};
-            \addplot[pthyr] table[x=x, y=thyristor] {journals/shhc/data/paper_conv_alpha_base.dat};
-            \addplot[pmix] table[x=x, y=mix] {journals/shhc/data/paper_conv_alpha_base.dat};
+%        \begin{axis}[expplot, width=0.22\textwidth, ylabel={$\alpha^{\text{eq}}_{\Harmonic}$ [-]}]
+        \begin{axis}[expplot, width=0.23\textwidth, ylabel={$\alpha^{\text{eq}}_{\Harmonic}$ [-]}]
+%            \addplot[iec] coordinates {(0.7,1.4) (2.5,1.4) (2.5,2.0) (4.3,2.0)};
+            \addplot[iec] coordinates {(0.6,1.4) (2.5,1.4) (2.5,2.0) (8.4,2.0)};
+%            \addplot[pdiode] table[x=x, y=diode] {journals/shhc/data/paper_conv_alpha_base.dat};
+            \addplot[pdiode] table[x=x, y=diode] {journals/shhc/data/paper_conv_alpha_base_h25.dat};
+%            \addplot[pthyr] table[x=x, y=thyristor] {journals/shhc/data/paper_conv_alpha_base.dat};
+            \addplot[pthyr] table[x=x, y=thyristor] {journals/shhc/data/paper_conv_alpha_base_h25.dat};
+%            \addplot[pmix] table[x=x, y=mix] {journals/shhc/data/paper_conv_alpha_base.dat};
+            \addplot[pmix] table[x=x, y=mix] {journals/shhc/data/paper_conv_alpha_base_h25.dat};
             \legend{IEC, diode, thyristor, mix}
         \end{axis}
     \end{tikzpicture}}%
     \subfloat[exponent, cables at mv]{%
     \begin{tikzpicture}
-        \begin{axis}[expplot, width=0.22\textwidth, yticklabels={}]
-            \addplot[iec] coordinates {(0.7,1.4) (2.5,1.4) (2.5,2.0) (4.3,2.0)};
-            \addplot[pdiode] table[x=x, y=diode] {journals/shhc/data/paper_conv_alpha_cable33.dat};
-            \addplot[pthyr] table[x=x, y=thyristor] {journals/shhc/data/paper_conv_alpha_cable33.dat};
-            \addplot[pmix] table[x=x, y=mix] {journals/shhc/data/paper_conv_alpha_cable33.dat};
+%        \begin{axis}[expplot, width=0.22\textwidth, yticklabels={}]
+        \begin{axis}[expplot, width=0.23\textwidth, yticklabels={}]
+%            \addplot[iec] coordinates {(0.7,1.4) (2.5,1.4) (2.5,2.0) (4.3,2.0)};
+            \addplot[iec] coordinates {(0.6,1.4) (2.5,1.4) (2.5,2.0) (8.4,2.0)};
+%            \addplot[pdiode] table[x=x, y=diode] {journals/shhc/data/paper_conv_alpha_cable33.dat};
+            \addplot[pdiode] table[x=x, y=diode] {journals/shhc/data/paper_conv_alpha_cable33_h25.dat};
+%            \addplot[pthyr] table[x=x, y=thyristor] {journals/shhc/data/paper_conv_alpha_cable33.dat};
+            \addplot[pthyr] table[x=x, y=thyristor] {journals/shhc/data/paper_conv_alpha_cable33_h25.dat};
+%            \addplot[pmix] table[x=x, y=mix] {journals/shhc/data/paper_conv_alpha_cable33.dat};
+            \addplot[pmix] table[x=x, y=mix] {journals/shhc/data/paper_conv_alpha_cable33_h25.dat};
         \end{axis}
     \end{tikzpicture}}
 %    \caption{Converter populations, IEEE 30-bus system, $N = 21$ units, all diode bridges, all thyristor bridges or a mix of both, $\varepsilon = 0.05$: (a) total hosting capacity of the base network and with all 33\,kV lines as cables (cables at mv), for the aggregation rules of Section~\ref{sec:levers}\removable{\ except the robust bound}; (b)--(c) equivalent summation exponent of the 95\,\% chance bound per harmonic, against the indicative exponents of IEC~61000-3-6 (gray).}
-    \caption{Converter populations, IEEE 30-bus system, $N = 21$ units, all diode bridges, all thyristor bridges or a mix of both, $\varepsilon = 0.05$: (a) total hosting capacity of the base network and with all 33\,kV lines as cables (cables at mv), for the aggregation rules of Section~\ref{sec:levers}; (b)--(c) equivalent summation exponent of the 95\,\% chance bound per harmonic, against the indicative exponents of IEC~61000-3-6 (gray).}
+%    \caption{Converter populations, IEEE 30-bus system, $N = 21$ units, all diode bridges, all thyristor bridges or a mix of both, $\varepsilon = 0.05$: (a) total hosting capacity of the base network and with all 33\,kV lines as cables (cables at mv), for the aggregation rules of Section~\ref{sec:levers}; (b)--(c) equivalent summation exponent of the 95\,\% chance bound per harmonic, against the indicative exponents of IEC~61000-3-6 (gray).}
+    \caption{Converter populations, IEEE 30-bus system, $N = 21$ units, all diode bridges, all thyristor bridges or a mix of both, $\varepsilon = 0.05$: (a) total hosting capacity of the base network and with all 33\,kV lines as cables (cables at mv), for the aggregation rules of Section~\ref{sec:levers}; (b)--(c) equivalent summation exponent of the 95\,\% chance bound per harmonic up to the 25th, against the indicative exponents of IEC~61000-3-6 (gray).}
     \label{fig:populations}
 \end{figure*}
 \subsection{Equivalence of the Methods}
