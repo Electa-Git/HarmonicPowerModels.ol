@@ -1,0 +1,66 @@
+\section{Supplementary content}
+\label{sec:supplementary}
+
+\pgfplotsset{shhc/.style={
+    axis lines=left, xmajorgrids=true, ymajorgrids=true, grid style={gray!10},
+    label style={font=\footnotesize}, tick label style={font=\footnotesize},
+    every axis plot/.append style={line width=0.6pt, mark size=1.5pt, black},
+    legend style={draw=none, font=\scriptsize, legend columns=-1, at={(0.5,1.02)}, anchor=south},
+    legend cell align=left},
+    iec/.style={gray!60, line width=1.2pt, mark=none},
+    sbase/.style={solid, mark=*},
+    sbank/.style={densely dashed, mark=o},
+    scable/.style={densely dotted, mark=square},
+    scablec/.style={dashdotted, mark=triangle}}
+
+\subsection{Harmonic distributions being extended towards 25th} 
+
+\begin{table}[!t]
+    \centering
+    \caption{Shared Beta distribution parameters and fit quality for harmonic current angles of diode-based converter}
+    \label{tab:beta_phase_params_diode_to25}
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{l c c c c}
+    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max}-v_{\min}$ [deg] & error \\
+    \hline
+    1st & -106.43 & -99.26 & 7.17 & 0.040338 \\
+    5th & 4.80 & 40.90 & 36.10 & 0.005484 \\
+    7th & -22.52 & 27.18 & 49.71 & 0.003869 \\
+    11th & 77.87 & 163.96 & 86.09 & 0.002271 \\
+    13th & 48.98 & 148.35 & 99.37 & 0.001626 \\
+    17th & -239.51 & -76.70 & 162.81 & 0.001997 \\
+    19th & 80.08 & 266.23 & 186.15 & 0.001264 \\
+    23th & -209.79 & 34.31 & 244.10 & 0.000503 \\
+    25th & -246.50 & 15.56 & 262.06 & 0.001143 \\
+    \end{tabular}
+    \vspace{2pt}
+    \parbox{\columnwidth}{\scriptsize All harmonics share the jointly fitted shape parameters $\hat{\alpha}=3.731$ and $\hat{\beta}=4.439$. \\
+    Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific.}
+\end{table}
+
+\begin{table}[!t]
+    \centering
+    \caption{Shared Beta distribution parameters and fit quality for harmonic current angles of phase-controlled converter}
+    \label{tab:beta_phase_params_pc_to25}
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{l c c c c}
+    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max}-v_{\min}$ [deg] & error \\
+    \hline
+    1st & -136.66 & -110.06 & 26.60 & 0.006921 \\
+    5th & -143.07 & -9.30 & 133.77 & 0.001402 \\
+    7th & -263.84 & -52.49 & 211.36 & 0.001196 \\
+    11th & -248.03 & 46.71 & 294.74 & 0.000525 \\
+    13th & -353.10 & 5.22 & 358.32 & 0.000416 \\
+    17th & -346.15 & 104.27 & 450.42 & 0.000331 \\
+    19th & -447.14 & 62.43 & 509.57 & 0.000255 \\
+    23th & -442.00 & 161.32 & 603.31 & 0.000238 \\
+    25th & -180.49 & 479.68 & 660.17 & 0.000205 \\
+    \end{tabular}
+    \vspace{2pt}
+    \parbox{\columnwidth}{\scriptsize All harmonics share the jointly fitted shape parameters $\hat{\alpha}=4.1612$ and $\hat{\beta}=3.5541$. \\
+    Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific.}
+\end{table}
+
+
