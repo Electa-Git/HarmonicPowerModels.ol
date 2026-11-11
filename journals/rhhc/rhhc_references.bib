@@ -52,8 +52,81 @@
 % Authors and version to be confirmed by Amauri Martins
 @misc{lcm_2026,
   author       = {Martins-Britto, Amauri G.},
-  title        = {{LineCableModels.jl}: frequency-dependent parameters of cables and overhead lines},
+  title        = {{LineCableModels.jl}: Toolbox in Julia for accurate modeling of power lines and cables},
   year         = {2026},
   howpublished = {\url{https://github.com/Electa-Git/LineCableModels.jl}},
   note         = {Version 0.1.0}
+}
+
+
+% Section II (cable and overhead-line parameter uncertainty), added by Amauri Martins
+@book{ametani_cable_2015,
+  author    = {Ametani, Akihiro and Ohno, Teruo and Nagaoka, Naoto},
+  title     = {Cable System Transients: Theory, Modeling and Simulation},
+  publisher = {Wiley-IEEE Press},
+  address   = {Singapore},
+  year      = {2015},
+  doi       = {10.1002/9781118702154},
+}
+
+@standard{iec60228_2023,
+  title        = {Conductors of insulated cables},
+  organization = {International Electrotechnical Commission},
+  number       = {IEC 60228:2023},
+  note         = {Ed. 4.0},
+  year         = {2023},
+}
+
+@standard{iec60502_2_2014,
+  title        = {Power cables with extruded insulation and their accessories for rated voltages from 1 kV ($U_{\text{m}} = 1.2$ kV) up to 30 kV ($U_{\text{m}} = 36$ kV) -- Part 2: Cables for rated voltages from 6 kV ($U_{\text{m}} = 7.2$ kV) up to 30 kV ($U_{\text{m}} = 36$ kV)},
+  organization = {International Electrotechnical Commission},
+  number       = {IEC 60502-2:2014},
+  note         = {Ed. 3.0},
+  year         = {2014},
+}
+
+@standard{iec60287_1_1_2006,
+  title        = {Electric cables -- Calculation of the current rating -- Part 1-1: Current rating equations (100\,\% load factor) and calculation of losses -- General},
+  organization = {International Electrotechnical Commission},
+  number       = {IEC 60287-1-1:2006},
+  note         = {Ed. 2.0},
+  year         = {2006},
+}
+
+@standard{en50182_2001,
+  title        = {Conductors for overhead lines -- Round wire concentric lay stranded conductors},
+  organization = {CENELEC},
+  number       = {EN 50182:2001},
+  year         = {2001},
+}
+
+@standard{iec62641_2022,
+  title        = {Conductors for overhead lines -- Aluminium and aluminium alloy wires for concentric lay stranded conductors},
+  organization = {International Electrotechnical Commission},
+  number       = {IEC 62641:2022},
+  year         = {2022},
+}
+
+@standard{iec63248_2022,
+  title        = {Conductors for overhead lines -- Coated or cladded metallic wire for concentric lay stranded conductors},
+  organization = {International Electrotechnical Commission},
+  number       = {IEC 63248:2022},
+  note         = {Ed. 1.0},
+  year         = {2022},
+}
+
+@standard{ieee738_2023,
+  title        = {{IEEE} Standard for Calculating the Current-Temperature Relationship of Bare Overhead Conductors},
+  organization = {IEEE},
+  number       = {IEEE Std 738-2023},
+  year         = {2023},
+}
+
+
+@misc{hpm_2026,
+  author       = {Ergun, Hakan and Geth, Frederik and Van Acker, Tom},
+  title        = {{HarmonicPowerModels.jl}},
+  year         = {2026},
+  howpublished = {\url{https://github.com/timmyfaraday/HarmonicPowerModels.jl}},
+  note         = {Study data in \texttt{examples/rhhc-variants}},
 }
