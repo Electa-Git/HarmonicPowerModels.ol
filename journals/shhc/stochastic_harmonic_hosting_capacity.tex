@@ -1,7 +1,6 @@
 \documentclass[journal]{IEEEtran}
 \PassOptionsToPackage{x11names}{xcolor}
 
-% packages
 \usepackage{hyperref}
 \usepackage{flushend}
 \usepackage[inline]{enumitem}
@@ -12,17 +11,13 @@
 \usepackage{orcidlink}
 
 \usepackage{xcolor}
-% \usepackage{microtype,xparse,tcolorbox}
 
-%% footnote
 \usepackage{footnote}
 \makesavenoteenv{tabular}
 \makesavenoteenv{table}
 \makesavenoteenv{tabular*}
 \makesavenoteenv{table*}
-% \usepackage{tablefootnote}
 
-%% graphics packages
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usetikzlibrary{patterns}
@@ -39,42 +34,29 @@
     \usepackage[caption=false, font=footnotesize]{subfig}
 \fi
 
-%% checkmark packages 
 \usepackage{pifont}
 \newcommand{\cmark}{\ding{51}}
 \newcommand{\xmark}{\ding{55}}
 
-%% math packages
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{mathtools}
 \usepackage{booktabs}
 
-% math 
 \IEEEeqnarraydefcolsep{0}{\hoffset}
 \newcommand*{\defeq}{\stackrel{\text{def}}{=}}
 
-% definition setup
-%\theoremstyle{definition}
-
 \newtheorem{defn}{Definition}[section]
 
-% text that may be removed to reach the 10-page limit
 \newcommand{\removable}[1]{{\color{red}#1}}
-% suggested replacement text, for review
 \newcommand{\suggested}[1]{{\color{teal}#1}}
-% text changed for the extension to the 25th harmonic, for review
 \newcommand{\changed}[1]{{\color{orange}#1}}
-% placeholder for input after the Harmonic Meeting of 30/10
 \newcommand{\placeholder}[1]{\textcolor{blue}{[#1]}}
 
-% correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-% document
 \begin{document}
 
-% title, authors and thanks
 \title{Stochastic Harmonic Hosting Capacity \\ Considering Harmonic Recombination}
 \author{Tom~Van~Acker~\orcidlink{0000-0001-6283-1457},%
         Jinwen~Xiang~\orcidlink{0000-0003-2107-0238},%
@@ -84,29 +66,21 @@
 \thanks{This work is supported by the Energy Transition Fund by FOD Economy, Belgium, project HARMONIC. The General Board on Energy of the FOD Economy is not liable for any use of the presented work and subsequent results.}
 \thanks{\textit{(Corresponding author: Tom~Van~Acker)}}}
 
-% paper headers
 \markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
 {Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
 
-% make the title area
 \maketitle
 
-% abstract
 \begin{abstract}
-%The aggregation of harmonic currents from many power-electronic interfaced units depends on their phase angles, which are uncertain at the planning stage. This paper presents a stochastic harmonic hosting capacity method for phase-balanced three-phase power systems that captures harmonic recombination. The angle uncertainty is characterized through a harmonic state-space model and is represented by polynomial chaos expansion, with one random variable per unit, and the angles are referenced to each unit's fundamental terminal voltage. Harmonic voltage and current limits are enforced through chance constraints. For fairness criteria that fix the ratios between the allocations of the units, e.g., absolute equality, the problem reduces to a small second-order cone program that equals the general formulation and recovers the deterministic hosting capacity exactly when the uncertainty vanishes. For the IEEE 30-bus system, recombination between units of a single converter technology, diode or thyristor bridges, is limited, and the indicative summation exponents of IEC~61000-3-6 overestimate the hosting capacity by a factor of two to three, also with underground cables. A mix of diode and thyristor bridges raises the hosting capacity by 62--88\,\% over arithmetic summation and brings the summation exponent of the 7th harmonic to the indicative value.
-%The aggregation of harmonic currents from many power-electronic interfaced units depends on their phase angles, which are uncertain at the planning stage. This paper presents a stochastic harmonic hosting capacity method for phase-balanced three-phase power systems that captures harmonic recombination. The angle uncertainty is characterized through a harmonic state-space model and is represented by polynomial chaos expansion, with one random variable per unit, and the angles are referenced to each unit's fundamental terminal voltage. Harmonic voltage and current limits are enforced through chance constraints. For fairness criteria that fix the ratios between the allocations of the units, e.g., absolute equality, the problem reduces to a small second-order cone program that equals the general formulation and recovers the deterministic hosting capacity exactly when the uncertainty vanishes. For the IEEE 30-bus system, recombination between units of a single converter technology, diode or thyristor bridges, is limited, and the indicative summation exponents of IEC~61000-3-6 overestimate the hosting capacity by a factor of two to three, also with underground cables. A mix of diode and thyristor bridges raises the hosting capacity by 62--88\,\% over arithmetic summation and raises the summation exponent to about 1.4 at the harmonics where the mean angles of both technologies nearly oppose each other, which remains below the indicative value at the high orders.
-The aggregation of harmonic currents from many power-electronic interfaced units depends on their phase angles, which are uncertain at the planning stage. This paper presents a stochastic harmonic hosting capacity method for phase-balanced three-phase power systems that captures harmonic recombination. The angle uncertainty is characterized through a harmonic state-space model and is represented by polynomial chaos expansion, with one random variable per unit, and the angles are referenced to each unit's fundamental terminal voltage. Harmonic voltage and current limits are enforced through chance constraints. For fairness criteria that fix the ratios between the allocations of the units, e.g., absolute equality, the problem reduces to a small second-order cone program that equals the general formulation and recovers the deterministic hosting capacity exactly when the uncertainty vanishes. For the IEEE 30-bus system and the characteristic harmonics up to the 25th, recombination between units of a single converter technology, diode or thyristor bridges, grows with the harmonic order but remains limited, and the indicative summation exponents of IEC~61000-3-6 overestimate the hosting capacity by a factor of about two, also with underground cables. Cable resonances add recombination through the network, which an aggregation at the mean angles overstates by more than a factor of two at the highest harmonics, whereas the chance constraint remains safe.
+The aggregation of harmonic currents from many power-electronic interfaced units depends on their phase angles, which are uncertain at the planning stage. This paper presents a stochastic harmonic hosting capacity method for phase-balanced three-phase power systems that captures harmonic recombination. The angle uncertainty is characterized through a harmonic state-space model and is represented by polynomial chaos expansion, with one random variable per unit, and the angles are referenced to each unit's fundamental terminal voltage. Harmonic voltage and current limits are enforced through chance constraints. For fairness criteria that fix the ratios between the allocations of the units, e.g., absolute equality, the problem reduces to a small second-order cone program that equals the general formulation and recovers the deterministic hosting capacity exactly when the uncertainty vanishes. For the IEEE 30-bus system and the characteristic harmonics up to the 25th, recombination between units of a single converter technology, diode or thyristor bridges, grows with the harmonic order but remains limited, and the indicative summation exponents of IEC~61000-3-6 overestimate the hosting capacity by a factor of about two, also with underground cables. Cable resonances add recombination through the network. Aggregating the units at their mean angles is unsafe, as it overestimates the hosting capacity wherever their contributions cancel, by more than a factor of two at the highest harmonics, whereas the presented chance-constrained approach guarantees that the harmonic limits are met with the prescribed probability.
 \end{abstract}
 
-% keywords
 \begin{IEEEkeywords}
 Chance constraints, harmonic distortion, harmonic recombination, hosting capacity, polynomial chaos expansion.
 \end{IEEEkeywords}
 
-% peer-review title
 \IEEEpeerreviewmaketitle
 
-% sections
 \input{nomenclature}
 \input{journals/shhc/sections/introduction_new}
 
@@ -125,31 +99,13 @@ Chance constraints, harmonic distortion, harmonic recombination, hosting capacit
 
 \input{journals/shhc/sections/conclusion}
 
-% the full optimization model is kept in a separate document for now:
-% journals/shhc/stochastic_harmonic_hosting_capacity_appendix.tex
-
 \section*{Acknowledgement}
 The authors used Claude (Anthropic) to assist with implementing and testing parts of the open-source code in \textsc{HarmonicPowerModels.jl}, running the numerical studies of Section~\ref{sec:numerical_illustration}, generating the TikZ figures from the resulting data, and drafting and editing the text of Sections~\ref{sec:introduction}, \ref{sec:mathematical_framework}, \ref{sec:numerical_illustration} and~\ref{sec:conclusion}. All AI-assisted content was reviewed, verified and revised by the authors, who take full responsibility for the content of this article.
 
 The authors would like thank dr. Kaan Yurtseven for the fruitful discussions.
 
-% bibliography
 \bibliographystyle{IEEEtran}
 \bibliography{journals/shhc/shhc_references}
-
-
-% biographies
-%\begin{IEEEbiographynophoto}{Dr. Ir. Ing. Tom Van Acker} received the M.Eng., M.Sc. and Ph.D. degrees in Electrical Engineering from KU Leuven, Leuven, Belgium in 2012, 2014 and 2020, respectively. Currently, he is a Senior Expert and Team Lead at Elia Transmission Belgium. His main areas of research interest are optimization and uncertainty in a power system context, applied in the context of availability, harmonics, optimal power flow, and state estimation. 
-%\end{IEEEbiographynophoto}
-
-%\begin{IEEEbiographynophoto}{Dr. Jinwen Xiang} received the B.S., M.Sc., and Ph.D. degrees in electrical engineering from Hunan University, China, and was a visiting Ph.D. student at the Technical University of Denmark. He was a control engineer at CRRC Zhuzhou Institute. Currently, he is a post-doctoral researcher with KU Leuven / EnergyVille, Belgium. His main areas of research interes are modeling and control of power electronics and their applications in transportation and power systems. 
-%\end{IEEEbiographynophoto}
-
-%\begin{IEEEbiographynophoto}{Dr. Dipl.-Ing. Hakan Ergun} has obtained his MSc in electrical engineering at the Graz University of Technology (TU Graz) and his PhD in electrical engineering at KU Leuven, respectively. In the past he has been a postdoctoral researcher, and a research expert at KU Leuven / EnergyVille. Currently he is an Associate Professor with KU Leuven and the Energy Transmission Competence Hub (Etch) within EnergyVille.
-%His main research interest is to optimally develop and operate future energy networks for the renewable energy transition. He is the main developer of a number of open-source network modelling tools for optimal planning and operation of ac and dc grids, and stability and security constrained network operation. He is a senior member of IEEE and an active member of CIGRE. 
-
-%\end{IEEEbiographynophoto}
-
 
 \input{journals/shhc/sections/supplementary}
 

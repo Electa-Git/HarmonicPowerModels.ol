@@ -1,23 +1,7 @@
 \section{Mathematical Framework}
 \label{sec:mathematical_framework}
 
-This section presents the mathematical framework for the stochastic harmonic hosting capacity problem of a phase-balanced three-phase power system, considering uncertainty on the angle of the harmonic current injected by the connected harmonic units. To this end, the formulation for the deterministic harmonic hosting capacity presented in~\cite{vanacker_hosting_2026} is extended. For brevity, the original formulation is not repeated in this section, rather the relevant variables and constraints are highlighted and transformed to their stochastic counterpart. %For the full stochastic formulation, the reader is referred to the supplementary material.
-
-%Table~\ref{tab:notation} gives an overview and generic examples of the notation used throughout the mathematical framework.
-%\begin{table}[ht!]
-%    \centering
-%    \caption{Notation used throughout the mathematical framework.}
-%    \label{tab:notation}
-%    \begin{tabular}{ l l c }
-%        element             & notation                  & example                           \\ \hline
-%        index               & lower-case italic         & $x$                               \\
-%        set                 & calligraphic              & $\mathcal{X}$                     \\
-%        (random) variable   & sans serif                & $\mathsf{X}$                      \\
-%        parameter           & italic                    & $X$                               \\
-%        approximation       & hat notation              & $\hat{\mathsf{X}}$                \\
-%        vector              & bar notation              & $\bar{\mathsf{X}}$, $\bar{X}$
-%    \end{tabular}
-%\end{table}
+This section presents the mathematical framework for the stochastic harmonic hosting capacity problem of a phase-balanced three-phase power system, considering uncertainty on the angle of the harmonic current injected by the connected harmonic units. To this end, the formulation for the deterministic harmonic hosting capacity presented in~\cite{vanacker_hosting_2026} is extended. For brevity, the original formulation is not repeated in this section, rather the relevant variables and constraints are highlighted and transformed to their stochastic counterpart. %
 
 \subsection{Background on Polynomial Chaos Expansion}
 \label{sec:polynomial_chaos_expansion}
@@ -37,7 +21,7 @@ Through polynomial chaos expansion, any stochastic equality constraint is equiva
 \begin{IEEEeqnarray}{ r C l }
     |\PCESet| &=& \frac{(|\bar{\omega}| + \delta)!}{|\bar{\omega}|!\,\delta!}, \label{eq:cardinality}
 \end{IEEEeqnarray}
-where~$\delta$ denotes the maximum degree of the polynomial basis functions. 
+where~$\delta$ denotes the maximum degree of the polynomial basis functions.
 
 The Galerkin projection forms a system of equations for the stochastic modes~(Chapter~12 in~\cite{sullivan_introduction_2015}). For the harmonic hosting capacity problem, two operations stand out: summation and multiplication. For three approximated random variables~$\ApproxRVX$,~$\ApproxRVY$ and~$\ApproxRVZ$ defined on the same basis, the Galerkin projection, denoted by~$\gp$, of both operations is,
 \begin{IEEEeqnarray}{ l C l l}
@@ -61,19 +45,10 @@ with the expectation and variance of an approximated random variable~$\ApproxRVX
     \Variance[\ApproxRVX]      &=& \mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \CoefficientX_{\PCEIndex}^{2}, \label{eq:gpc_variance}
 \end{IEEEeqnarray}
 so that~\eqref{eq:cc_constraint} is a second-order cone constraint in the coefficients~$\{\CoefficientX_{\PCEIndex}\}_{\PCEIndex \in \PCESet}$. The risk factor~$\lambda(\varepsilon)$ is calibrated per constraint as $\lambda^{*} = (q_{1-\varepsilon}(\RVX)-\Expectation[\ApproxRVX])/\sqrt{\Variance[\ApproxRVX]}$, with the $(1-\varepsilon)$ quantile~$q_{1-\varepsilon}$ of samples of the constrained quantity and the moments~\eqref{eq:gpc_expectation}--\eqref{eq:gpc_variance} of its expansion, and is updated with the hosting capacity until convergence. As it is calibrated on the moments of the expansion, the bound equals the sampled quantile irrespective of the truncation of the basis, i.e., it targets the risk level~$\varepsilon$ exactly.
-%Three choices of the risk factor~$\lambda(\varepsilon)$ are considered:
-%\begin{enumerate*}
-%    \item[(i)] the distribution-free Cantelli bound $\lambda(\varepsilon) = \sqrt{(1-\varepsilon)/\varepsilon}$, which guarantees the chance constraint for any distribution of finite variance;
-%    \item[(ii)] the Gaussian quantile $\lambda(\varepsilon) = \Phi^{-1}(1-\varepsilon)$; and
-%%    \item[(iii)] an empirical, per-constraint factor $\lambda^{*} = (q_{1-\varepsilon}(\RVX)-\Expectation(\RVX))/\sqrt{\Variance(\RVX)}$, calibrated from samples of the constrained quantity and updated with the hosting capacity until convergence.
-%    \item[(iii)] an empirical, per-constraint factor $\lambda^{*} = (q_{1-\varepsilon}(\RVX)-\Expectation[\ApproxRVX])/\sqrt{\Variance[\ApproxRVX]}$, with the $(1-\varepsilon)$ quantile~$q_{1-\varepsilon}$ of samples of the constrained quantity and the moments~\eqref{eq:gpc_expectation}--\eqref{eq:gpc_variance} of its expansion, updated with the hosting capacity until convergence. As it is calibrated on the moments of the expansion, the bound equals the sampled quantile irrespective of the truncation of the basis.
-%\end{enumerate*}
-%The Cantelli bound is the safe choice when nothing is known about the output distribution; the empirical factor targets the risk level~$\varepsilon$ exactly.
 
 \subsection{Uncertainty on Angle of Harmonic Current Injection}
 \label{sec:harmonic_current_angle_uncertainty}
 
-%This section discusses the treatment of the uncertain angles~$\phi_{\Unit,\Harmonic}$ of the harmonic currents injected by the harmonic units~$\Unit \in \HarmonicUnitSet$, for all harmonics~$\Harmonic \in \HarmonicSet$. Throughout, a polynomial basis of degree~$\delta = 2$ is used, which captures the non-linear nature of the power flow equations without significant loss of accuracy~\cite{muhlpfordt_chance_2019}.
 This section discusses the treatment of the uncertain angles~$\phi_{\Unit,\Harmonic}$ of the harmonic currents injected by the harmonic units~$\Unit \in \HarmonicUnitSet$, for all harmonics~$\Harmonic \in \HarmonicSet$. Throughout, a polynomial basis of degree~$\delta = 2$ is used, which captures the non-linear nature of the power flow equations without significant loss of accuracy~\cite{muhlpfordt_chance_2019}. For narrow angle ranges, it keeps at least~92\,\% of the variance of the cosine and sine of the angle up to the 13th harmonic, but only~39\,\% at the 25th harmonic of the thyristor bridges. The calibration of the risk factor on the moments of the expansion, Section~\ref{sec:polynomial_chaos_expansion}, compensates for this truncation.
 
 \subsubsection{Random Variable per Harmonic Unit}
@@ -81,19 +56,10 @@ As shown in Section~\ref{sec:uncertainty}, the phase angles of a converter acros
 \begin{IEEEeqnarray}{ r C l }
     \phi_{\Unit,\Harmonic} &=& v^{\text{min}}_{\Harmonic} + (v^{\text{max}}_{\Harmonic} - v^{\text{min}}_{\Harmonic})\,\omega_{\Unit} + \Harmonic\,\theta_{\Node(\Unit)}, \label{eq:angle_affine}
 \end{IEEEeqnarray}
-%while the random variables of different units are independent. For a mix of converter technologies, the shape parameters~$\hat{\alpha}$, $\hat{\beta}$ and the angle ranges~$[v^{\text{min}}_{\Harmonic}, v^{\text{max}}_{\Harmonic}]$ are those of the technology of unit~$\Unit$, Section~\ref{sec:uncertainty}, and the basis is the tensor product of the univariate bases of the units.
 while the random variables of different units are independent. At the higher harmonics, the angle range may exceed~$2\pi$, e.g., 660$^{\circ}$ at the 25th harmonic of the thyristor bridges. The affine map then wraps around the circle, which leaves the phasor~$e^{\im\phi_{\Unit,\Harmonic}}$ and the dependence between the harmonics of a unit well defined. For a mix of converter technologies, the shape parameters~$\hat{\alpha}$, $\hat{\beta}$ and the angle ranges~$[v^{\text{min}}_{\Harmonic}, v^{\text{max}}_{\Harmonic}]$ are those of the technology of unit~$\Unit$, Section~\ref{sec:uncertainty}, and the basis is the tensor product of the univariate bases of the units.
 
 \subsubsection{Local Angle Reference}
 The angle ranges of Section~\ref{sec:uncertainty} result from a converter model driven by its own terminal voltage, i.e., they are defined relative to the fundamental voltage at the bus~$\Node(\Unit)$ the unit connects to. A shift of the fundamental by its angle~$\theta_{\Node}$ rotates the $\Harmonic$-th harmonic phasor by~$\Harmonic\,\theta_{\Node}$, which gives the last term of~\eqref{eq:angle_affine}. The fundamental angles follow from the fundamental power flow, which is solved first. Since~$\theta_{\Node}$ depends on the operating point and not only on the network topology, units of the same type at different buses inject at different absolute angles: the local angle reference is a physically required source of angle diversity, and it is the reference used throughout this work.
-
-%\subsubsection{Converter Types and Shared Random Variables}
-%Units of different converter types differ in their mean angle. For a phase-controlled converter, a firing delay~$\alpha_{\text{f}}$ delays the current waveform and rotates the $\Harmonic$-th harmonic phasor by~$-\Harmonic\,\alpha_{\text{f}}$. The firing delay follows the operating point, which is common to all units of a type. Each converter type~$t \in \mathcal{T}$ is therefore assigned one additional random variable~$\omega_{t}$, shared by all its units,
-%\begin{IEEEeqnarray}{ r C l }
-%    \phi_{\Unit,\Harmonic} &=& v^{\text{min}}_{\Harmonic} + (v^{\text{max}}_{\Harmonic} - v^{\text{min}}_{\Harmonic})\,\omega_{\Unit} + \Harmonic\,\theta_{\Node(\Unit)} \nonumber \\
-%    && +\: s^{\text{min}}_{t,\Harmonic} + (s^{\text{max}}_{t,\Harmonic} - s^{\text{min}}_{t,\Harmonic})\,\omega_{t}, \label{eq:angle_affine_type}
-%\end{IEEEeqnarray}
-%where the type shift~$[s^{\text{min}}_{t,\Harmonic}, s^{\text{max}}_{t,\Harmonic}]$ maps the firing-delay range of type~$t$ onto harmonic~$\Harmonic$. The germ then has dimension~$|\HarmonicUnitSet| + |\mathcal{T}|$, which by~\eqref{eq:cardinality} adds little to the cardinality; an independent firing delay per unit is the special case of one type per unit. The shared random variable preserves the inter-harmonic dependence, as the same~$\omega_{t}$ drives all harmonics.
 
 \subsubsection{Exact Projection of the Trigonometric Functions}
 In the deterministic formulation~\cite{vanacker_hosting_2026}, the harmonic current magnitude~$\CurrentMagnitude_{\Unit,\Harmonic}$ is related to its rectangular components through the angle~$\phi_{\Unit,\Harmonic}$,
@@ -103,15 +69,11 @@ In the deterministic formulation~\cite{vanacker_hosting_2026}, the harmonic curr
         \sin(\phi_{\Unit,\Harmonic}) \, \CurrentMagnitude_{\Unit,\Harmonic} =
         \ImaginaryCurrent_{\Unit,\Harmonic}, \quad \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet. \label{eq:imag_harmonic_unit_current}
 \end{IEEEeqnarray}
-%Since the angle~\eqref{eq:angle_affine} is affine in a single random variable, $\cos(\phi_{\Unit,\Harmonic})$ and $\sin(\phi_{\Unit,\Harmonic})$ are functions of~$\omega_{\Unit}$ alone, and their coefficients follow exactly from~\eqref{eq:gpc_expansion} by Gauss quadrature with respect to the Beta measure,
 Since the angle~\eqref{eq:angle_affine} is affine in a single random variable, $\cos(\phi_{\Unit,\Harmonic})$ and $\sin(\phi_{\Unit,\Harmonic})$ are functions of~$\omega_{\Unit}$ alone, and their coefficients follow from~\eqref{eq:gpc_expansion}, for every index~$\PCEIndex$ supported on~$\omega_{\Unit}$ alone and zero otherwise,
 \begin{IEEEeqnarray}{ r C l }
-%    \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} &=& \frac{1}{\langle \Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle} \sum_{q} w_{q} \cos\big(\phi_{\Unit,\Harmonic}(\xi_{q})\big)\,\Polynoom_{\PCEIndex}(\xi_{q}), \label{eq:trig_quadrature}
     \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} &=& \frac{\langle \cos(\phi_{\Unit,\Harmonic}), \Polynoom_{\PCEIndex} \rangle}{\langle \Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle}, \label{eq:trig_quadrature}
 \end{IEEEeqnarray}
-%with nodes~$\xi_{q}$ and weights~$w_{q}$, and analogously for the sine.
-and analogously for the sine. %The inner product is a one-dimensional integral over the Beta measure of~$\omega_{\Unit}$, evaluated by Gauss quadrature, whose error is negligible against the truncation of the basis.
-% For the type angle~\eqref{eq:angle_affine_type}, the identities $\cos(a+b) = \cos a\cos b - \sin a \sin b$ and $\sin(a+b) = \sin a\cos b + \cos a \sin b$ split the functions into products of functions of the independent random variables~$\omega_{\Unit}$ and~$\omega_{t}$. As the basis is a tensor product, their coefficients are the products of the univariate projections~\eqref{eq:trig_quadrature}, truncated to total degree~$\delta$. In both cases
+and analogously for the sine. %
 The coefficients~$\cos(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ and~$\sin(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ are parameters, not optimization variables.
 
 \subsection{General Stochastic Harmonic Hosting Capacity}
@@ -131,12 +93,10 @@ which are linear in the decision variables. Any variables related to the fairnes
 \subsubsection{Reformulation of Linear Constraints}
 \label{sec:reformulation_of_linear_constraints}
 The network equations of the current-voltage formulation in~\cite{vanacker_hosting_2026}, i.e., the reference bus, Kirchhoff's current law, Ohm's law, branch current and transformer constraints~(10)--(31), are linear, as are the fairness constraints~(34), (36) and~(38)--(39) and the harmonic current injection constraints~(40)--(41), of which the latter are treated above. Supported by~\eqref{eq:gp_sum}, a generic linear constraint $a\,\RVX + b\,\RVY = c$ with deterministic parameters is repeated over all indices, $a\,\RVX_{k} + b\,\RVY_{k} = c_{k}$, $\forall \PCEIndex \in \PCESet$, where $c_{k} = c$ for $k=0$ and $c_{k}=0$ otherwise. Since each voltage and current coefficient is then linear in the injected current coefficients, the physical variables are non-zero only on the indices supported by a single random variable%
-%, or by the pair of the random variables of a unit and its type
 , which reduces the number of variables.
 
 \subsubsection{Reformulation of Quadratic Constraints and Problem Class}
 \label{sec:reformulation_of_quadratic_constraints}
-%The fundamental power limits~(42)--(43) in~\cite{vanacker_hosting_2026} involve only the deterministic fundamental and are retained unchanged. 
 The root-mean-square, total and individual harmonic distortion voltage limits and the root-mean-square current limit are the second-order cone constraints~(47)--(49) and~(51) in~\cite{vanacker_hosting_2026}. Consider a generic constraint $\RVX^{2} + \RVY^{2} \leq a^{2}$ with deterministic~$a$. Following~\cite{vanacker_ivr}, an auxiliary lifted variable~$\RVZ$ is introduced, $\RVX^{2} + \RVY^{2} = \RVZ \leq a^{2}$. Supported by~\eqref{eq:gp_product}, the lifting yields~$|\PCESet|$ constraints,
 \begin{IEEEeqnarray}{ l }
     \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-15mu M_{\bar{\kappa},\PCEIndex} \,(\RVX_{\kappa_{1}} \RVX_{\kappa_{2}} + \RVY_{\kappa_{1}} \RVY_{\kappa_{2}}) = \RVZ_{\PCEIndex}, \quad \forall \PCEIndex \in \PCESet. \label{eq:soc_aux_eq}
@@ -158,7 +118,6 @@ For fixed weights, \eqref{eq:real_harmonic_unit_current_pce}--\eqref{eq:imag_har
     \ImaginaryVoltage_{\Node,\Harmonic,\PCEIndex} = C^{\text{im}}_{\Node,\Harmonic,\PCEIndex}\, \HostingCapacity_{\Harmonic},
     \label{eq:voltage_linear}
 \end{IEEEeqnarray}
-%where~$C^{\text{re}}$ and~$C^{\text{im}}$ follow from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network, obtained by inverting the harmonic admittance matrix, the weights~$w_{\Unit}$ and the trigonometric coefficients~\eqref{eq:trig_quadrature}; branch currents follow analogously. The admittance matrix includes the phase shift of the transformer vector groups, which is exact for the positive- and negative-sequence harmonics considered in this work; zero-sequence harmonics would additionally require the winding configuration and earthing of the transformers. The lifting then collapses to the precomputed scalars,
 where~$C^{\text{re}}$ and~$C^{\text{im}}$ follow from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network, obtained by inverting the harmonic admittance matrix, the weights~$w_{\Unit}$ and the trigonometric coefficients~\eqref{eq:trig_quadrature}; branch currents follow analogously. The transformer vector-group enters the admittance matrix with the sign of the sequence of the harmonic. Zero-sequence harmonics additionally require the winding configuration and earthing of the transformers. The lifting then collapses to the precomputed scalars,
 \begin{IEEEeqnarray}{ l }
 \alpha_{\Node,\Harmonic,\PCEIndex} = \mkern-18mu \sum_{\bar{\kappa} \in P^{*}(\PCESet,2)} \mkern-18mu M_{\bar{\kappa},\PCEIndex} \big( C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{re}}_{\Node,\Harmonic,\bar{\kappa}_{2}} + C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{1}} C^{\text{im}}_{\Node,\Harmonic,\bar{\kappa}_{2}} \big),
@@ -178,22 +137,3 @@ a second-order cone in~$\bar{\LiftedHostingCapacity}$: $\mathcal{H}_{c} = \{\Har
 \end{IEEEeqnarray}
 with one pair of variables per harmonic, whatever the size of the network or the cardinality of the basis; the latter only enters the precomputed scalars~$\alpha$. The relaxation~$\HostingCapacity_{\Harmonic}^{2} \leq \LiftedHostingCapacity_{\Harmonic}$ is exact: the chance constraints~\eqref{eq:socp_cc} involve~$\bar{\LiftedHostingCapacity}$ only and the objective is strictly increasing in each~$\HostingCapacity_{\Harmonic}$, so any optimum satisfies~$\HostingCapacity_{\Harmonic} = \sqrt{\LiftedHostingCapacity_{\Harmonic}}$. The rating is therefore imposed on~$\LiftedHostingCapacity_{\Harmonic}$ as well. Since the left-hand side of~\eqref{eq:socp_cc} is not monotone in~$\bar{\LiftedHostingCapacity}$, i.e., under recombination an increase of~$\LiftedHostingCapacity_{\Harmonic}$ may reduce the variance more than it increases the expectation, a bound on~$\HostingCapacity_{\Harmonic}$ alone would allow~$\LiftedHostingCapacity_{\Harmonic} > \HostingCapacity_{\Harmonic}^{2}$ once the rating binds, and the reported hosting capacity would violate the chance constraints. A limit that the fundamental already exhausts, $a_{\Node,c} \leq 0$, leaves no harmonic headroom and forces the contributing~$\LiftedHostingCapacity_{\Harmonic}$ to zero. When every angle range collapses to a point, all variances vanish and~\eqref{eq:socp} reduces exactly to the deterministic model.
 
-%\subsection{Quantifying Harmonic Recombination}
-%\label{sec:recombination_metrics}
-
-%Harmonic recombination is the reduction of the aggregate distortion below the arithmetic sum of the individual contributions. With a single hosting capacity per harmonic, as in~\eqref{eq:socp}, and binding individual harmonic voltage limits, the hosting capacity at harmonic~$\Harmonic$ is set by the tightest bus,
-%\begin{IEEEeqnarray}{ r C l }
-%    I_{\Harmonic} &=& \min_{\Node \in \NodeSet} \frac{U^{\text{ihd}}_{\Node,\Harmonic}\,|\ComplexVoltage_{\Node,1}|}{A_{\Node,\Harmonic}}, \qquad c_{\Node\Unit,\Harmonic} = Z_{\Harmonic,\Node\Node(\Unit)}\,e^{\im\phi_{\Unit,\Harmonic}}, \label{eq:reduced_hosting}
-%\end{IEEEeqnarray}
-%where~$A_{\Node,\Harmonic}$ aggregates the unit contributions~$c_{\Node\Unit,\Harmonic}$ per unit of current. Four aggregation rules are compared:
-%\begin{enumerate*}
-%    \item[(i)] arithmetic summation $\sum_{\Unit}|c_{\Node\Unit,\Harmonic}|$, i.e., no recombination;
-%    \item[(ii)] the robust bound $\max_{\bar{\omega}}|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$ over the support of the germ, evaluated exactly through the support function of the angle box;
-%    \item[(iii)] the deterministic angle $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}(\Expectation[\bar\omega])|$, as in~\cite{vanacker_hosting_2026}; and
-%    \item[(iv)] the $(1-\varepsilon)$-quantile of $|\sum_{\Unit}c_{\Node\Unit,\Harmonic}|$, i.e., the exact per-constraint chance bound.
-%\end{enumerate*}
-%The uplift of~(iv) over~(ii) is the hosting capacity a chance constraint gains over a safe deterministic bound. To relate the result to IEC~61000-3-6~\cite{noauthor_iec61000-3-6_2008}, the equivalent summation exponent~$\alpha^{\text{eq}}_{\Harmonic}$ is defined as the exponent for which the general summation law,
-%\begin{IEEEeqnarray}{ r C l }
-%    A_{\Node,\Harmonic} &=& \Big(\sum_{\Unit \in \HarmonicUnitSet} |c_{\Node\Unit,\Harmonic}|^{\alpha^{\text{eq}}_{\Harmonic}}\Big)^{1/\alpha^{\text{eq}}_{\Harmonic}}, \label{eq:summation_law}
-%\end{IEEEeqnarray}
-%reproduces the network hosting capacity~\eqref{eq:reduced_hosting} of rule~(iv); $\alpha^{\text{eq}}_{\Harmonic} = 1$ is arithmetic summation, and the standard's indicative values are~$1.4$ for~$5 \leq \Harmonic \leq 10$ and~$2$ for~$\Harmonic > 10$.

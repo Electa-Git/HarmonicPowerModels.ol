@@ -8,8 +8,6 @@
 
 A key challenge arises from the stochastic nature of harmonic emissions. Measurements and laboratory studies show that harmonic magnitudes depend on loading, switching states, and internal control actions. More importantly, harmonic current phase angles, which govern the phasor summation of emissions from multiple sources, vary significantly. Even small angle variations can result in large differences in harmonic voltage distortion, particularly in networks with many distributed converters. As the penetration of the converter increases, system operators need transparent metrics to assess whether additional units can be connected without exceeding harmonic limits. Harmonic hosting capacity provides such a metric by defining the maximum allowable harmonic emissions while ensuring compliance with power-quality standards. However, most existing methods rely on deterministic assumptions regarding harmonic magnitudes, phase angles, network parameters, and background distortion, leading to overly conservative or insufficiently protective results.
 
-% This work presents a harmonic hosting capacity methodology that explicitly accounts for the stochastic nature of harmonic current phase angles associated with power-electronic interfaced resources, thereby capturing harmonic recombination effects. This enables the enforcement of stochastic limits on harmonic voltages and currents in line with relevant standards.
-
 \subsection{Literature Review}
 \label{sec:literature_review}
 
@@ -67,18 +65,17 @@ Early harmonic hosting capacity methods incorporated harmonic limits within dete
 
 \subsubsection{Research gaps}
 
-Table~\ref{tab:literature_review} shows that no existing method simultaneously achieves: 
+Table~\ref{tab:literature_review} shows that no existing method simultaneously achieves:
 \begin{enumerate*}
-    \item [(i)] tractable network-wide optimization, 
-    \item [(ii)] explicit treatment of phase angle uncertainty, and 
-    \item [(iii)] chance-constraint enforcement of harmonic distortion limits. 
+    \item [(i)] tractable network-wide optimization,
+    \item [(ii)] explicit treatment of phase angle uncertainty, and
+    \item [(iii)] chance-constraint enforcement of harmonic distortion limits.
 \end{enumerate*}
 Moreover, the recombination that a network and a converter population allow has not been quantified against the summation law of IEC~61000-3-6, and the conditions under which it occurs have not been identified.
 
 \subsection{Contributions and Outline}
 \label{sec:contribution_and_outline}
 
-%In this paper, a holistic one-shot methodology is presented to determine the steady-state harmonic hosting capacity for an entire phase-balanced three-phase power system in a stochastic context. The presented method considers uncertainty on the angle of the injected harmonic current, enabling harmonic recombination, and limits the resulting individual and total harmonic voltage distortion, as well as the root-mean-square voltages and currents, using chance constraints. The problem is formulated from the perspective of the power system operator, i.e., without explicit knowledge of the future assets of its customers. Consequently, the harmonic hosting capacity is determined in terms of harmonic current magnitude using a fairness principle. The presented formulation uses the rectangular current-voltage variable space and incorporates:
 In this paper, a holistic one-shot methodology is presented to determine the steady-state harmonic hosting capacity for an entire phase-balanced three-phase power system in a stochastic context. The presented method considers uncertainty on the angle of the injected harmonic current, enabling harmonic recombination, and limits the resulting individual and total harmonic voltage distortion, as well as the root-mean-square voltages and currents, using chance constraints. The problem is formulated from the perspective of the power system operator\changed{, who may anticipate the converter technologies its customers will connect, but not the operating point, parameters and control of the individual units. The angle of the harmonic current is therefore modeled as a random variable per unit, characterized for the anticipated technology, whereas its magnitude is the decision, and the harmonic hosting capacity is determined in terms of harmonic current magnitude using a fairness principle.} The presented formulation uses the rectangular current-voltage variable space and incorporates:
 \begin{itemize}
     \item uncertainty on the angle of the injected harmonic current via polynomial chaos expansion,
@@ -86,8 +83,7 @@ In this paper, a holistic one-shot methodology is presented to determine the ste
     \item enforcement of stochastic harmonic limits on bus voltage and component ampacity through chance constraints, and
     \item equitable distribution of the harmonic hosting capacity following a fairness principle.
 \end{itemize}
-%For fairness criteria that fix the ratios between the allocations of the units, e.g., absolute equality, the problem reduces to a second-order cone program with one pair of variables per harmonic. Furthermore, metrics are proposed to quantify harmonic recombination, i.e., the gain over a robust bound and an equivalent summation exponent that is directly comparable with IEC~61000-3-6, and the conditions for recombination are identified. The models and numerical illustrations are made freely available as part of the \textsc{Julia}-package \textsc{HarmonicPowerModels.jl}.\footnote{Available at \url{https://github.com/timmyfaraday/HarmonicPowerModels.jl}.}
-For fairness criteria that fix the ratios between the allocations of the units, e.g., absolute equality, the problem reduces to a second-order cone program with one pair of variables per harmonic. %Furthermore, an equivalent summation exponent is proposed to quantify harmonic recombination, which is directly comparable with IEC~61000-3-6, and the conditions for recombination are identified. 
+For fairness criteria that fix the ratios between the allocations of the units, e.g., absolute equality, the problem reduces to a second-order cone program with one pair of variables per harmonic. %
 The models and numerical illustrations are made freely available as part of the \textsc{Julia}-package \textsc{HarmonicPowerModels.jl}.\footnote{Available at \url{https://github.com/timmyfaraday/HarmonicPowerModels.jl}.}
 
 The remainder of the paper is organized as follows: Section~\ref{sec:uncertainty} addresses the uncertainty of harmonic current phasors associated with power-electronic interfaced resources. Section~\ref{sec:mathematical_framework} presents the mathematical formulation of the stochastic harmonic hosting capacity problem. Section~\ref{sec:numerical_illustration} proves the equivalence of the presented methods on the IEEE 30-bus system and investigates the levers for harmonic recombination. Section~\ref{sec:conclusion} concludes the paper.
