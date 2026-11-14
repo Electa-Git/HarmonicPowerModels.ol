@@ -103,11 +103,14 @@ In the deterministic formulation~\cite{vanacker_hosting_2026}, the harmonic curr
         \sin(\phi_{\Unit,\Harmonic}) \, \CurrentMagnitude_{\Unit,\Harmonic} =
         \ImaginaryCurrent_{\Unit,\Harmonic}, \quad \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet. \label{eq:imag_harmonic_unit_current}
 \end{IEEEeqnarray}
-Since the angle~\eqref{eq:angle_affine} is affine in a single random variable, $\cos(\phi_{\Unit,\Harmonic})$ and $\sin(\phi_{\Unit,\Harmonic})$ are functions of~$\omega_{\Unit}$ alone, and their coefficients follow exactly from~\eqref{eq:gpc_expansion} by Gauss quadrature with respect to the Beta measure,
+%Since the angle~\eqref{eq:angle_affine} is affine in a single random variable, $\cos(\phi_{\Unit,\Harmonic})$ and $\sin(\phi_{\Unit,\Harmonic})$ are functions of~$\omega_{\Unit}$ alone, and their coefficients follow exactly from~\eqref{eq:gpc_expansion} by Gauss quadrature with respect to the Beta measure,
+Since the angle~\eqref{eq:angle_affine} is affine in a single random variable, $\cos(\phi_{\Unit,\Harmonic})$ and $\sin(\phi_{\Unit,\Harmonic})$ are functions of~$\omega_{\Unit}$ alone, and their coefficients follow \changed{from~\eqref{eq:gpc_expansion}, for every index~$\PCEIndex$ supported on~$\omega_{\Unit}$ alone and zero otherwise},
 \begin{IEEEeqnarray}{ r C l }
-    \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} &=& \frac{1}{\langle \Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle} \sum_{q} w_{q} \cos\big(\phi_{\Unit,\Harmonic}(\xi_{q})\big)\,\Polynoom_{\PCEIndex}(\xi_{q}), \label{eq:trig_quadrature}
+%    \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} &=& \frac{1}{\langle \Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle} \sum_{q} w_{q} \cos\big(\phi_{\Unit,\Harmonic}(\xi_{q})\big)\,\Polynoom_{\PCEIndex}(\xi_{q}), \label{eq:trig_quadrature}
+    \cos(\phi_{\Unit,\Harmonic})_{\PCEIndex} &=& \frac{\langle \cos(\phi_{\Unit,\Harmonic}), \Polynoom_{\PCEIndex} \rangle}{\langle \Polynoom_{\PCEIndex},\Polynoom_{\PCEIndex}\rangle}, \label{eq:trig_quadrature}
 \end{IEEEeqnarray}
-with nodes~$\xi_{q}$ and weights~$w_{q}$, and analogously for the sine.
+%with nodes~$\xi_{q}$ and weights~$w_{q}$, and analogously for the sine.
+\changed{and analogously for the sine. The inner product is a one-dimensional integral over the Beta measure of~$\omega_{\Unit}$, evaluated by Gauss quadrature, whose error is negligible against the truncation of the basis.}
 % For the type angle~\eqref{eq:angle_affine_type}, the identities $\cos(a+b) = \cos a\cos b - \sin a \sin b$ and $\sin(a+b) = \sin a\cos b + \cos a \sin b$ split the functions into products of functions of the independent random variables~$\omega_{\Unit}$ and~$\omega_{t}$. As the basis is a tensor product, their coefficients are the products of the univariate projections~\eqref{eq:trig_quadrature}, truncated to total degree~$\delta$. In both cases
 The coefficients~$\cos(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ and~$\sin(\phi_{\Unit,\Harmonic})_{\PCEIndex}$ are parameters, not optimization variables.
 
