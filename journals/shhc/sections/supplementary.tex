@@ -21,18 +21,18 @@
     \label{tab:beta_phase_params_diode_to25}
     \scriptsize
     \setlength{\tabcolsep}{3pt}
-    \begin{tabular}{l c c c c}
-    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max}-v_{\min}$ [deg] & error \\
+    \begin{tabular}{l c c c c c}
+    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max}-v_{\min}$ [deg] & Mean [deg] & error \\
     \hline
-    1st & -106.43 & -99.26 & 7.17 & 0.040338 \\
-    5th & 4.80 & 40.90 & 36.10 & 0.005484 \\
-    7th & -22.52 & 27.18 & 49.71 & 0.003869 \\
-    11th & 77.87 & 163.96 & 86.09 & 0.002271 \\
-    13th & 48.98 & 148.35 & 99.37 & 0.001626 \\
-    17th & -239.51 & -76.70 & 162.81 & 0.001997 \\
-    19th & 80.08 & 266.23 & 186.15 & 0.001264 \\
-    23th & -209.79 & 34.31 & 244.10 & 0.000503 \\
-    25th & -246.50 & 15.56 & 262.06 & 0.001143 \\
+    1st & -106.43 & -99.26 & 7.17 & -103.42 & 0.040338 \\
+    5th & 4.80 & 40.90 & 36.10 & 20.87 & 0.005484 \\
+    7th & -22.52 & 27.18 & 49.71 & 0.08 & 0.003869 \\
+    11th & 77.87 & 163.96 & 86.09 & 118.52 & 0.002271 \\
+    13th & 48.98 & 148.35 & 99.37 & 94.10 & 0.001626 \\
+    17th & -239.51 & -76.70 & 162.81 & -157.65 & 0.001997 \\
+    19th & 80.08 & 266.23 & 186.15 & 170.26 & 0.001264 \\
+    23th & -209.79 & 34.31 & 244.10 & -100.85 & 0.000503 \\
+    25th & -246.50 & 15.56 & 262.06 & -138.77 & 0.001143 \\
     \end{tabular}
     \vspace{2pt}
     \parbox{\columnwidth}{\scriptsize All harmonics share the jointly fitted shape parameters $\hat{\alpha}=3.731$ and $\hat{\beta}=4.439$. \\
@@ -45,22 +45,26 @@
     \label{tab:beta_phase_params_pc_to25}
     \scriptsize
     \setlength{\tabcolsep}{3pt}
-    \begin{tabular}{l c c c c}
-    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max}-v_{\min}$ [deg] & error \\
+    \begin{tabular}{l c c c c c}
+    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max}-v_{\min}$ [deg] & Mean [deg] & error \\
     \hline
-    1st & -136.66 & -110.06 & 26.60 & 0.006921 \\
-    5th & -143.07 & -9.30 & 133.77 & 0.001402 \\
-    7th & -263.84 & -52.49 & 211.36 & 0.001196 \\
-    11th & -248.03 & 46.71 & 294.74 & 0.000525 \\
-    13th & -353.10 & 5.22 & 358.32 & 0.000416 \\
-    17th & -346.15 & 104.27 & 450.42 & 0.000331 \\
-    19th & -447.14 & 62.43 & 509.57 & 0.000255 \\
-    23th & -442.00 & 161.32 & 603.31 & 0.000238 \\
-    25th & -180.49 & 479.68 & 660.17 & 0.000205 \\
+    1st & -136.66 & -110.06 & 26.60 & -122.56 & 0.006921 \\
+    5th & -143.07 & -9.30 & 133.77 & -71.00 & 0.001402 \\
+    7th & -263.84 & -52.49 & 211.36 & -143.42 & 0.001196 \\
+    11th & -248.03 & 46.71 & 294.74 & -88.68 & 0.000525 \\
+    13th & -353.10 & 5.22 & 358.32 & -156.41 & 0.000416 \\
+    17th & -346.15 & 104.27 & 450.42 & -103.60 & 0.000331 \\
+    19th & -447.14 & 62.43 & 509.57 & -169.55 & 0.000255 \\
+    23th & -442.00 & 161.32 & 603.31 & -116.36 & 0.000238 \\
+    25th & -180.49 & 479.68 & 660.17 & 178.94 & 0.000205 \\
     \end{tabular}
     \vspace{2pt}
     \parbox{\columnwidth}{\scriptsize All harmonics share the jointly fitted shape parameters $\hat{\alpha}=4.1612$ and $\hat{\beta}=3.5541$. \\
     Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific.}
 \end{table}
 
+% Mean value difference between diode-based and phase-controlled converters:
+% At 1 order: $-122.56-(-103.42)=-19.14$;\\
+% At 7 order: $-143.42-(0.08)=-143.5 (close to 7*(-19.14))$;\\
+% At 11 order: $-88.68-(118.52)=-207.2 (close to 11*(-19.14))$.
 
