@@ -33,7 +33,7 @@ The per-unit-length series impedance~$\bar{z}'_{\Line}(\Frequency;\bar{p})$ and 
 \end{IEEEeqnarray}
 in which $Z'_{\text{c}}$ collects the surface impedances of the conductors, $Z'_{\text{i}}$ the impedances of the insulating layers and $Z'_{\text{e}}$ the earth-return impedances; and $P'_{\text{i}}$ and $P'_{\text{e}}$ are the potential coefficients of the insulating layers and of the surrounding air and earth.
 
-% The surface impedances are ratios of modified Bessel functions of~$r\sqrt{\mathrm{j}2\pi\Frequency\mu/\rho}$ for a conductor of radius~$r$, permeability~$\mu$ and resistivity~$\rho$. The factor~$\sqrt{\pi\Frequency\mu/\rho}$ is the reciprocal of the skin depth, which in aluminium falls from 12.0\,mm at 50\,Hz to 3.3\,mm at 650\,Hz, below the 13.25\,mm radius of a 500\,mm$^{2}$ core. The earth return penetrates 712\,m at 50\,Hz and 197\,m at 650\,Hz into a 100\,$\Omega\cdot$m earth, so the zero-sequence parameters, whose currents return through screens, earth wires and earth, vary most. 
+% The surface impedances are ratios of modified Bessel functions of~$r\sqrt{\mathrm{j}2\pi\Frequency\mu/\rho}$ for a conductor of radius~$r$, permeability~$\mu$ and resistivity~$\rho$. The factor~$\sqrt{\pi\Frequency\mu/\rho}$ is the reciprocal of the skin depth, which in aluminum falls from 12.0\,mm at 50\,Hz to 3.3\,mm at 650\,Hz, below the 13.25\,mm radius of a 500\,mm$^{2}$ core. The earth return penetrates 712\,m at 50\,Hz and 197\,m at 650\,Hz into a 100\,$\Omega\cdot$m earth, so the zero-sequence parameters, whose currents return through screens, earth wires and earth, vary most. 
 The effect of temperature~$\vartheta$, in $^{\circ}$C, on metal resistivity is described by 
 \begin{equation}
     \rho(\vartheta) = \rho_{20} \left[ 1 + \kappa_{20} \left( \vartheta - 20 \right) \right],
@@ -41,7 +41,7 @@ The effect of temperature~$\vartheta$, in $^{\circ}$C, on metal resistivity is d
 \end{equation}
 where $\rho_{20}$ is the resistivity at 20\,$^{\circ}$C and $\kappa_{20}$ its temperature coefficient~\cite{iec62641_2022,iec60287_1_1_2006}. In overhead lines, temperature also sets the sag through the elastic thermal change-of-state equation, and each conductor lies at its support height less two thirds of the sag.
 
-Cable screens are assumed bonded and solidly earthed at both cable terminals and the earth wires at every tower, with circuits ideally transposed. This yields circulant-reduced $3 \times 3$ matrices, expressed as positive- and negative-sequence parameters ~$\bar{z}'_{\Line}$ and~$\bar{y}'_{\Line}$ of Section~\ref{sec:parametric_network}.
+Cable screens are assumed bonded and solidly earthed at both cable terminals and the earth wires at every tower, with circuits ideally transposed. This yields circulant-reduced $3 \times 3$ matrices, expressed as zero-, positive- and negative-sequence parameters ~$\bar{z}'_{\Line}$ and~$\bar{y}'_{\Line}$ of Section~\ref{sec:parametric_network}.
 
 Table~\ref{tab:parameter_box} summarizes the cables, lines and earth of the IEEE 30-bus case, whose cable sizes and ACSR codes follow from the branch currents, rated under IEEE~738~\cite{ieee738_2023}. The intervals are the acceptance limits of the standards cited in Table~\ref{tab:parameter_box}, operating and environmental ranges for the temperatures and the earth, and study intervals otherwise. Two continuous maps, equal to the identity at feasible points, keep every point of the box physical: the phase temperature is at least the ambient one, and the wire-diameter deviations of each ACSR code are scaled back onto the diameter and mass limits of EN~50182~\cite{en50182_2001}.
 
@@ -54,8 +54,8 @@ Physical inputs are represented as parameter space coordinates per input of a fa
     \footnotesize\setlength{\tabcolsep}{4pt}
     \begin{tabular}{ >{\raggedright\arraybackslash}p{0.42\textwidth} >{\raggedright\arraybackslash}p{0.20\textwidth} l r }
         quantity & nominal & interval & largest change \\ \hline
-        \multicolumn{4}{l}{\textit{cables, 33\,kV, 22 links in touching trefoil, centre 0.8\,m deep, screens bonded at both ends}} \\
-        aluminium conductor cross section~\cite{iec60228_2023} & 400--800\,mm$^{2}$ & by link & -- \\
+        \multicolumn{4}{l}{\textit{cables, 33\,kV, 22 links in touching trefoil, center 0.8\,m deep, screens bonded at both ends}} \\
+        aluminum conductor cross section~\cite{iec60228_2023} & 400--800\,mm$^{2}$ & by link & -- \\
         conductor DC resistance at 20\,$^{\circ}$C~\cite{iec60228_2023} & 0.0367--0.0778\,$\Omega$/km & $-8$\,\% to nominal & 4.4\,\% $z_{1}$ \\
         conductor diameter~\cite{iec60228_2023} & 23.0--34.2\,mm & nominal to $+0.4$\,mm & 1.3\,\% $y_{0}$ \\
         XLPE insulation thickness~\cite{iec60502_2_2014} & 8.0\,mm & 7.6 to 8.4\,mm & 4.4\,\% $y_{0}$ \\
@@ -64,7 +64,7 @@ Physical inputs are represented as parameter space coordinates per input of a fa
         jacket thickness~\cite{iec60502_2_2014} & 2.85--3.30\,mm & nominal to $+35$\,\% & 2.0\,\% $z_{1}$ \\
         conductor temperature~\cite{iec60502_2_2014} & 20\,$^{\circ}$C & 10 to 90\,$^{\circ}$C & 26\,\% $z_{0}$ \\
         \multicolumn{4}{l}{\textit{overhead lines, 132\,kV, 12 single-circuit lines in delta, span 300\,m}} \\
-        ACSR phase conductors, 30 aluminium and 7 steel wires~\cite{en50182_2001} & Lion, Goat, Bear, Panther & by line & -- \\
+        ACSR phase conductors, 30 aluminum and 7 steel wires~\cite{en50182_2001} & Lion, Goat, Bear, Panther & by line & -- \\
         phase positions $(x, y)$ at the tower & $(\pm 2.5, 18.0)$, $(0, 22.33)$\,m & -- & -- \\
         earth wire, 7 steel wires of 3.15\,mm~\cite{iec63248_2022}, position & $(0, 29.0)$\,m & -- & -- \\
         reference sag at 20\,$^{\circ}$C, phases and earth wire & 6.0 and 5.4\,m & -- & -- \\
