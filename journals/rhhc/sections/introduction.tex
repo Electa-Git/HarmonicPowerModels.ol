@@ -45,7 +45,7 @@ A growing body of literature addresses the harmonic hosting capacity of a power 
         \cite{liu_feasible_2023}            & fr    & ro    & lin.  & unb.  & rob.  &\xmark &\xmark &\cmark &\xmark &\xmark & --    & 8     \\ \arrayrulecolor{black} \hline
         $\star$~\cite{vanacker_hosting_2026}& hhc   & soc   & full  & bal.  & --    &\xmark &\xmark &\xmark &\xmark &\xmark & 1880  & $<$\,6 \\
         $\star$~\cite{vanacker_shhc}        & hhc   & qcqp/soc & full & bal. & pce  &\cmark &\xmark &\xmark &\xmark &\cmark & 30    & $<$\,0.04 \\ \arrayrulecolor{black} \hline
-        \multirow{2}{*}{This work}          & \multirow{2}{*}{hhc}   & \multirow{2}{*}{soc}   & \multirow{2}{*}{full}  & \multirow{2}{*}{bal.}  & pce/rob. &\cmark &\xmark &\cmark &\xmark &\cmark & 30$^{*}$ & $<$\,3 \\ 
+        \multirow{2}{*}{This work}          & \multirow{2}{*}{hhc}   & \multirow{2}{*}{soc}   & \multirow{2}{*}{full}  & \multirow{2}{*}{bal.}  & \del{pce/rob.}\add{an./rob.} &\cmark &\xmark &\cmark &\xmark &\cmark & 30$^{*}$ & $<$\,3 \\ 
         &&&&& rob. & \xmark & \xmark & \cmark &\xmark & \xmark & 30$^{**}$ & $<$\,8 \\
     \end{tabular}
 
@@ -125,7 +125,7 @@ In this paper, a holistic one-shot methodology is presented to determine the ste
 \end{enumerate}
 limiting the resulting individual and total harmonic voltage distortion, as well as the root-mean-square voltages and currents, using chance constraints. The problem is formulated from the perspective of the power system operator, who may anticipate the converter technologies its customers will connect, but not the operating point, parameters and control of the individual units. The angle of the harmonic current is therefore modeled as a random variable per unit. Additionally, the cable and overhead-line parameters follow from physical inputs, e.g., conductor temperatures, manufacturing tolerances, and earth resistances, known to lie within intervals. The harmonic hosting capacity is determined in terms of harmonic current magnitude using a fairness principle, anticipating angle uncertainty, and robust against parameter uncertainty. The robust counterpart over the parameter set is solved by a cutting-set method which gives a robust upper bound on the harmonic hosting capacity. The presented formulation uses the rectangular current-voltage variable space and incorporates:
 \begin{itemize}
-    \item uncertainty on the angle of the injected harmonic current via polynomial chaos expansion,
+    \item uncertainty on the angle of the injected harmonic current via \del{polynomial chaos expansion}\add{the angle model of~\cite{vanacker_shhc}, with exact moments in place of its truncated polynomial chaos expansion},
     \item series impedance and shunt admittance of the cables and overhead lines computed at every harmonic frequency from their physical inputs, with intervals from the acceptance limits of the standards and the operating ranges,
     \item exact representation of the harmonic impedance in the frequency domain and detailed treatment of transformers, in the zero, positive and negative sequence,
     \item enforcement of stochastic harmonic limits on bus voltage and component ampacity through chance constraints, and
