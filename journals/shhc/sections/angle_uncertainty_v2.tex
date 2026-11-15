@@ -151,69 +151,68 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
     \label{fig:harmonic_phasors_CI_LacLdc}
 \end{figure*}
 
-
-\usepgfplotslibrary{polar}
-\providecommand{\Harmonic}{h}
-\begin{figure*}[!t]
-    \centering
-    \includegraphics[width=0.7\textwidth]{journals/shhc/data/type2_phasor_ci/harmonic_phasors_pc.pdf}
-    % \pgfplotsset{phasorplotpc/.style={shhc, width=0.2\textwidth, ymin=0,
-    %     xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
-    %     yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt,
-    %         /pgf/number format/1000 sep={}},
-    %     every axis plot/.append style={line join=round}},
-    %     outsidepc/.style={only marks, mark=*, mark size=0.5pt, gray!35},
-    %     insidepc/.style={only marks, mark=*, mark size=0.5pt, black!70},
-    %     cipc/.style={densely dashed, black, line width=0.5pt, mark=none},
-    %     meanphasorpc/.style={-latex, black, line width=1pt, mark=none}}
-    % \subfloat[$\Harmonic = 1$]{%
-    % \begin{tikzpicture}
-    %     \begin{polaraxis}[phasorplotpc, ymax=3200, ytick={2000}]
-    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h1.dat};
-    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h1.dat};
-    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h1.dat};
-    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h1.dat};
-    %     \end{polaraxis}
-    % \end{tikzpicture}}%
-    % \subfloat[$\Harmonic = 5$]{%
-    % \begin{tikzpicture}
-    %     \begin{polaraxis}[phasorplotpc, ymax=800, ytick={300}]
-    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h5.dat};
-    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h5.dat};
-    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h5.dat};
-    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h5.dat};
-    %     \end{polaraxis}
-    % \end{tikzpicture}}%
-    % \subfloat[$\Harmonic = 7$]{%
-    % \begin{tikzpicture}
-    %     \begin{polaraxis}[phasorplotpc, ymax=370, ytick={150}]
-    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h7.dat};
-    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h7.dat};
-    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h7.dat};
-    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h7.dat};
-    %     \end{polaraxis}
-    % \end{tikzpicture}}%
-    % \subfloat[$\Harmonic = 11$]{%
-    % \begin{tikzpicture}
-    %     \begin{polaraxis}[phasorplotpc, ymax=300, ytick={100}]
-    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h11.dat};
-    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h11.dat};
-    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h11.dat};
-    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h11.dat};
-    %     \end{polaraxis}
-    % \end{tikzpicture}}%
-    % \subfloat[$\Harmonic = 13$]{%
-    % \begin{tikzpicture}
-    %     \begin{polaraxis}[phasorplotpc, ymax=200, ytick={50}]
-    %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h13.dat};
-    %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h13.dat};
-    %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h13.dat};
-    %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h13.dat};
-    %     \end{polaraxis}
-    % \end{tikzpicture}}
-    \caption{Phasors of characteristic harmonic currents of the phase-controlled converter, showing 1000 of the 5000 Monte Carlo samples, with samples inside (dark gray) and outside (light gray) the 95\,\% confidence region of magnitude and phase angle (dashed), and the mean phasor (black arrow): (a) $\Harmonic = 1$; (b) $\Harmonic = 5$; (c) $\Harmonic = 7$; (d) $\Harmonic = 11$; (e) $\Harmonic = 13$. \placeholder{For visualization. To be commented out before submit.}}
-    \label{fig:harmonic_phasors_CI_LacLdc_pc}
-\end{figure*}
+% \usepgfplotslibrary{polar}
+% \providecommand{\Harmonic}{h}
+% \begin{figure*}[!t]
+%     \centering
+%     \includegraphics[width=0.7\textwidth]{journals/shhc/data/type2_phasor_ci/harmonic_phasors_pc.pdf}
+%     % \pgfplotsset{phasorplotpc/.style={shhc, width=0.2\textwidth, ymin=0,
+%     %     xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
+%     %     yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt,
+%     %         /pgf/number format/1000 sep={}},
+%     %     every axis plot/.append style={line join=round}},
+%     %     outsidepc/.style={only marks, mark=*, mark size=0.5pt, gray!35},
+%     %     insidepc/.style={only marks, mark=*, mark size=0.5pt, black!70},
+%     %     cipc/.style={densely dashed, black, line width=0.5pt, mark=none},
+%     %     meanphasorpc/.style={-latex, black, line width=1pt, mark=none}}
+%     % \subfloat[$\Harmonic = 1$]{%
+%     % \begin{tikzpicture}
+%     %     \begin{polaraxis}[phasorplotpc, ymax=3200, ytick={2000}]
+%     %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h1.dat};
+%     %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h1.dat};
+%     %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h1.dat};
+%     %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h1.dat};
+%     %     \end{polaraxis}
+%     % \end{tikzpicture}}%
+%     % \subfloat[$\Harmonic = 5$]{%
+%     % \begin{tikzpicture}
+%     %     \begin{polaraxis}[phasorplotpc, ymax=800, ytick={300}]
+%     %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h5.dat};
+%     %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h5.dat};
+%     %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h5.dat};
+%     %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h5.dat};
+%     %     \end{polaraxis}
+%     % \end{tikzpicture}}%
+%     % \subfloat[$\Harmonic = 7$]{%
+%     % \begin{tikzpicture}
+%     %     \begin{polaraxis}[phasorplotpc, ymax=370, ytick={150}]
+%     %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h7.dat};
+%     %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h7.dat};
+%     %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h7.dat};
+%     %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h7.dat};
+%     %     \end{polaraxis}
+%     % \end{tikzpicture}}%
+%     % \subfloat[$\Harmonic = 11$]{%
+%     % \begin{tikzpicture}
+%     %     \begin{polaraxis}[phasorplotpc, ymax=300, ytick={100}]
+%     %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h11.dat};
+%     %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h11.dat};
+%     %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h11.dat};
+%     %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h11.dat};
+%     %     \end{polaraxis}
+%     % \end{tikzpicture}}%
+%     % \subfloat[$\Harmonic = 13$]{%
+%     % \begin{tikzpicture}
+%     %     \begin{polaraxis}[phasorplotpc, ymax=200, ytick={50}]
+%     %         \addplot[outsidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_outside_h13.dat};
+%     %         \addplot[insidepc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/plot_inside_h13.dat};
+%     %         \addplot[cipc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/ci_h13.dat};
+%     %         \addplot[meanphasorpc] table[x=angle, y=mag] {journals/shhc/data/type2_phasor_ci/mean_h13.dat};
+%     %     \end{polaraxis}
+%     % \end{tikzpicture}}
+%     \caption{Phasors of characteristic harmonic currents of the phase-controlled converter, showing 1000 of the 5000 Monte Carlo samples, with samples inside (dark gray) and outside (light gray) the 95\,\% confidence region of magnitude and phase angle (dashed), and the mean phasor (black arrow): (a) $\Harmonic = 1$; (b) $\Harmonic = 5$; (c) $\Harmonic = 7$; (d) $\Harmonic = 11$; (e) $\Harmonic = 13$. \placeholder{For visualization. To be commented out before submit.}}
+%     \label{fig:harmonic_phasors_CI_LacLdc_pc}
+% \end{figure*}
 
 \subsubsection{Inter-Harmonic Dependency Analysis}
 An important feature of the harmonics generated by the line-commutated converter is the inter-harmonic dependency due to frequency coupling, as indicated by the harmonic state-space model in ~\eqref{eq:HSS}. To characterize the dependencies among harmonic components, the correlation matrices with Kendall's Tau correlation coefficients are obtained.
@@ -326,26 +325,48 @@ Table~\ref{tab:beta_phase_params} lists the shared shape parameters, harmonic-sp
 % The goodness-of-fit of the shared Beta distribution model is evaluated for each harmonic phase angle by comparing the denormalized Beta probability density function against the empirical histograms from Monte Carlo simulation. The root-mean-square error is computed between the empirical histogram and the denormalized Beta probability density function, with the results summarized in last column of Table~\ref{tab:beta_phase_params}.
 The comparison plots between the empirical histograms and the denormalized shared Beta probability density functions for each harmonic phase angle are shown in Fig.~\ref{fig:Shared_Beta_Fit}. Both the visual comparison and the low root-mean-square errors indicate a good fit of the shared Beta distribution to the simulated data across all harmonics.
 
+% \begin{table}[!t]
+%     \centering
+%     \caption{Shared Beta distribution parameters and fit quality for harmonic phase angles of the diode-based converter}
+%     \label{tab:beta_phase_params}
+%     \scriptsize
+%     \begin{tabular}{l c c c c}
+%     Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max} - v_{\min}$ [deg] & error \\
+%     \hline
+%     1st  & $-106.70$ & $-99.43$   & 7.27   & 0.0226 \\
+%     5th  & 4.75      & 40.05      & 35.30  & 0.0037 \\
+%     7th  & $-22.77$  & 27.51      & 50.28  & 0.0029 \\
+%     11th & 79.69     & 164.01     & 84.32  & 0.0014 \\
+%     13th & 49.38     & 147.67     & 98.29  & 0.0011 \\
+%     \end{tabular}
+    
+%     \vspace{2pt}
+%     \parbox{\columnwidth}{\scriptsize All harmonics share the same shape parameters ($\hat{\alpha} = 4.041$, $\hat{\beta} = 4.776$).\\
+%     Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific.}
+% \end{table}
+
 \begin{table}[!t]
     \centering
-    \caption{Shared Beta distribution parameters and fit quality for harmonic phase angles of the diode-based converter}
+    \caption{Shared Beta distribution parameters and fit quality for harmonic current angles of diode-based converter}
     \label{tab:beta_phase_params}
     \scriptsize
-    \begin{tabular}{l c c c c}
-    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max} - v_{\min}$ [deg] & error \\
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{l c c c c c}
+    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max}-v_{\min}$ [deg] & Mean [deg] & error \\
     \hline
-    1st  & $-106.70$ & $-99.43$   & 7.27   & 0.0226 \\
-    5th  & 4.75      & 40.05      & 35.30  & 0.0037 \\
-    7th  & $-22.77$  & 27.51      & 50.28  & 0.0029 \\
-    11th & 79.69     & 164.01     & 84.32  & 0.0014 \\
-    13th & 49.38     & 147.67     & 98.29  & 0.0011 \\
+    1st & -106.43 & -99.26 & 7.17 & -103.42 & 0.0403 \\
+    5th & 4.80 & 40.90 & 36.10 & 20.87 & 0.0055 \\
+    7th & -22.52 & 27.18 & 49.71 & 0.08 & 0.0039 \\
+    11th & 77.87 & 163.96 & 86.09 & 118.52 & 0.0023 \\
+    13th & 48.98 & 148.35 & 99.37 & 94.10 & 0.0016 \\
+    17th & -239.51 & -76.70 & 162.81 & -157.65 & 0.0020 \\
+    19th & 80.08 & 266.23 & 186.15 & 170.26 & 0.0013 \\
+    23th & -209.79 & 34.31 & 244.10 & -100.85 & 0.0005 \\
+    25th & -246.50 & 15.56 & 262.06 & -138.77 & 0.0011 \\
     \end{tabular}
-    
     \vspace{2pt}
-    \parbox{\columnwidth}{\scriptsize All harmonics share the same shape parameters ($\hat{\alpha} = 4.041$, $\hat{\beta} = 4.776$).\\
+    \parbox{\columnwidth}{\scriptsize All harmonics share the jointly fitted shape parameters $\hat{\alpha}=3.731$ and $\hat{\beta}=4.439$. \\
     Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific.}
-    % \multicolumn{7}{l}{\footnotesize Note: All harmonics share the same shape parameters ($\hat{\alpha} = 4.041$, $\hat{\beta} = 4.776$).} \\
-    % \multicolumn{7}{l}{\footnotesize Location parameter $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific.} \\
 \end{table}
 
 % \begin{figure}[!b]

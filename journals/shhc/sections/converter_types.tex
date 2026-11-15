@@ -16,23 +16,47 @@ where $V_{d0} = 3\sqrt{2}\,V_{LL}/\pi$ and $V_{LL}$ is the line-to-line voltage 
 
 Joint Monte Carlo sampling of $L_{ac}$, $L_{dc}$ and $\alpha_{\text{op}}$ ($N = 5000$) yields the harmonic current phase angle distributions for the phase-controlled converter. Following the same uncertainty quantification procedure as for the diode-based converter, the simulated angles are unwrapped about their respective circular means and normalized, and a shared Beta distribution is fitted to the pooled normalized samples. The resulting shared shape parameters, harmonic-specific locations and scales, and fit errors are listed in Table~\ref{tab:beta_phase_params_pc}. The histograms from the Monte Carlo simulation and the fitted probability densities are compared in~Fig.~\ref{fig:Shared_Beta_Fit_pc}. As summarized in Table~\ref{tab:fund_angle},the lag of the fundamental current behind the terminal reference voltage~$v_a$ ($v_a = V_a\cos(\omega_1 t - 90^{\circ})$) increases from $9.43^{\circ}$-$16.70^{\circ}$ for the diode-based converter to $20.15^{\circ}$-$47.26^{\circ}$ for the phase-controlled converter. The firing delay~$\alpha_{\text{f}}$ shifts the current waveform later in time and introduces a phase shift of~$-h\alpha_{\text{f}}$ to the $h$-th harmonic. Since uncertainty in operating reference introduces additional order-dependent spread in harmonic phase angles of the phase-controlled converter, the distribution ranges are wider than those of the diode-based converter for every harmonic considered, as indicated in~Fig.~\ref{fig:Shared_Beta_Fit} and~Fig.~\ref{fig:Shared_Beta_Fit_pc}.
 
+% \begin{table}[!t]
+%     \centering
+%     \caption{Shared Beta distribution parameters and fit quality for harmonic phase angles of the phase-controlled converter}
+%     \label{tab:beta_phase_params_pc}
+%     \scriptsize
+%     \begin{tabular}{l c c c c}
+%     Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max} - v_{\min}$ [deg] & error \\
+%     \hline
+%     1st  & $-137.26$ & $-110.15$ & 27.11  & 0.0066 \\
+%     5th  & $-141.74$ & $-11.33$  & 130.41 & 0.0013 \\
+%     7th  & $-262.58$ & $-49.81$  & 212.77 & 0.0011 \\
+%     11th & $-245.62$ & 47.96     & 293.58 & 0.0005 \\
+%     13th & $-338.03$ & 20.48     & 358.51 & 0.0007 \\
+%     \end{tabular}
+    
+%     \vspace{2pt}
+%     \parbox{\columnwidth}{\scriptsize All harmonics share the same shape parameters ($\hat{\alpha}=4.120$ and $\hat{\beta}=3.622$).\\
+%     Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific. Angles are unwrapped about their respective circular means.}
+% \end{table}
+
 \begin{table}[!t]
     \centering
-    \caption{Shared Beta distribution parameters and fit quality for harmonic phase angles of the phase-controlled converter}
+    \caption{Shared Beta distribution parameters and fit quality for harmonic current angles of phase-controlled converter}
     \label{tab:beta_phase_params_pc}
     \scriptsize
-    \begin{tabular}{l c c c c}
-    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max} - v_{\min}$ [deg] & error \\
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{l c c c c c}
+    Order & $v_{\min}$ [deg] & $v_{\max}$ [deg] & $v_{\max}-v_{\min}$ [deg] & Mean [deg] & error \\
     \hline
-    1st  & $-137.26$ & $-110.15$ & 27.11  & 0.0066 \\
-    5th  & $-141.74$ & $-11.33$  & 130.41 & 0.0013 \\
-    7th  & $-262.58$ & $-49.81$  & 212.77 & 0.0011 \\
-    11th & $-245.62$ & 47.96     & 293.58 & 0.0005 \\
-    13th & $-338.03$ & 20.48     & 358.51 & 0.0007 \\
+    1st & -136.66 & -110.06 & 26.60 & -122.56 & 0.0069 \\
+    5th & -143.07 & -9.30 & 133.77 & -71.00 & 0.0014 \\
+    7th & -263.84 & -52.49 & 211.36 & -143.42 & 0.0012 \\
+    11th & -248.03 & 46.71 & 294.74 & -88.68 & 0.0005 \\
+    13th & -353.10 & 5.22 & 358.32 & -156.41 & 0.0004 \\
+    17th & -346.15 & 104.27 & 450.42 & -103.60 & 0.0003 \\
+    19th & -447.14 & 62.43 & 509.57 & -169.55 & 0.0003 \\
+    23th & -442.00 & 161.32 & 603.31 & -116.36 & 0.0002 \\
+    25th & -180.49 & 479.68 & 660.17 & 178.94 & 0.0002 \\
     \end{tabular}
-    
     \vspace{2pt}
-    \parbox{\columnwidth}{\scriptsize All harmonics share the same shape parameters ($\hat{\alpha}=4.120$ and $\hat{\beta}=3.622$).\\
+    \parbox{\columnwidth}{\scriptsize All harmonics share the jointly fitted shape parameters $\hat{\alpha}=4.1612$ and $\hat{\beta}=3.5541$. \\
     Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific. Angles are unwrapped about their respective circular means.}
 \end{table}
 
