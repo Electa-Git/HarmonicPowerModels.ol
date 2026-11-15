@@ -34,29 +34,35 @@
 \section{Mathematical Framework}
 \label{sec:mathematical_framework}
 
-This section presents the robust counterpart of the stochastic harmonic hosting capacity problem of~\cite{vanacker_shhc} for a phase-balanced three-phase power system. The angles~$\phi_{\Unit,\Harmonic}$ of the harmonic currents injected by the harmonic units~$\Unit \in \HarmonicUnitSet$ remain random variables, handled through polynomial chaos expansion and chance constraints, whereas the cable and overhead-line parameters of Section~\ref{sec:parameter_uncertainty} are only known to lie in a set: the hosting capacity must comply with the chance constraints for every realization of the network in that set. For brevity, the stochastic formulation is not repeated; the second-order cone program of~\cite{vanacker_shhc} is first recalled in a form that exposes its dependence on the network, after which the robust counterpart, its solution by a cutting-set method, the bounds it provides and the sampling of the parameter set are presented.
+This section presents the robust counterpart of the stochastic harmonic hosting capacity problem of~\cite{vanacker_shhc} for a phase-balanced three-phase power system. The angles~$\phi_{\Unit,\Harmonic}$ of the harmonic currents injected by the harmonic units~$\Unit \in \HarmonicUnitSet$ remain random variables, handled through polynomial chaos expansion and chance constraints, whereas the cable and overhead-line parameters of Section~\ref{sec:parameter_uncertainty} are only known to lie in a set. The harmonic hosting capacity must comply with the chance constraints for every realization of the network in that set. For brevity, the stochastic formulation is not repeated; the second-order cone program of~\cite{vanacker_shhc} is first recalled in a form that exposes its dependence on the network, after which the robust counterpart, its solution by a cutting-set method, the bounds it provides and the sampling of the parameter set are presented.
 
 \subsection{Stochastic Harmonic Hosting Capacity}
 \label{sec:shhc_recap}
 
-For a fairness criterion that fixes the ratios between the allocations of the harmonic units, the injected current magnitude is~$\CurrentMagnitude_{\Unit,\Harmonic,0} = w_{\Unit}\,\HostingCapacity_{\Harmonic}$, with fixed positive weights~$w_{\Unit}$ and a single hosting capacity~$\HostingCapacity_{\Harmonic}$ per harmonic~$\Harmonic \in \HarmonicSet$, and every voltage and current coefficient is linear in~$\HostingCapacity_{\Harmonic}$~\cite{vanacker_shhc}. With the lifted variable~$\LiftedHostingCapacity_{\Harmonic} \geq \HostingCapacity_{\Harmonic}^{2}$, a squared harmonic quantity has the polynomial chaos coefficients~$\alpha_{c,\Harmonic,\PCEIndex}\,\LiftedHostingCapacity_{\Harmonic}$, $\PCEIndex \in \PCESet$, where the precomputed scalars~$\alpha$ follow from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network, the weights~$w_{\Unit}$ and the projected trigonometric functions of the angles~\cite{vanacker_shhc}. Every limit~$c \in \mathcal{C}$, i.e., the individual and total harmonic voltage distortion and the root-mean-square voltage per bus and the root-mean-square current per branch, constrains a sum over a set~$\mathcal{H}_{c} \subseteq \HarmonicSet$ of harmonics: $\mathcal{H}_{c} = \{\Harmonic\}$ for the individual harmonic voltage distortion and~$\mathcal{H}_{c} = \HarmonicSet$ otherwise. The index~$c$ thus combines the kind of limit with its bus or branch, i.e., $\alpha_{c,\Harmonic,\PCEIndex}$ and~$a_{c}$ stand for~$\alpha_{\Node,\Harmonic,\PCEIndex}$ and~$a_{\Node,c}$ in~\cite{vanacker_shhc}. Its chance constraint reads,
+A harmonic hosting capacity problem~\cite{vanacker_shhc} under the following conditions is considered:
+\begin{enumerate}
+    \item [(i)] a fairness criterion that fixes the ratios between the allocations of the harmonic units through an injected current magnitude~$ w_{\Unit}\,\HostingCapacity_{\Harmonic}$ with fixed positive weights~$w_{\Unit}$,
+    \item [(ii)] a single hosting capacity~$\HostingCapacity_{\Harmonic}$ per harmonic~$\Harmonic \in \HarmonicSet$, and 
+    \item [(iii)] every voltage and current coefficient is linear in~$\HostingCapacity_{\Harmonic}$. 
+\end{enumerate}    
+The problem introduces a lifted variable~$\LiftedHostingCapacity_{\Harmonic} \geq \HostingCapacity_{\Harmonic}^{2}$ representing a squared harmonic quantity and precomputed polynomial chaos expansion coefficients~$\alpha_{c,\Harmonic,\PCEIndex}$ following from the harmonic transfer impedances~$Z_{\Harmonic}$ of the network. Every limit~$c \in \mathcal{C}$, i.e., the individual and total harmonic voltage distortion and the root-mean-square voltage per bus and the root-mean-square current per branch, constrains a sum over a set of harmonics~$\mathcal{H}_{c} \subseteq \HarmonicSet$. As such, the index~$c$ combines the kind of limit with its bus or branch, its chance constraint reads,
 \begin{IEEEeqnarray}{ r C l }
     F_{c}(\bar{\LiftedHostingCapacity}) &=& \MeanVec_{c}^{\text{T}} \bar{\LiftedHostingCapacity} + \lambda(\varepsilon) \sqrt{\bar{\LiftedHostingCapacity}^{\text{T}} \GramMat_{c}\, \bar{\LiftedHostingCapacity}} \;\leq\; a_{c}, \label{eq:cc_compact}
 \end{IEEEeqnarray}
-with the mean vector and the Gram matrix over the harmonics of~$\mathcal{H}_{c}$,
+where~$a_{c}$ denotes the limit net the fundamental and the mean vector and the Gram matrix over the harmonics of~$\mathcal{H}_{c}$,
 \begin{IEEEeqnarray}{ r C l }
     \mu_{c,\Harmonic} &=& \alpha_{c,\Harmonic,0}, \label{eq:mean_vector} \\
-    \GramMat_{c,\Harmonic\Harmonic'} &=& \mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \alpha_{c,\Harmonic,\PCEIndex}\, \alpha_{c,\Harmonic',\PCEIndex}, \label{eq:gram_matrix}
+    \GramMat_{c,\Harmonic\Harmonic'} &=& \mkern-10mu \sum_{\PCEIndex \in \PCESet \backslash \{0\}} \mkern-10mu \langle \Polynoom_{\PCEIndex}, \Polynoom_{\PCEIndex} \rangle \, \alpha_{c,\Harmonic,\PCEIndex}\, \alpha_{c,\Harmonic',\PCEIndex}. \label{eq:gram_matrix}
 \end{IEEEeqnarray}
-and~$a_{c}$ the limit net of the fundamental. Expression~\eqref{eq:cc_compact} is the chance constraint of~\cite{vanacker_shhc} with the variance written as a quadratic form; it needs~$|\mathcal{H}_{c}| + |\mathcal{H}_{c}|^{2}$ numbers per constraint, whatever the cardinality of the basis. The stochastic harmonic hosting capacity is the second-order cone program,
+The chance constraint requires~$|\mathcal{H}_{c}| + |\mathcal{H}_{c}|^{2}$ precomputed scalars per constraint independent of the cardinality of the polynomial chaos expansion basis. The stochastic harmonic hosting capacity is the second-order cone program,
 \begin{IEEEeqnarray}{ l l l }
     \max_{\bar{\HostingCapacity},\,\bar{\LiftedHostingCapacity}} & \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) \HostingCapacity_{\Harmonic} & \nonumber \\
     \text{subject to} \quad & \HostingCapacity_{\Harmonic}^{2} \leq \LiftedHostingCapacity_{\Harmonic}, & \forall \Harmonic \in \HarmonicSet, \nonumber \\
     & w_{\Unit}\,\HostingCapacity_{\Harmonic} \leq \RatedCurrent_{\Unit}, & \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \nonumber \\
     & w_{\Unit}^{2}\,\LiftedHostingCapacity_{\Harmonic} \leq (\RatedCurrent_{\Unit})^{2}, \quad & \forall \Unit \in \HarmonicUnitSet, \Harmonic \in \HarmonicSet, \nonumber \\
-    & F_{c}(\bar{\LiftedHostingCapacity}) \leq a_{c}, & \forall c \in \mathcal{C}, \label{eq:shhc}
+    & F_{c}(\bar{\LiftedHostingCapacity}) \leq a_{c}, & \forall c \in \mathcal{C}. \label{eq:shhc}
 \end{IEEEeqnarray}
-i.e., problem~(31) of~\cite{vanacker_shhc}, in which the relaxation~$\HostingCapacity_{\Harmonic}^{2} \leq \LiftedHostingCapacity_{\Harmonic}$ is exact and the rating is imposed on~$\LiftedHostingCapacity_{\Harmonic}$ as well. Two properties of~\eqref{eq:cc_compact} carry the remainder of this section: it is convex in~$\bar{\LiftedHostingCapacity}$, and it is positively homogeneous of degree one, $F_{c}(s\,\bar{\LiftedHostingCapacity}) = s\,F_{c}(\bar{\LiftedHostingCapacity})$ for all~$s \geq 0$.
+The relaxation~$\HostingCapacity_{\Harmonic}^{2} \leq \LiftedHostingCapacity_{\Harmonic}$ is exact and the rating is imposed on~$\LiftedHostingCapacity_{\Harmonic}$ as well. Two properties of~\eqref{eq:cc_compact} carry the remainder of this section: it is convex in~$\bar{\LiftedHostingCapacity}$, and it is positively homogeneous of degree one, $F_{c}(s\,\bar{\LiftedHostingCapacity}) = s\,F_{c}(\bar{\LiftedHostingCapacity})$ for all~$s \geq 0$.
 
 \subsection{Parametric Network Model}
 \label{sec:parametric_network}
@@ -66,18 +72,25 @@ The parameters of Section~\ref{sec:parameter_uncertainty} are collected in the v
     \SeriesImpedance{\Line,\Harmonic} &=& \bar{z}^{\text{c}}_{\Line} \sinh(\gamma_{\Line} \ell_{\Line}), \label{eq:pi_series} \\
     \tfrac{1}{2} \ShuntAdmittance{\Line,\Harmonic} &=& \tanh(\gamma_{\Line} \ell_{\Line}/2)/\bar{z}^{\text{c}}_{\Line}, \label{eq:pi_shunt}
 \end{IEEEeqnarray}
-with the propagation constant~$\gamma_{\Line} = \sqrt{\bar{z}'_{\Line}\bar{y}'_{\Line}}$ and the characteristic impedance~$\bar{z}^{\text{c}}_{\Line} = \sqrt{\bar{z}'_{\Line}/\bar{y}'_{\Line}}$, both at~$(\Frequency;\ParamVec)$. The length scales the series and shunt terms non-linearly, so it is a parameter of the network model rather than of the per-unit-length data\textcolor{blue}{, and an uncertain length enters~$\ParamSet$ as a further coordinate}. The resulting harmonic admittance matrix~$Y_{\Harmonic}(\ParamVec)$, reduced to the buses that are not ideal harmonic grounds, gives the transfer impedances~$Z_{\Harmonic}(\ParamVec) = Y_{\Harmonic}(\ParamVec)^{-1}$ and, through~\cite{vanacker_shhc}, the moments~$\alpha(\ParamVec)$, the mean vectors~$\MeanVec_{c}(\ParamVec)$ and the Gram matrices~$\GramMat_{c}(\ParamVec)$.
+with the propagation constant~$\gamma_{\Line} = \sqrt{\bar{z}'_{\Line}\bar{y}'_{\Line}}$ and the characteristic impedance~$\bar{z}^{\text{c}}_{\Line} = \sqrt{\bar{z}'_{\Line}/\bar{y}'_{\Line}}$, both at~$(\Frequency;\ParamVec)$. The length scales the series and shunt terms non-linearly, so it is a parameter of the network model rather than of the per-unit-length data, and an uncertain length enters~$\ParamSet$ as a further coordinate. The resulting harmonic admittance matrix~$Y_{\Harmonic}(\ParamVec)$, reduced to the buses that are not ideal harmonic grounds, gives the transfer impedances~$Z_{\Harmonic}(\ParamVec) = Y_{\Harmonic}(\ParamVec)^{-1}$ and, through~\cite{vanacker_shhc}, the moments~$\alpha(\ParamVec)$, the mean vectors~$\MeanVec_{c}(\ParamVec)$ and the Gram matrices~$\GramMat_{c}(\ParamVec)$.
 
 The fundamental operating point, and with it the limits~$a_{c}$ and the local angle reference~$\Harmonic\,\theta_{\Node(\Unit)}$ of the units~\cite{vanacker_shhc}, is taken at the nominal parameters. The fundamental power flow is far less sensitive to the cable parameters than the harmonic impedances near a resonance, and keeping it fixed preserves the decoupling of the fundamental and the harmonic problems.
 
 \subsubsection{Zero-Sequence Network}
-In a phase-balanced system, every harmonic order belongs to one sequence: positive for~$\Harmonic \equiv 1 \pmod 3$, negative for~$\Harmonic \equiv 2 \pmod 3$ and zero for~$\Harmonic \equiv 0 \pmod 3$. For the positive and negative sequence, the network is the positive-sequence one, with the phase shifts of the transformer vector groups~\cite{vanacker_shhc}. For the zero sequence, four elements differ:
-\begin{enumerate*}
-    \item[(i)] the cables and overhead lines have their zero-sequence series impedance and shunt admittance, which follow from Section~\ref{sec:parameter_uncertainty} with the earth return and the screen bonding;
+
+A phase-balanced three-phase power system allows a single-phase representation of the system for all individual harmonic. Specifically, the harmonics are classified into three types:
+\begin{enumerate}
+    \item [1)] positive sequence~$\Harmonic \in \HarmonicSet^{\texttt{+}} \subset \HarmonicSet: h = 1+3n$,
+    \item [2)] negative sequence~$\Harmonic \in \HarmonicSet^{\texttt{-}} \subset \HarmonicSet: h = 2+3n$, and
+    \item [3)] zero sequence~$\Harmonic \in \HarmonicSet^{\texttt{0}} \subset \HarmonicSet: h = 3+3n$,
+\end{enumerate}
+where~$n \in \mathbb{N}_{0}$. For the positive and negative sequence, the network is the positive-sequence one, with the phase shifts of the transformer vector groups~\cite{vanacker_shhc}. For the zero sequence, four aspects differ:
+\begin{enumerate}
+    \item[(i)] cables and overhead lines have their zero-sequence series impedance and shunt admittance, which follow from Section~\ref{sec:parameter_uncertainty} with the earth return and the screen bonding;
     \item[(ii)] a transformer winding pair with leakage impedance~$z^{\text{l}}$ and neutral impedances~$z^{\text{n}}_{1}$, $z^{\text{n}}_{2}$ of its star windings is a series element~$z^{\text{l}} + 3z^{\text{n}}_{1} + 3z^{\text{n}}_{2}$ between two earthed stars, a shunt to earth~$z^{\text{l}} + 3z^{\text{n}}$ at the earthed star of a delta--star pair, and open otherwise, i.e., for an unearthed star or two deltas, with the neutral impedances outside the off-nominal tap and a neutral resistance independent of the frequency; a vector group with clock number 2, 6 or 10 between two stars inverts the zero sequence, and a three-winding unit follows the same rules per winding around its star point;
     \item[(iii)] a generator connects to the network through a step-up transformer, which for a YNd step-up with the delta on the machine side is an impedance to earth at its bus; and
     \item[(iv)] a capacitor bank connected as an unearthed star carries no zero-sequence current.
-\end{enumerate*}
+\end{enumerate}
 Delta windings split the zero-sequence network into separately earthed parts. A part without a path to earth admits no zero-sequence injection: its units drop out of the allocation at that harmonic, while the units elsewhere keep theirs, and the admittance of the remaining parts stays invertible. The zero-sequence network shares the parameters~$\ParamVec$ of the cables and lines, so the robust counterpart below covers all three sequences alike.
 
 \subsection{Robust Counterpart}
