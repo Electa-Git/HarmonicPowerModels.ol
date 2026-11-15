@@ -48,7 +48,7 @@ A growing body of literature addresses the harmonic hosting capacity of a power 
         \cite{liu_feasible_2023}            & fr    & ro    & lin.  & unb.  & rob.  &\xmark &\xmark &\cmark &\xmark &\xmark & --    & 8     \\ \arrayrulecolor{black} \hline
         $\star$~\cite{vanacker_hosting_2026}& hhc   & soc   & full  & bal.  & --    &\xmark &\xmark &\xmark &\xmark &\xmark & 1880  & $<$\,6 \\
         $\star$~\cite{vanacker_shhc}        & hhc   & qcqp/soc & full & bal. & pce  &\cmark &\xmark &\xmark &\xmark &\cmark & 30    & $<$\,0.04 \\ \arrayrulecolor{black} \hline
-        This work                           & hhc   & soc   & full  & bal.  & pce/rob. &\cmark &\xmark &\cmark &\xmark &\cmark & 30 & $<$\,3 \\
+        This work                           & hhc   & soc   & full  & bal.  & pce/rob. &\cmark &\xmark &\cmark &\xmark &\cmark & 30 & $<$\,3$^{*}$, $<$\,8$^{**}$ \\
     \end{tabular}
 
     \vspace{2pt}
@@ -56,7 +56,7 @@ A growing body of literature addresses the harmonic hosting capacity of a power 
     $^{a}$Objective: (hhc)~harmonic hosting capacity, (hpf)~harmonic power flow, (hra)~harmonic resonance or impedance analysis, (vc)~voltage control and (fr)~feasible region of distributed energy resources, both at the fundamental frequency.
     $^{b}$Mathematical methods: (ae)~analytical expression, (pf)~power flow, (fs)~frequency scan, (rma)~resonance mode analysis, (mh)~metaheuristic optimization, (cc)~chance-constrained optimal power flow, (ro)~robust counterpart, (soc)~second-order cone optimal power flow, (qcqp)~quadratically constrained quadratic program. Network model: (nodal)~equivalent at one node, (full)~full network, (lin.)~linearized full network. Phases: (bal.)~balanced, (unb.)~unbalanced.
     $^{c}$Treatment of uncertainty: (mc)~Monte Carlo simulation, (an.)~analytical or moment-based, (scen.)~scenario-based, (pos.)~possibility theory, (int.)~interval or affine arithmetic, (pce)~polynomial chaos expansion, (rob.)~robust, i.e., guaranteed over a set.
-    $^{d}$Tractability expressed as the number of nodes and the solve time in minutes.}
+    $^{d}$Tractability expressed as the number of nodes and the solve time in minutes. $^{*}$Positive- and negative-sequence harmonics 5--25, 23 uncertain physical inputs, on 10 threads. $^{**}$Zero-sequence variants without recombination, harmonics 2--50, on 16 threads.}
 \end{table*}
 
 \subsubsection{Harmonic hosting capacity}
