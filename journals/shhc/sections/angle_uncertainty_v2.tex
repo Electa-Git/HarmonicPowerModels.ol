@@ -13,9 +13,9 @@
     scable/.style={densely dotted, mark=square},
     scablec/.style={dashdotted, mark=triangle}}
 
-This section addresses the uncertainty of harmonic current phasors, especially phase angles, related to the typical industrial load with diode-based or phase-controlled line-commutated converter. The diode-based converter, as shown in Fig. \ref{fig:topo_indust_LCC}.
-% The Monte Carlo simulation is applied to the steady-state harmonic state-space model of the converter to assess the uncertainty propagation from key circuit parameters to harmonic phase angles.
-The steady-state harmonic state-space model of the line-commutated converter is established, which captures the mutual coupling among the harmonic phasors and their dependence on key passive parameters. The parameterized model is then integrated into a stochastic assessment framework. The key parameters are modeled as random variables with realistic bounds. Monte Carlo simulation is applied to generate probability distributions of harmonic phasors. Finally, the Gaussian copula correlation matrix of harmonic phase angles is obtained to indicate the inter-harmonic correlation, and the shared probability density functions are obtained.
+This section addresses the uncertainty of harmonic current phase angles, related to the typical industrial load with diode-based or phase-controlled line-commutated converter.
+% The steady-state harmonic state-space model of the line-commutated converter is established, which captures the mutual coupling among the harmonic phasors and their dependence on key passive parameters. The parameterized model is then integrated into a stochastic assessment framework. The key parameters are modeled as random variables with realistic bounds. Monte Carlo simulation is applied to generate probability distributions of harmonic phasors. Finally, the Gaussian copula correlation matrix of harmonic phase angles is obtained to indicate the inter-harmonic correlation, and the shared probability density functions are obtained.
+The Monte Carlo simulation is applied to the steady-state harmonic state-space model of the converter to assess the uncertainty propagation from key circuit parameters to harmonic phase angles. The Gaussian copula correlation matrix of harmonic phase angles is obtained to indicate the inter-harmonic correlation, and the shared probability density functions are obtained.
 
 \begin{figure}[!t]
 \centering
@@ -26,8 +26,7 @@ The steady-state harmonic state-space model of the line-commutated converter is 
 
 \subsection{Steady-State Harmonic Model} 
 % Internal frequency coupling is the key feature of converter-generated harmonics, which decide the recombination of harmonic phasors. Therefore, the accurate harmonic state-space model is built here to capture the nature commutation and harmonic coupling of line-commutated converter.
-
-The steady-state harmonic state-space model is used here to accurately capture the nature commutation and internal harmonic coupling of the line-commutated converter. The line-commutated converter periodically operates with sequential switching states, including 6 conducting states and 6 commutation states per fundamental period. Each state can be described by differential equations with time-varying coefficients that represent topology variations. The state equations for any switching state can be expressed as,
+The steady-state harmonic state-space model is used here to accurately capture the nature commutation and internal harmonic coupling of the line-commutated converter. The diode-based converter, as shown in Fig. \ref{fig:topo_indust_LCC}, is The line-commutated converter periodically operates with sequential switching states, including 6 conducting states and 6 commutation states per fundamental period. Each state can be described by differential equations with time-varying coefficients that represent topology variations. The state equations for any switching state can be expressed as,
 \begin{IEEEeqnarray}{l}
     (S_{dc} L_{ac} + L_{dc}) \frac{di_{dc}}{dt} = \nonumber \\
     S_{dc,ac}^{a} v_{ac}^a + S_{dc,ac}^{b} v_{ac}^b + S_{dc,ac}^{c} v_{ac}^c - R_{dc} i_{dc}, \label{eq:idc_t} \\
