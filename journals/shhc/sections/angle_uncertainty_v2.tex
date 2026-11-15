@@ -88,68 +88,69 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
 %     \label{fig:harmonic_phasors_CI_LacLdc}
 % \end{figure}
 
-% \usepgfplotslibrary{polar}
-% \providecommand{\Harmonic}{h}
-% \begin{figure*}[!b]
-%     \centering
-%     % \includegraphics[width=0.4\textwidth]
-%     % {journals/shhc/data/phasor_ci/harmonic_phasors_diode.pdf}
-%     \pgfplotsset{phasorplot/.style={shhc, width=0.18\textwidth, ymin=0,
-%         xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
-%         yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt, /pgf/number format/1000 sep={}},
-%         every axis plot/.append style={line join=round}},
-%         outside/.style={only marks, mark=*, mark size=0.5pt, gray!35},
-%         inside/.style={only marks, mark=*, mark size=0.5pt, black!70},
-%         ci/.style={densely dashed, black, line width=0.5pt, mark=none},
-%         meanphasor/.style={-latex, black, line width=1pt, mark=none}}
-%     \subfloat[$\Harmonic = 1$]{%
-%     \begin{tikzpicture}
-%         \begin{polaraxis}[phasorplot, ymax=3200, ytick={2000}]
-%             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h1.dat};
-%             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h1.dat};
-%             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h1.dat};
-%             \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h1.dat};
-%         \end{polaraxis}
-%     \end{tikzpicture}}%
-%     \subfloat[$\Harmonic = 5$]{%
-%     \begin{tikzpicture}
-%         \begin{polaraxis}[phasorplot, ymax=700, ytick={300}]
-%             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h5.dat};
-%             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h5.dat};
-%             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h5.dat};
-%             \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h5.dat};
-%         \end{polaraxis}
-%     \end{tikzpicture}}%
-%     \subfloat[$\Harmonic = 7$]{%
-%     \begin{tikzpicture}
-%         \begin{polaraxis}[phasorplot, ymax=370, ytick={150}]
-%             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h7.dat};
-%             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h7.dat};
-%             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h7.dat};
-%             \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h7.dat};
-%         \end{polaraxis}
-%     \end{tikzpicture}}%
-%     \subfloat[$\Harmonic = 11$]{%
-%     \begin{tikzpicture}
-%         \begin{polaraxis}[phasorplot, ymax=230, ytick={100}]
-%             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h11.dat};
-%             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h11.dat};
-%             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h11.dat};
-%             \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h11.dat};
-%         \end{polaraxis}
-%     \end{tikzpicture}}%
-%     \subfloat[$\Harmonic = 13$]{%
-%     \begin{tikzpicture}
-%         \begin{polaraxis}[phasorplot, ymax=170, ytick={50}]
-%             \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h13.dat};
-%             \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h13.dat};
-%             \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h13.dat};
-%             \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h13.dat};
-%         \end{polaraxis}
-%     \end{tikzpicture}}
-%     \caption{Phasors of characteristic harmonic currents of the diode-based converter, showing 1000 of the 5000 Monte Carlo samples, with samples inside (dark gray) and outside (light gray) the 95\,\% confidence region of magnitude and phase angle (dashed), and the mean phasor (black arrow): (a) $\Harmonic = 1$; (b) $\Harmonic = 5$; (c) $\Harmonic = 7$; (d) $\Harmonic = 11$; (e) $\Harmonic = 13$.}
-%     \label{fig:harmonic_phasors_CI_LacLdc}
-% \end{figure*}
+\usepgfplotslibrary{polar}
+\providecommand{\Harmonic}{h}
+\begin{figure}[!b]
+    \centering
+    % \includegraphics[width=0.4\textwidth]
+    % {journals/shhc/data/phasor_ci/harmonic_phasors_diode.pdf}
+    \pgfplotsset{phasorplot/.style={shhc, width=0.18\textwidth, ymin=0,
+        xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
+        yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt, /pgf/number format/1000 sep={}},
+        every axis plot/.append style={line join=round}},
+        outside/.style={only marks, mark=*, mark size=0.5pt, gray!35},
+        inside/.style={only marks, mark=*, mark size=0.5pt, black!70},
+        ci/.style={densely dashed, black, line width=0.5pt, mark=none},
+        meanphasor/.style={-latex, black, line width=1pt, mark=none}}
+    \subfloat[$\Harmonic = 1$]{%
+    \begin{tikzpicture}
+        \begin{polaraxis}[phasorplot, ymax=3200, ytick={2000}]
+            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h1.dat};
+            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h1.dat};
+            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h1.dat};
+            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h1.dat};
+        \end{polaraxis}
+    \end{tikzpicture}}%
+    \subfloat[$\Harmonic = 5$]{%
+    \begin{tikzpicture}
+        \begin{polaraxis}[phasorplot, ymax=700, ytick={300}]
+            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h5.dat};
+            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h5.dat};
+            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h5.dat};
+            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h5.dat};
+        \end{polaraxis}
+    \end{tikzpicture}}%
+    \subfloat[$\Harmonic = 7$]{%
+    \begin{tikzpicture}
+        \begin{polaraxis}[phasorplot, ymax=370, ytick={150}]
+            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h7.dat};
+            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h7.dat};
+            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h7.dat};
+            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h7.dat};
+        \end{polaraxis}
+    \end{tikzpicture}}%
+    \\
+    \subfloat[$\Harmonic = 11$]{%
+    \begin{tikzpicture}
+        \begin{polaraxis}[phasorplot, ymax=230, ytick={100}]
+            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h11.dat};
+            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h11.dat};
+            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h11.dat};
+            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h11.dat};
+        \end{polaraxis}
+    \end{tikzpicture}}%
+    \subfloat[$\Harmonic = 13$]{%
+    \begin{tikzpicture}
+        \begin{polaraxis}[phasorplot, ymax=170, ytick={50}]
+            \addplot[outside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_outside_h13.dat};
+            \addplot[inside] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/plot_inside_h13.dat};
+            \addplot[ci] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/ci_h13.dat};
+            \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h13.dat};
+        \end{polaraxis}
+    \end{tikzpicture}}
+    \caption{Phasors of characteristic harmonic currents of the diode-based converter, showing 1000 of the 5000 Monte Carlo samples, with samples inside (dark gray) and outside (light gray) the 95\,\% confidence region of magnitude and phase angle (dashed), and the mean phasor (black arrow): (a) $\Harmonic = 1$; (b) $\Harmonic = 5$; (c) $\Harmonic = 7$; (d) $\Harmonic = 11$; (e) $\Harmonic = 13$.}
+    \label{fig:harmonic_phasors_CI_LacLdc}
+\end{figure}
 
 % \usepgfplotslibrary{polar}
 % \providecommand{\Harmonic}{h}
@@ -358,7 +359,7 @@ Thirdly, the fitted shared Beta distribution is transformed back to each harmoni
 % \end{equation}
 % where $\phi\in [v_{\min,h}, v_{\max,h}]$ is the original phase angle range for harmonic $h$.
 
-The comparison plots between the empirical histograms and the denormalized shared Beta probability density functions for each harmonic phase angle are shown in Fig.~\ref{fig:Shared_Beta_Fit}.
+The comparison plots between the empirical histograms and the denormalized shared Beta probability density functions for each harmonic phase angle are shown in Fig.~\ref{fig:Shared_Beta_Fit_diode}.
 Table~\ref{tab:beta_phase_params} lists the shared shape parameters, harmonic-specific locations $v_{\min,h}$ and scales $(v_{\max,h} - v_{\min,h})$, and the root-mean-square errors between the empirical histograms from the Monte Carlo simulation and the denormalized Beta probability density functions. Both the visual comparison and the low root-mean-square errors indicate a good fit of the shared Beta distribution to the simulated data across all harmonics.
 % The goodness-of-fit of the shared Beta distribution model is evaluated for each harmonic phase angle by comparing the denormalized Beta probability density function against the empirical histograms from Monte Carlo simulation. The root-mean-square error is computed between the empirical histogram and the denormalized Beta probability density function, with the results summarized in last column of Table~\ref{tab:beta_phase_params}.
 % \begin{figure}[!b]
@@ -368,56 +369,57 @@ Table~\ref{tab:beta_phase_params} lists the shared shape parameters, harmonic-sp
 %     \caption{Histograms of the harmonic current phase angles from 5000 Monte Carlo samples of~$L_{ac}$ and~$L_{dc}$, and the denormalized shared Beta probability density functions with parameters listed in Table~\ref{tab:beta_phase_params}.}
 %     \label{fig:Shared_Beta_Fit} 
 % \end{figure}
-\begin{figure*}[t]
-    \centering
-    \pgfplotsset{phaseplot/.style={shhc, width=0.2\textwidth, height=3cm, ymin=0,
-        xlabel={phase [deg]}, scaled y ticks=false, yticklabel style={/pgf/number format/fixed},
-        every axis plot/.append style={mark=none}},
-        mcs/.style={ybar interval, fill=gray!30, draw=gray!70, line width=0.2pt},
-        beta/.style={solid, black, line width=0.9pt}}
-    \subfloat[$h = 1$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplot, xtick={-106,-103,-100}, ylabel style={align=center}, ylabel={probability\\density\\{[1/deg]}}]
-            \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h1.dat};
-            \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h1.dat};
-        \end{axis}
-    \end{tikzpicture}}%
-    \subfloat[$h = 5$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplot, xtick={10,20,30}]
-            \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h5.dat};
-            \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h5.dat};
-        \end{axis}
-    \end{tikzpicture}}%
-    \subfloat[$h = 7$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplot, xtick={-20,0,20}]
-            \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h7.dat};
-            \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h7.dat};
-        \end{axis}
-    \end{tikzpicture}}%
-    \subfloat[$h = 11$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplot, xtick={90,120,150}]
-            \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h11.dat};
-            \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h11.dat};
-        \end{axis}
-    \end{tikzpicture}}%
-    \subfloat[$h = 13$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplot, xtick={60,100,140}]
-            \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h13.dat};
-            \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h13.dat};
-        \end{axis}
-    \end{tikzpicture}}
-    \caption{Distribution of harmonic current phase angles of the diode-based converter, histograms of 5000 Monte Carlo samples (gray, 50 bins) against the denormalized shared Beta probability density functions (black) with parameters listed in Table~\ref{tab:beta_phase_params}: (a) $h = 1$; (b) $h = 5$; (c) $h = 7$; (d) $h = 11$; (e) $h = 13$.}
-    \label{fig:Shared_Beta_Fit}
-\end{figure*}
+
+% \begin{figure*}[t]
+%     \centering
+%     \pgfplotsset{phaseplot/.style={shhc, width=0.2\textwidth, height=3cm, ymin=0,
+%         xlabel={phase [deg]}, scaled y ticks=false, yticklabel style={/pgf/number format/fixed},
+%         every axis plot/.append style={mark=none}},
+%         mcs/.style={ybar interval, fill=gray!30, draw=gray!70, line width=0.2pt},
+%         beta/.style={solid, black, line width=0.9pt}}
+%     \subfloat[$h = 1$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplot, xtick={-106,-103,-100}, ylabel style={align=center}, ylabel={probability\\density\\{[1/deg]}}]
+%             \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h1.dat};
+%             \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h1.dat};
+%         \end{axis}
+%     \end{tikzpicture}}%
+%     \subfloat[$h = 5$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplot, xtick={10,20,30}]
+%             \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h5.dat};
+%             \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h5.dat};
+%         \end{axis}
+%     \end{tikzpicture}}%
+%     \subfloat[$h = 7$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplot, xtick={-20,0,20}]
+%             \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h7.dat};
+%             \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h7.dat};
+%         \end{axis}
+%     \end{tikzpicture}}%
+%     \subfloat[$h = 11$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplot, xtick={90,120,150}]
+%             \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h11.dat};
+%             \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h11.dat};
+%         \end{axis}
+%     \end{tikzpicture}}%
+%     \subfloat[$h = 13$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplot, xtick={60,100,140}]
+%             \addplot[mcs] table[x=x, y=density] {journals/shhc/data/shared_beta_phase/hist_interval_h13.dat};
+%             \addplot[beta] table[x=x, y=pdf] {journals/shhc/data/shared_beta_phase/pdf_h13.dat};
+%         \end{axis}
+%     \end{tikzpicture}}
+%     \caption{Distribution of harmonic current phase angles of the diode-based converter, histograms of 5000 Monte Carlo samples (gray, 50 bins) against the denormalized shared Beta probability density functions (black) with parameters listed in Table~\ref{tab:beta_phase_params}: (a) $h = 1$; (b) $h = 5$; (c) $h = 7$; (d) $h = 11$; (e) $h = 13$.}
+%     \label{fig:Shared_Beta_Fit}
+% \end{figure*}
 
 \providecommand{\diodedatatoXXV}{journals/shhc/data/shared_beta_phase/}
-\begin{figure}[!t]
+\begin{figure}[!b]
     \centering
-    \pgfplotsset{diodephaseXXV/.style={shhc, scale only axis, width=0.22\columnwidth, height=1.6cm, ymin=0,
+    \pgfplotsset{diodephaseXXV/.style={shhc, scale only axis, width=0.22\columnwidth, height=1.5cm, ymin=0,
         scaled y ticks=false, scaled x ticks=false,
         yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
         tick label style={font=\tiny}, label style={font=\scriptsize},
@@ -490,8 +492,8 @@ Table~\ref{tab:beta_phase_params} lists the shared shape parameters, harmonic-sp
             \addplot[diodebetaXXV] table[x=x,y=pdf] {\diodedatatoXXV/pdf_h25.dat};
         \end{axis}
     \end{tikzpicture}}
-    \caption{Unwrapped harmonic current phases of the diode-based converter through order 25: histograms of 5000 Monte Carlo samples per harmonic (gray, 50 bins) and rescaled shared Beta densities (black), jointly fitted to all nine normalized datasets with parameters in Table~\ref{tab:beta_phase_params_diode_to25}: (a) $h=1$; (b) $h=5$; (c) $h=7$; (d) $h=11$; (e) $h=13$; (f) $h=17$; (g) $h=19$; (h) $h=23$; (i) $h=25$.}
-    \label{fig:Shared_Beta_Fit_diode_to25}
+    \caption{Harmonic current phase angles of the diode-based converter, histograms of 5000 Monte Carlo samples per harmonic (gray, 50 bins) against denormalized shared Beta densities (black), with parameters listed in Table~\ref{tab:beta_phase_params}: (a) $h=1$; (b) $h=5$; (c) $h=7$; (d) $h=11$; (e) $h=13$; (f) $h=17$; (g) $h=19$; (h) $h=23$; (i) $h=25$.}
+    \label{fig:Shared_Beta_Fit_diode}
 \end{figure}
 
 % \begin{table}[!t]
@@ -514,7 +516,7 @@ Table~\ref{tab:beta_phase_params} lists the shared shape parameters, harmonic-sp
 %     Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific.}
 % \end{table}
 
-\begin{table}[t]
+\begin{table}[!b]
     \centering
     \caption{Shared Beta distribution parameters and fit quality for harmonic current angles of diode-based converter}
     \label{tab:beta_phase_params}
@@ -580,7 +582,7 @@ The lag of the fundamental current behind the terminal reference voltage~$v_a$ (
 %     Location parameters $v_{\min}$ and scale parameter $(v_{\max} - v_{\min})$ are harmonic-specific. Angles are unwrapped about their respective circular means.}
 % \end{table}
 
-\begin{table}[t]
+\begin{table}[!b]
     \centering
     \caption{Shared Beta distribution parameters and fit quality for harmonic current angles of phase-controlled converter}
     \label{tab:beta_phase_params_pc}
