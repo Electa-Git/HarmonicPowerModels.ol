@@ -89,11 +89,22 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
 %     \label{fig:harmonic_phasors_CI_LacLdc}
 % \end{figure}
 
+
+% \begin{figure}[!t]
+% \centering
+% \includegraphics[width=0.6\columnwidth]{figures/topo_indust_LCC.pdf}
+% \caption{Diode-based line-commutated converter with ac-side commutation inductance~$L_{ac}$, dc-side smoothing inductance~$L_{dc}$ and dc load.}
+% \label{fig:topo_indust_LCC} 
+% \end{figure}
+
 \usepgfplotslibrary{polar}
 \providecommand{\Harmonic}{h}
-\begin{figure*}[!b]
+\begin{figure}[!b]
     \centering
-    \includegraphics[width=0.4\textwidth]{journals/shhc/data/phasor_ci/harmonic_phasors_diode.pdf}
+    % \includegraphics[width=0.4\textwidth]
+    % {journals/shhc/data/phasor_ci/harmonic_phasors_diode.pdf}
+    \includegraphics[width=1\columnwidth]
+    {journals/shhc/data/phasor_ci/harmonic_phasors_diode.pdf}
     % \pgfplotsset{phasorplot/.style={shhc, width=0.18\textwidth, ymin=0,
     %     xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
     %     yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt, /pgf/number format/1000 sep={}},
