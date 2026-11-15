@@ -80,7 +80,7 @@ Monte Carlo simulation is then implemented, by which 5000 pairs of random sample
 A case study is conducted based on a representative diode-based line-commutated converter unit, with nominal capacity of 1.25 MW and nominal voltage of 380 V, which is connected to the 35 kV bus through a rectifier transformer with a ratio of 35 kV/400 V. 
 For the ac-side commutation inductance, the truncation bounds are $L_{ac,\min} = 0.01$ mH and $L_{ac,\max} = 0.03$ mH, corresponding to transformer short-circuit voltage ranging from $U_k = 5\%$ to $15\%$. For the dc-side smoothing inductance, the truncation bounds are $L_{dc,\min} = 0.05$ mH and $L_{dc,\max} = 0.35$ mH.
 
-Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution of each characteristic harmonic. In each harmonic phasor distribution plot, the black arrow represent the phasors with mean magnitude and mean phase angle, while the dark gray represent the phasors within the 95\% confidence intervals. The results indicate that (i) the harmonic phasors at different frequencies exhibit mutual dependency; (ii) harmonics at higher orders display progressively larger angle variations and uncertainties. 
+Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distributions for a subset of characteristic harmonics. In each harmonic phasor distribution plot, the black arrow represent the phasors with mean magnitude and mean phase angle, while the dark gray represent the phasors within the 95\% confidence intervals. The results indicate that (i) the harmonic phasors at different frequencies exhibit mutual dependency; (ii) harmonics at higher orders display progressively larger angle variations and uncertainties. 
 % \begin{figure}[!t]
 %     \centering
 %     \includegraphics[width=\columnwidth]{figures/harmonic_phasors_CI_LacLdc.png}
@@ -90,11 +90,11 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
 
 \usepgfplotslibrary{polar}
 \providecommand{\Harmonic}{h}
-\begin{figure}[!b]
+\begin{figure}[!t]
     \centering
     % \includegraphics[width=0.4\textwidth]
     % {journals/shhc/data/phasor_ci/harmonic_phasors_diode.pdf}
-    \pgfplotsset{phasorplot/.style={shhc, width=0.18\textwidth, ymin=0,
+    \pgfplotsset{phasorplot/.style={shhc, width=0.17\textwidth, ymin=0,
         xtick={0,90,180,270}, xticklabel={$\pgfmathprintnumber{\tick}^{\circ}$},
         yticklabel style={font=\tiny, anchor=north, inner sep=1.5pt, yshift=-2pt, /pgf/number format/1000 sep={}},
         every axis plot/.append style={line join=round}},
@@ -148,7 +148,7 @@ Fig.\ref{fig:harmonic_phasors_CI_LacLdc} shows the resulting phasor distribution
             \addplot[meanphasor] table[x=angle, y=mag] {journals/shhc/data/phasor_ci/mean_h13.dat};
         \end{polaraxis}
     \end{tikzpicture}}
-    \caption{Phasors of characteristic harmonic currents of the diode-based converter, showing 1000 of the 5000 Monte Carlo samples, with samples inside (dark gray) and outside (light gray) the 95\,\% confidence region of magnitude and phase angle (dashed), and the mean phasor (black arrow): (a) $\Harmonic = 1$; (b) $\Harmonic = 5$; (c) $\Harmonic = 7$; (d) $\Harmonic = 11$; (e) $\Harmonic = 13$.}
+    \caption{Phasors of a subset of characteristic harmonic currents of the diode-based converter (1000 of the 5000 Monte Carlo samples) with samples inside (dark gray) and outside (light gray) the 95\,\% confidence region of magnitude and phase angle (dashed), and the mean phasor (black arrow): (a) $\Harmonic = 1$; (b) $\Harmonic = 5$; (c) $\Harmonic = 7$; (d) $\Harmonic = 11$; (e) $\Harmonic = 13$.}
     \label{fig:harmonic_phasors_CI_LacLdc}
 \end{figure}
 
@@ -419,7 +419,7 @@ Table~\ref{tab:beta_phase_params} lists the shared shape parameters, harmonic-sp
 \providecommand{\diodedatatoXXV}{journals/shhc/data/shared_beta_phase/}
 \begin{figure}[!b]
     \centering
-    \pgfplotsset{diodephaseXXV/.style={shhc, scale only axis, width=0.22\columnwidth, height=1.5cm, ymin=0,
+    \pgfplotsset{diodephaseXXV/.style={shhc, scale only axis, width=0.20\columnwidth, height=1.3cm, ymin=0,
         scaled y ticks=false, scaled x ticks=false,
         yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
         tick label style={font=\tiny}, label style={font=\scriptsize},
@@ -560,8 +560,7 @@ At a given current reference, a larger $L_{ac}$ therefore requires earlier firin
 Joint Monte Carlo sampling of $L_{ac}$, $L_{dc}$ and $\alpha_{\text{op}}$ ($N = 5000$) yields the harmonic current phase angle distributions for the phase-controlled converter. Following the same uncertainty quantification procedure as for the diode-based converter, the simulated angles are unwrapped about their respective circular means and normalized, and a shared Beta distribution is fitted to the pooled normalized samples. The resulting shared shape parameters, harmonic-specific locations and scales, and fit errors are listed in Table~\ref{tab:beta_phase_params_pc}.
 % The histograms from the Monte Carlo simulation and the fitted probability densities are compared in~Fig.~\ref{fig:Shared_Beta_Fit_pc}.
 % As summarized in Table~\ref{tab:fund_angle},
-The lag of the fundamental current behind the terminal reference voltage~$v_a$ ($v_a = V_a\cos(\omega_1 t - 90^{\circ})$) increases from $9.43^{\circ}$-$16.70^{\circ}$ for the diode-based converter to $20.15^{\circ}$-$47.26^{\circ}$ for the phase-controlled converter. The firing delay~$\alpha_{\text{f}}$ shifts the current waveform later in time and introduces a phase shift of~$-h\alpha_{\text{f}}$ to the $h$-th harmonic. Since uncertainty in operating reference introduces additional order-dependent spread in harmonic phase angles of the phase-controlled converter, the distribution ranges are wider than those of the diode-based converter for every harmonic considered. 
-% as indicated in~Fig.~\ref{fig:Shared_Beta_Fit} and~Fig.~\ref{fig:Shared_Beta_Fit_pc}.
+The lag of the fundamental current behind the terminal reference voltage~$v_a$ ($v_a = V_a\cos(\omega_1 t - 90^{\circ})$) increases from $9.26^{\circ}$-$16.43^{\circ}$ for the diode-based converter to $20.06^{\circ}$-$46.66^{\circ}$ for the phase-controlled converter. The firing delay~$\alpha_{\text{f}}$ shifts the current waveform later in time and introduces a phase shift of~$-h\alpha_{\text{f}}$ to the $h$-th harmonic. Since uncertainty in operating reference introduces additional order-dependent spread in harmonic phase angles of the phase-controlled converter, the distribution ranges are wider than those of the diode-based converter for every harmonic considered, as indicated in Table~\ref{tab:beta_phase_params} and Table~\ref{tab:beta_phase_params_pc}.
 
 % \begin{table}[!t]
 %     \centering
