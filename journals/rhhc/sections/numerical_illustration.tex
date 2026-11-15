@@ -86,7 +86,7 @@ The robust hosting capacity is computed for the IEEE 30-bus system of~\cite{vana
     \item[(iii)] \emph{cables and lines}, case~(ii) with the 132\,kV lines modeled physically, including their charging; and
     \item[(iv)] \emph{full}, case~(iii) with all 23 physical inputs of Section~\ref{sec:parameter_uncertainty}.
 \end{enumerate*}
-The fundamental operating point is that of the nominal parameters, Section~\ref{sec:parametric_network}. Table~\ref{tab:ieee30_physical} gives the results, and Table~\ref{tab:ieee30_harmonics} the robust hosting capacity per harmonic relative to the nominal stochastic one. Every case converges in two or three iterations to a relative gap below~$5\cdot10^{-4}$ and shows no violation on 1024 independent random points of~$\ParamSet$.
+The fundamental operating point is that of the nominal parameters, Section~\ref{sec:parametric_network}. Table~\ref{tab:ieee30_physical} gives the results, and Table~\ref{tab:ieee30_harmonics} the robust hosting capacity per harmonic relative to the nominal stochastic one. Every case converges in two or three iterations to a relative gap below~$5\cdot10^{-4}$ and shows no violation on 1024 independent random points of~$\ParamSet$. \add{At the worst-case points of the final scenario sets of case~(iv), the empirical factor of the binding limits lies between 1.54 and 1.79, against 1.645 for the Gaussian factor, so that their sampled 95\,\% quantile stays within 3.0\,\% of the limit and their violation probability lies between 0.035 and 0.064, i.e., at most 1.3 times the risk level, the largest at the 19th harmonic at bus~5.}
 
 \begin{table}[!tb]
     \centering
