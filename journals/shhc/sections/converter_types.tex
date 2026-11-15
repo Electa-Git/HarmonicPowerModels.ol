@@ -62,53 +62,53 @@ Joint Monte Carlo sampling of $L_{ac}$, $L_{dc}$ and $\alpha_{\text{op}}$ ($N = 
 
 % RMSE compares the 50-bin histogram density with the fitted density evaluated at the bin centers.
 
-\begin{figure*}[!t]
-    \centering
-    \pgfplotsset{phaseplotpc/.style={shhc, width=0.205\textwidth, height=3cm, ymin=0,
-        xlabel={phase [deg]}, scaled y ticks=false,
-        yticklabel style={/pgf/number format/fixed},
-        every axis plot/.append style={mark=none}},
-        mcspc/.style={ybar interval, fill=gray!30, draw=gray!70, line width=0.2pt},
-        betapc/.style={solid, black, line width=0.9pt}}
-    \subfloat[$h = 1$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplotpc, xtick={-135,-125,-115},
-            ylabel style={align=center}, ylabel={probability\\density\\{[1/deg]}}]
-            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h1.dat};
-            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h1.dat};
-        \end{axis}
-    \end{tikzpicture}}%
-    \subfloat[$h = 5$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplotpc, xtick={-140,-80,-20}]
-            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h5.dat};
-            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h5.dat};
-        \end{axis}
-    \end{tikzpicture}}%
-    \subfloat[$h = 7$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplotpc, xtick={-250,-150,-50}]
-            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h7.dat};
-            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h7.dat};
-        \end{axis}
-    \end{tikzpicture}}%
-    \subfloat[$h = 11$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplotpc, xtick={-200,-100,0}]
-            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h11.dat};
-            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h11.dat};
-        \end{axis}
-    \end{tikzpicture}}%
-    \subfloat[$h = 13$]{%
-    \begin{tikzpicture}
-        \begin{axis}[phaseplotpc, xtick={-300,-150,0}]
-            \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h13.dat};
-            \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h13.dat};
-        \end{axis}
-    \end{tikzpicture}}
-    \caption{Distribution of harmonic current phase angles of the phase-controlled converter, histograms of 5000 Monte Carlo samples (gray, 50 bins) against the denormalized shared Beta probability density functions (black), with parameters listed in Table~\ref{tab:beta_phase_params_pc}: (a) $h = 1$; (b) $h = 5$; (c) $h = 7$; (d) $h = 11$; (e) $h = 13$.}
-    \label{fig:Shared_Beta_Fit_pc}
-\end{figure*}
+% \begin{figure*}[!t]
+%     \centering
+%     \pgfplotsset{phaseplotpc/.style={shhc, width=0.205\textwidth, height=3cm, ymin=0,
+%         xlabel={phase [deg]}, scaled y ticks=false,
+%         yticklabel style={/pgf/number format/fixed},
+%         every axis plot/.append style={mark=none}},
+%         mcspc/.style={ybar interval, fill=gray!30, draw=gray!70, line width=0.2pt},
+%         betapc/.style={solid, black, line width=0.9pt}}
+%     \subfloat[$h = 1$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplotpc, xtick={-135,-125,-115},
+%             ylabel style={align=center}, ylabel={probability\\density\\{[1/deg]}}]
+%             \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h1.dat};
+%             \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h1.dat};
+%         \end{axis}
+%     \end{tikzpicture}}%
+%     \subfloat[$h = 5$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplotpc, xtick={-140,-80,-20}]
+%             \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h5.dat};
+%             \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h5.dat};
+%         \end{axis}
+%     \end{tikzpicture}}%
+%     \subfloat[$h = 7$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplotpc, xtick={-250,-150,-50}]
+%             \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h7.dat};
+%             \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h7.dat};
+%         \end{axis}
+%     \end{tikzpicture}}%
+%     \subfloat[$h = 11$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplotpc, xtick={-200,-100,0}]
+%             \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h11.dat};
+%             \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h11.dat};
+%         \end{axis}
+%     \end{tikzpicture}}%
+%     \subfloat[$h = 13$]{%
+%     \begin{tikzpicture}
+%         \begin{axis}[phaseplotpc, xtick={-300,-150,0}]
+%             \addplot[mcspc] table[x=x, y=density] {journals/shhc/data/type2_shared_beta_phase/hist_interval_h13.dat};
+%             \addplot[betapc] table[x=x, y=pdf] {journals/shhc/data/type2_shared_beta_phase/pdf_h13.dat};
+%         \end{axis}
+%     \end{tikzpicture}}
+%     \caption{Distribution of harmonic current phase angles of the phase-controlled converter, histograms of 5000 Monte Carlo samples (gray, 50 bins) against the denormalized shared Beta probability density functions (black), with parameters listed in Table~\ref{tab:beta_phase_params_pc}: (a) $h = 1$; (b) $h = 5$; (c) $h = 7$; (d) $h = 11$; (e) $h = 13$.}
+%     \label{fig:Shared_Beta_Fit_pc}
+% \end{figure*}
 
 \begin{table}[!t]
     \centering

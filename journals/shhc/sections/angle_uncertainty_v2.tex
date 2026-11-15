@@ -13,12 +13,9 @@
     scable/.style={densely dotted, mark=square},
     scablec/.style={dashdotted, mark=triangle}}
 
-This section addresses the uncertainty of harmonic current phasors, especially phase angles, related to the typical industrial load with a diode-based line-commutated converter as shown in Fig. \ref{fig:topo_indust_LCC}.
+This section addresses the uncertainty of harmonic current phasors, especially phase angles, related to the typical industrial load with diode-based or phase-controlled line-commutated converter. The diode-based converter, as shown in Fig. \ref{fig:topo_indust_LCC}.
 % The Monte Carlo simulation is applied to the steady-state harmonic state-space model of the converter to assess the uncertainty propagation from key circuit parameters to harmonic phase angles.
-First, a steady-state harmonic state-space model of the line-commutated converter is established, which captures the mutual coupling among the harmonic phasors and their dependence on key passive parameters.
-Then, the parameterized model is integrated into a stochastic assessment framework. The key parameters are modeled as random variables with realistic bounds. Monte Carlo simulation is applied to generate probability distributions of harmonic phasors.
-% Finally, the marginal probability density functions are fitted using the best-fit method, and the Gaussian copula correlation matrix of harmonic phase angles is obtained to indicate the inter-harmonic correlation.
-Finally, the Gaussian copula correlation matrix of harmonic phase angles is obtained to indicate the inter-harmonic correlation, and the shared probability density function is obtained.
+The steady-state harmonic state-space model of the line-commutated converter is established, which captures the mutual coupling among the harmonic phasors and their dependence on key passive parameters. The parameterized model is then integrated into a stochastic assessment framework. The key parameters are modeled as random variables with realistic bounds. Monte Carlo simulation is applied to generate probability distributions of harmonic phasors. Finally, the Gaussian copula correlation matrix of harmonic phase angles is obtained to indicate the inter-harmonic correlation, and the shared probability density functions are obtained.
 
 \begin{figure}[!t]
 \centering
