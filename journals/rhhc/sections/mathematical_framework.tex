@@ -98,9 +98,9 @@ Delta windings split the zero-sequence network into separately earthed parts. A 
 
 The robust harmonic hosting capacity requires every chance constraint to hold for every network in~$\ParamSet$,
 \begin{IEEEeqnarray}{ l l l }
-    \max_{\bar{\HostingCapacity},\,\bar{\LiftedHostingCapacity}} & \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) \HostingCapacity_{\Harmonic} & \nonumber \\
-    \text{subject to} \quad & \text{the constraints of~\eqref{eq:shhc} on~$\bar{\HostingCapacity}$ and~$\bar{\LiftedHostingCapacity}$ alone}, & \nonumber \\
-    & \sup_{\ParamVec \in \ParamSet} F_{c}(\bar{\LiftedHostingCapacity};\ParamVec) \leq a_{c}, \quad & \forall c \in \mathcal{C}. \label{eq:rhhc}
+    \max_{\bar{\HostingCapacity},\,\bar{\LiftedHostingCapacity}} & \sum_{\Harmonic \in \HarmonicSet} \Big( \sum_{\Unit \in \HarmonicUnitSet} w_{\Unit} \Big) \HostingCapacity_{\Harmonic} \nonumber \\
+    \text{subject to} \quad & \text{constraints of~\eqref{eq:shhc} on~$\bar{\HostingCapacity}$ and~$\bar{\LiftedHostingCapacity}$ alone},  \nonumber \\
+    & \sup_{\ParamVec \in \ParamSet} F_{c}(\bar{\LiftedHostingCapacity};\ParamVec) \leq a_{c}, \quad \forall c \in \mathcal{C}. \label{eq:rhhc}
 \end{IEEEeqnarray}
 The resulting problem is hybrid: the angles are treated in probability, through the chance constraints, and the network parameters in the worst case. The worst-case constraint function is a supremum of functions convex in~$\bar{\LiftedHostingCapacity}$, so~\eqref{eq:rhhc} is a convex semi-infinite program. Its difficulty lies in the supremum: $F_{c}$ depends on~$\ParamVec$ through the inverse of~$Y_{\Harmonic}(\ParamVec)$, which is far from concave near a parallel resonance, so the worst case may lie in the interior of~$\ParamSet$ rather than at one of its vertices, and no tractable reformulation of the robust counterpart exists.
 
