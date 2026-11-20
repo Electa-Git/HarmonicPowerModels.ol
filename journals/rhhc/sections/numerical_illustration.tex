@@ -82,6 +82,7 @@ The Gaussian and Cantelli factors (\S\,\ref{sec:shhc_recap}) are compared on the
     \begin{tikzpicture}
         \begin{semilogxaxis}[rfplot, ymin=-15, ymax=2, ylabel={difference [\%]},
             legend columns=2, legend to name=rflegend, legend style={font=\scriptsize, /tikz/every even column/.append style={column sep=4pt}}]
+            \addplot[reference, forget plot] coordinates {(0.008,0) (0.25,0)};
             \addplot[can] table[x=eps, y=ddcan] {journals/rhhc/data/risk_factor.dat};
             \addplot[gau] table[x=eps, y=ddgau] {journals/rhhc/data/risk_factor.dat};
             \legend{Cantelli, Gaussian}
@@ -89,13 +90,13 @@ The Gaussian and Cantelli factors (\S\,\ref{sec:shhc_recap}) are compared on the
     \end{tikzpicture}}\hfill
     \subfloat[violation probability of the binding limit]{%
     \begin{tikzpicture}
-        \begin{loglogaxis}[rfplot, ymin=0.001, ymax=0.3, ylabel={probability [-]}]
+        \begin{loglogaxis}[rfplot, ymin=1e-4, ymax=0.3, ylabel={probability [-]}, ytick={1e-3,1e-2,1e-1}, extra y ticks={1.5e-4}, extra y tick labels={0}, extra y tick style={grid=none}]
             \addplot[reference] coordinates {(0.008,0.008) (0.25,0.25)};
-            \addplot[can] table[x=eps, y=vdcan] {journals/rhhc/data/risk_factor.dat};
+            \addplot[can] table[x=eps, y expr={max(\thisrow{vdcan},1.5e-4)}] {journals/rhhc/data/risk_factor.dat};
             \addplot[gau] table[x=eps, y=vdgau] {journals/rhhc/data/risk_factor.dat};
         \end{loglogaxis}
     \end{tikzpicture}}
-    \caption{Choice of the risk factor, nominal IEEE 30-bus system, $N = 21$ diode bridges, harmonics up to the 25th: (a) total hosting capacity with the Cantelli and Gaussian factor on exact moments relative to the exact $(1-\varepsilon)$ quantile, and (b) violation probability of the binding individual harmonic voltage limit by Monte Carlo simulation with 20\,000 samples, against the risk level~$\varepsilon$ (gray: probability equal to~$\varepsilon$). Violation probabilities of zero are not shown.}
+    \caption{Choice of the risk factor, nominal IEEE 30-bus system, $N = 21$ diode bridges, harmonics up to the 25th: (a) total hosting capacity with the Cantelli and Gaussian factor on exact moments relative to the exact $(1-\varepsilon)$ quantile, and (b) violation probability of the binding individual harmonic voltage limit by Monte Carlo simulation with 20\,000 samples, against the risk level~$\varepsilon$ (gray: probability equal to~$\varepsilon$; violation probabilities of zero at the bottom).}
     \label{fig:risk_factor}
 \end{figure}
 
@@ -116,7 +117,7 @@ No case shows a violation on 1024 random points of~$\ParamSet$. At the worst-cas
     \subfloat[total]{%
     \begin{tikzpicture}
         \begin{axis}[nmplot, ybar, bar width=4pt, ymin=0, ymax=0.165, ylabel={$\sum_{\Harmonic} \HostingCapacity_{\Harmonic}$ [pu]}, ylabel style={yshift=-4pt},
-            symbolic x coords={(i),(ii),(iii),(iv)}, xtick=data, enlarge x limits=0.18, legend columns=2,
+            symbolic x coords={(i),(ii),(iii),(iv)}, xtick=data, enlarge x limits=0.18, legend columns=2, xlabel={network model},
             legend image code/.code={\draw[#1] (0cm,-0.08cm) rectangle (0.2cm,0.08cm);},
             scaled y ticks=false, yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2},
             nodes near coords style={font=\tiny, rotate=90, anchor=west, inner sep=1pt}]
@@ -154,7 +155,7 @@ A common simplification scales the fundamental $\pi$-model with the harmonic ord
 \subsection{Computational Tractability}
 \label{sec:tractability}
 
-The master problem keeps two variables per harmonic and one cut per scenario, so the effort lies in the oracle. One evaluation of \textsc{LineCableModels.jl} takes about~1.5\,ms per cable design and~2.8--3.6\,ms per overhead-line design, per parameter point and frequency. The full model, with 23 inputs and eight harmonics, requires about 156\,000 such evaluations. With uncertain current angles, every network model converges in two or three iterations to a relative gap below~$5\cdot10^{-4}$, in 34 to 169\,s on 10 threads. The sign-predicted corners reduce its iterations from five to three and its time by 30\,\%. Without recombination, each earthing variant solves its 49 harmonics in 5.5--7.5\,minutes on 16 threads, in two iterations, to a relative gap below~$10^{-4}$.
+The master problem keeps two variables per harmonic and one cut per scenario, so the effort lies in the oracle. One evaluation of \textsc{LineCableModels.jl} takes about~1.5\,ms per cable design and~2.8--3.6\,ms per overhead-line design, per parameter point and frequency. The full model, with 23 inputs and eight harmonics, requires about \del{156\,000}\add{477\,000} such evaluations. With uncertain current angles, every network model converges in two or three iterations to a relative gap below~$5\cdot10^{-4}$, in 34 to 169\,s on 10 threads. The sign-predicted corners reduce \del{its}\add{the} iterations \add{of the full model} from five to three and its time by 30\,\%. Without recombination, each earthing variant solves its 49 harmonics in 5.5--7.5\,minutes on 16 threads, in two iterations, to a relative gap below~$10^{-4}$.
 
 \subsection{Comparison with the Literature}
 \label{sec:literature_comparison}
