@@ -81,11 +81,11 @@ The Gaussian and Cantelli factors (\S\,\ref{sec:shhc_recap}) are compared on the
     \subfloat[hosting capacity relative to the exact $(1-\varepsilon)$ quantile]{%
     \begin{tikzpicture}
         \begin{semilogxaxis}[rfplot, ymin=-15, ymax=2, ylabel={difference [\%]},
-            legend columns=2, legend to name=rflegend, legend style={font=\scriptsize, /tikz/every even column/.append style={column sep=4pt}}]
-            \addplot[reference, forget plot] coordinates {(0.008,0) (0.25,0)};
+            legend columns=3, legend to name=rflegend, legend style={font=\scriptsize, /tikz/every even column/.append style={column sep=4pt}}]
+            \addplot[reference] coordinates {(0.008,0) (0.25,0)};
             \addplot[can] table[x=eps, y=ddcan] {journals/rhhc/data/risk_factor.dat};
             \addplot[gau] table[x=eps, y=ddgau] {journals/rhhc/data/risk_factor.dat};
-            \legend{Cantelli, Gaussian}
+            \legend{target, Cantelli, Gaussian}
         \end{semilogxaxis}
     \end{tikzpicture}}\hfill
     \subfloat[violation probability of the binding limit]{%
@@ -96,7 +96,7 @@ The Gaussian and Cantelli factors (\S\,\ref{sec:shhc_recap}) are compared on the
             \addplot[gau] table[x=eps, y=vdgau] {journals/rhhc/data/risk_factor.dat};
         \end{loglogaxis}
     \end{tikzpicture}}
-    \caption{Choice of the risk factor, nominal IEEE 30-bus system, $N = 21$ diode bridges, harmonics up to the 25th: (a) total hosting capacity with the Cantelli and Gaussian factor on exact moments relative to the exact $(1-\varepsilon)$ quantile, and (b) violation probability of the binding individual harmonic voltage limit by Monte Carlo simulation with 20\,000 samples, against the risk level~$\varepsilon$ (gray: probability equal to~$\varepsilon$; violation probabilities of zero at the bottom).}
+    \caption{Choice of the risk factor, nominal IEEE 30-bus system, $N = 21$ diode bridges, harmonics up to the 25th: (a) total hosting capacity with the Cantelli and Gaussian factor on exact moments relative to the exact $(1-\varepsilon)$ quantile, and (b) violation probability of the binding individual harmonic voltage limit by Monte Carlo simulation with 20\,000 samples, against the risk level~$\varepsilon$ (gray: target, i.e., the exact quantile in~(a) and a violation probability equal to~$\varepsilon$ in~(b); violation probabilities of zero at the bottom).}
     \label{fig:risk_factor}
 \end{figure}
 
@@ -148,9 +148,38 @@ No case shows a violation on 1024 random points of~$\ParamSet$. At the worst-cas
 
 With cables only, i.e., case~(ii), the parallel resonances lie at~$\Harmonic = 6.95$ and~18.4. Modeling the 132\,kV lines physically, i.e., case~(iii) moves the first resonance to~$\Harmonic = 6.27$ and adds resonances at~$\Harmonic = 12.32$ and between the 17th and the 23rd harmonic. The robust hosting capacity relative to the nominal one halves at the 7th harmonic, from 0.966 to 0.483, and drops from 0.851 to 0.623 at the 13th harmonic. The network data that enter the robust problem thus matter as much as their uncertainty. A simplified network places the resonances, and with them the worst cases, at other harmonics.
 
-Extending the parameter set from 4 to 23 physical inputs, i.e., case~(iv), lowers the robust hosting capacity by a further~3.5\,\%, mostly at the 5th, 7th, 13th, 19th and 25th harmonic. The uncertainty of the inputs beyond the four dominant ones is therefore not negligible, but it is second order. With~$d = 23$, the dictionary holds 191 sign-predicted corners in place of the~$2^{23}$ vertices. Without them, the method signs off after five iterations at a solution that violates a limit by~0.16\,\% at a sign-predicted corner, whereas 1024 independent random points of~$\ParamSet$ find no violation. With the corners, no violation remains. In high dimension, random sampling, including the a-posteriori check, does not certify robustness, the corners do to first order. The worst corner of the binding limit, the 23rd harmonic at bus~3, is the least damped network, i.e., the coldest cables and lines and the lowest earth resistivity. Moreover, the robust hosting capacity per harmonic is not bounded by the nominal one. On a three-unit test network with cables and one parallel resonance at~$\Harmonic = 7.03$, the robust problem allocates~6.0 times the nominal current at the 7th harmonic, while the total over the harmonics up to the 25th falls by~13\,\%. A robust budget is therefore a new allocation, not a uniform derating of the nominal one.
+Extending the parameter set from 4 to 23 physical inputs, i.e., case~(iv), lowers the robust hosting capacity by a further~3.5\,\%, mostly at the 5th, 7th, 13th, 19th and 25th harmonic. The uncertainty of the inputs beyond the four dominant ones is therefore not negligible, but it is second order. With~$d = 23$, the dictionary holds 191 sign-predicted corners in place of the~$2^{23}$ vertices. Without them, the method signs off after five iterations at a solution that violates a limit by~0.16\,\% at a sign-predicted corner, whereas 1024 independent random points of~$\ParamSet$ find no violation. With the corners, no violation remains. In high dimension, random sampling, including the a-posteriori check, does not certify robustness, the corners do to first order. The worst corner of the binding limit, the 23rd harmonic at bus~3, is the least damped network, i.e., the coldest cables and lines and the lowest earth resistivity. \del{Moreover, the robust hosting capacity per harmonic is not bounded by the nominal one. On a three-unit test network with cables and one parallel resonance at~$\Harmonic = 7.03$, the robust problem allocates~6.0 times the nominal current at the 7th harmonic, while the total over the harmonics up to the 25th falls by~13\,\%.}\add{Moreover, the robust-to-nominal ratio ranges from 0.45 to 0.99 over the harmonics, Fig.~\ref{fig:ieee30_physical}(b).} A robust budget is therefore a new allocation, not a uniform derating of the nominal one.
 
-A common simplification scales the fundamental $\pi$-model with the harmonic order, i.e., the resistance with~$\sqrt{\Harmonic}$ and the reactance and susceptance with~$\Harmonic$. Applied to the nominal 50\,Hz parameters of case~(iv), it lowers the nominal hosting capacity by~21\,\%, yet its allocation over the harmonics violates the limits of the physical model at the nominal parameters. Factor intervals derived from the same box, i.e., the hull of the ratios of the resistance, inductance and capacitance of each family to their nominal values over the box, at the fundamental and at every harmonic frequency, give a robust hosting capacity of 0.0482\,pu, 37\,\% below the physical one, which still violates the limits of the physical model at every one of 1024 random points of~$\ParamSet$. The same factors applied to the nominal frequency response of \textsc{LineCableModels.jl} give 0.0726\,pu, 5.7\,\% below the physical one, with no violation of the physical model at 1024 random points. The frequency dependence of the cable and line parameters is therefore part of the robust problem, and a box of factors on the 50\,Hz parameters does not contain the physical uncertainty.
+A common simplification scales the fundamental $\pi$-model with the harmonic order, i.e., the resistance with~$\sqrt{\Harmonic}$ and the reactance and susceptance with~$\Harmonic$. \add{Against the physical model, Fig.~\ref{fig:scaling}(a), the rule overestimates the resistance of the lines by a factor of two to three and the reactance of the cables by up to 2.4 at the 25th harmonic, as the screen return lowers their inductance, while the physical cable resistance exceeds the rule by up to 36\,\%. The scaled model thereby moves the parallel resonance near the 23rd harmonic, where the binding limit lies, and halves the driving-point impedance at bus~3 there, Fig.~\ref{fig:scaling}(b).} Applied to the nominal 50\,Hz parameters of case~(iv), it lowers the nominal hosting capacity by~21\,\%, yet its allocation over the harmonics violates the limits of the physical model at the nominal parameters. Factor intervals derived from the same box, i.e., the hull of the ratios of the resistance, inductance and capacitance of each family to their nominal values over the box, at the fundamental and at every harmonic frequency, give a robust hosting capacity of 0.0482\,pu, 37\,\% below the physical one, which still violates the limits of the physical model at every one of 1024 random points of~$\ParamSet$. The same factors applied to the nominal frequency response of \textsc{LineCableModels.jl} give 0.0726\,pu, 5.7\,\% below the physical one, with no violation of the physical model at 1024 random points. The frequency dependence of the cable and line parameters is therefore part of the robust problem, and a box of factors on the 50\,Hz parameters does not contain the physical uncertainty.
+
+\begin{figure}[!tb]
+    \centering
+    \pgfplotsset{scplot/.style={rhhc, scale only axis, width=0.29\columnwidth, height=2.2cm, xlabel={harmonic order $\Harmonic$},
+        legend columns=2, legend style={at={(0.5,1.03)}, anchor=south, draw=none, font=\scriptsize, /tikz/every even column/.append style={column sep=2pt}},
+        legend image code/.code={\draw plot coordinates {(0cm,0cm) (0.3cm,0cm)};}}}
+    \subfloat[physical relative to the rule]{%
+    \begin{tikzpicture}
+        \begin{axis}[scplot, xmin=1, xmax=25, ymin=0.2, ymax=1.5, xtick={1,5,10,15,20,25}, ylabel={ratio [-]}]
+            \addplot[reference, forget plot] coordinates {(1,1) (25,1)};
+            \addplot[solid, mark=none]          table[x=h, y=Rc] {journals/rhhc/data/scaling_branch.dat};
+            \addplot[densely dashed, mark=none] table[x=h, y=Xc] {journals/rhhc/data/scaling_branch.dat};
+            \addplot[dotted, line width=0.9pt, mark=none] table[x=h, y=Rl] {journals/rhhc/data/scaling_branch.dat};
+            \addplot[dashdotted, mark=none]     table[x=h, y=Xl] {journals/rhhc/data/scaling_branch.dat};
+            \legend{$R$ cable, $X$ cable, $R$ line, $X$ line}
+        \end{axis}
+    \end{tikzpicture}}\hfill
+    \subfloat[driving-point impedance at bus~3]{%
+    \begin{tikzpicture}
+        \begin{semilogyaxis}[scplot, xmin=2, xmax=26, ymin=0.05, ymax=30, xtick={5,10,15,20,25}, ylabel={$|Z_{\Harmonic,33}|$ [pu]}]
+            \addplot[gray!60, line width=0.8pt, forget plot] coordinates {(23,0.05) (23,30)};
+            \addplot[solid, mark=none]          table[x=h, y=phys]   {journals/rhhc/data/scaling_z.dat};
+            \addplot[densely dashed, mark=none] table[x=h, y=scaled] {journals/rhhc/data/scaling_z.dat};
+            \legend{physical, scaled}
+        \end{semilogyaxis}
+    \end{tikzpicture}}
+    \caption{Frequency scaling of the fundamental parameters, network model~(iv) at the nominal parameters: (a) series resistance~$R$ and reactance~$X$ of a 500\,mm$^{2}$ cable and a Lion line, physical relative to the scaling rule~$R\sqrt{\Harmonic}$ and~$X\Harmonic$ (gray: rule), and (b) driving-point impedance magnitude at bus~3, physical and scaled (gray: 23rd harmonic, binding limit).}
+    \label{fig:scaling}
+\end{figure}
 
 \subsection{Computational Tractability}
 \label{sec:tractability}
