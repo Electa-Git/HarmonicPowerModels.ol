@@ -1,7 +1,7 @@
 \section{Numerical Illustration}
 \label{sec:numerical_illustration}
 
-This section presents the numerical illustration of the robust harmonic hosting capacity problem of a phase-balanced three-phase power system. All results are presented in per-unit using a 100\,MVA basis.
+\del{This section presents the numerical illustration of the robust harmonic hosting capacity problem of a phase-balanced three-phase power system.} All results are presented in per-unit using a 100\,MVA basis. \add{Two case studies are considered on the same test network: first, every harmonic order up to the 50th, including the zero-sequence harmonics, without uncertainty on the current angles, to assess the transformer windings and earthing; and second, the characteristic harmonics up to the 25th with uncertain current angles, to assess the choice of the risk factor and the network data and their uncertainty.}
 
 \pgfplotsset{rhhc/.style={
     axis lines=left, xmajorgrids=true, ymajorgrids=true, grid style={gray!10},
@@ -11,16 +11,76 @@ This section presents the numerical illustration of the robust harmonic hosting 
     legend cell align=left},
     reference/.style={gray!60, line width=1.2pt, mark=none}}
 
-\subsection{Choice of the Risk Factor}
-\label{sec:risk_factor_results}
+\subsection{Test Network}
+\label{sec:test_network}
+\begingroup\color{orange}
+The test network is the IEEE 30-bus system of~\cite{vanacker_shhc}, with the first~$N = 21$ loads as harmonic units under the absolute equality fairness criterion. The per-unit-length parameters of Section~\ref{sec:parameter_uncertainty} are computed with \textsc{LineCableModels.jl}~\cite{lcm_2026} in the exact $\pi$-model~\eqref{eq:pi_series}--\eqref{eq:pi_shunt}. The 33\,kV lines are replaced by 22 underground cables of four sizes, 400 to 800\,mm$^{2}$ aluminum, 18/30(36)\,kV, in touching trefoil at 0.8\,m depth, assigned per branch by the smallest buried rating above the branch current. The twelve 132\,kV lines are aluminum conductors steel reinforced of four sizes on a delta tower under one steel earth wire. Cable screens are solidly bonded at both ends, the earth wire is grounded at every tower, and all circuits are ideally transposed. The 34 branches share eight designs. The transformers carry their vector groups, i.e., YNyn0 for the 132/33\,kV units and YNd11 for the condenser step-up units. The fundamental operating point is that of the nominal parameters, Section~\ref{sec:parametric_network}. Four network models are compared:
+\endgroup
+\begin{enumerate*}
+    \item[(i)] \emph{placeholder}, a single 630\,mm$^{2}$ aluminum cable design for all 33\,kV links, with four uncertain inputs, and the 132\,kV lines of~\cite{vanacker_shhc} without line charging;
+    \item[(ii)] \emph{cables}, the four cable sizes with four uncertain inputs, i.e., resistance, insulation thickness, permittivity and earth resistivity, and the same 132\,kV lines;
+    \item[(iii)] \emph{cables and lines}, case~(ii) with the 132\,kV lines modeled physically, including their charging; and
+    \item[(iv)] \emph{full}, case~(iii) with all 23 physical inputs of Section~\ref{sec:parameter_uncertainty}.
+\end{enumerate*}
+\begingroup\color{orange}
+One evaluation of \textsc{LineCableModels.jl} takes about~1.5\,ms per cable design and~2.8--3.6\,ms per overhead-line design, per parameter point and frequency, so the physical model can sit inside the oracle.
+\endgroup
 
-The \del{three risk factors of Section~III-D}\add{Gaussian and Cantelli factors of Section~\ref{sec:shhc_recap} and the empirical factor of~\cite{vanacker_shhc}} are compared on the nominal network, i.e., without parameter uncertainty, where the exact~$(1-\varepsilon)$ quantile of every constrained quantity follows from Monte Carlo simulation. The case is the purely inductive IEEE 30-bus system of~\cite{vanacker_shhc}, with the characteristic harmonics up to the 25th, $\HarmonicSet = \{5,7,11,13,17,19,23,25\}$, the first~$N = 21$ loads as harmonic units under the absolute equality fairness criterion, and three converter populations: all diode bridges, all thyristor bridges, and a mix of both, alternating over the units, i.e., 11 diode and 10 thyristor bridges, with the angle distributions of~\cite{vanacker_shhc} up to the 25th harmonic. \del{The Cantelli and Gaussian factors act on the exact moments of Section~III-D, and the empirical factor is calibrated on the moments of the expansion, as in~\mbox{\cite{vanacker_shhc}}.}\add{All three factors act on the exact moments of Section~\ref{sec:shhc_recap}.} For every risk factor, population and risk level~$\varepsilon \in \{0.01, 0.02, 0.05, 0.1, 0.2\}$, Fig.~\ref{fig:risk_factor} gives (a) the total hosting capacity relative to the one that makes the exact~$(1-\varepsilon)$ quantile of the binding limit equal to its limit, and (b) the violation probability of the binding individual harmonic voltage limit, by Monte Carlo simulation with 20\,000 samples.
+\subsection{Zero-Sequence Harmonics and Transformer Earthing}
+\label{sec:zero_sequence_results}
+
+\add{The first case study considers network model~(iii) with} every harmonic order from 2 to 50, including the 16 zero-sequence orders, without recombination\del{, Section~III-E, so that no angle model of the units is needed}\add{, as in~\cite{vanacker_hosting_2026}: the unit contributions align in the worst case, so that no angle model of the units and no risk factor are needed}. The 50th harmonic, at 2.5\,kHz, lies within the \textcolor{blue}{validity range} of the cable and line model of Section~\ref{sec:parameter_uncertainty}. Bus~9 is the star point of the three-winding unit, and each generator is taken to connect through a YNd step-up with a leakage reactance of 0.12\,pu on a rating of 0.2 times its short-circuit power, at~$X/R = 40$; the synchronous condensers at buses~11 and~13 sit behind their own step-up units, whose delta windings block the zero sequence. % generator zero-sequence data: assumption accepted by Tom Van Acker on 2026-11-11
+Five variants differ only in the windings and earthing of the transformers with a 33\,kV winding, Table~\ref{tab:zero_sequence}:
+\begin{enumerate*}
+    \item[(a)] YNyn0 with solidly earthed 33\,kV stars;
+    \item[(b)] YNyn0 with the 33\,kV stars earthed through 19.05\,$\Omega$, which limits an earth fault to 1\,kA, i.e., case~(iii);
+    \item[(c)] Dyn11, with the delta on the 132\,kV side and the 33\,kV stars as in~(b);
+    \item[(d)] YNd11, with the delta on the 33\,kV side and the 33\,kV star of the condenser step-up unearthed; and
+    \item[(e)] YNy0 with every 33\,kV star unearthed.
+\end{enumerate*}
+The clock numbers keep the same phase shift on every 132/33\,kV path. \add{With 49 harmonics, each variant solves in 5.5--7.5 minutes on 16 threads to a relative gap below~$10^{-4}$.}
+
+\begin{table}[!tb]
+    \centering
+    \caption{Zero-sequence hosting capacity~$\sum_{\Harmonic} \HostingCapacity_{\Harmonic}$ over the zero-sequence harmonics without recombination, nominal and robust, and the harmonic with the lowest robust-to-nominal ratio, IEEE 30-bus system, case~(iii), $d = 4$.}
+    \label{tab:zero_sequence}
+    \footnotesize\setlength{\tabcolsep}{3pt}
+    \begin{tabular}{ l r r r r }
+        variant & nominal & robust & ratio & weakest \\
+                & [pu]    & [pu]   & [-]   & $\Harmonic$ (ratio) \\ \hline
+        (a) YNyn0, solid          & 0.00489 & 0.00444 & 0.907 & 24 (0.57) \\
+        (b) YNyn0, 19.05\,$\Omega$ & 0.00352 & 0.00313 & 0.888 & 30 (0.64) \\
+        (c) Dyn11                 & 0.00407 & 0.00361 & 0.886 & 30 (0.67) \\
+        (d) YNd11                 & 0.00344 & 0.00289 & 0.841 & 24 (0.58) \\
+        (e) YNy0, unearthed       & 0.00344 & 0.00294 & 0.854 & 30 (0.66)
+    \end{tabular}
+\end{table}
+
+\subsubsection{The Earthing Acts on the Zero Sequence Only}
+The robust hosting capacity summed over the positive- and negative-sequence harmonics is the same in all five variants, 0.00344 and 0.00644\,pu, to within~$10^{-6}$\,pu\del{, and so are their weakest harmonics, the 7th and the 13th at 0.48 and 0.62 of the nominal hosting capacity, as in Section~\mbox{\ref{sec:ieee30_physical}}}. Without recombination, the phase shift of the vector groups does not change the magnitudes of the transfer impedances along paths with equal shifts, and the earthing does not enter the positive and negative sequence. Every difference between the variants therefore stems from the zero-sequence network.
+
+\subsubsection{Earthing Practice}
+Solid earthing of the 33\,kV stars hosts~42\,\% more zero-sequence current than the earthing through 19.05\,$\Omega$ after robustness\del{, and 39\,\% more at the nominal parameters}. With~$3 \times 19.05\,\Omega$ in every zero-sequence path to earth, the resistance already decouples the 33\,kV network to a large extent: removing the earthing altogether, variants~(d) and~(e), lowers the robust zero-sequence hosting capacity by only a further 6--8\,\%. A delta on the 132\,kV side, variant~(c), raises it by 15\,\%: the 132\,kV network no longer shares the zero-sequence path, and each 33\,kV star earths its own network through the leakage and the neutral resistance. The earthing practice of the distribution network is thus a lever on the zero-sequence hosting capacity of the order of the uncertainty of the network itself.
+
+\subsubsection{Robustness at the Zero Sequence}
+The uncertain cable parameters cost 9--16\,\% of the zero-sequence hosting capacity, against 6--15\,\% for the positive- and negative-sequence harmonics. The loss concentrates at a few high orders, the 24th and 30th harmonic, where the robust hosting capacity falls to 0.57--0.67 of the nominal one, and the earthing moves it from one order to the other: the 24th harmonic is the weakest with solid earthing and with a delta on the 33\,kV side, the 30th in the other variants. The zero-sequence parameters of the cables\del{, through the earth return and the screen bonding,} and the earthing path together place the zero-sequence resonances, so a deterministic study of the zero-sequence harmonics with nominal cable data misses the harmonics that are most at risk.
+
+\subsection{Harmonics with Uncertain Current Angles}
+\label{sec:ieee30_physical}
+
+\begingroup\color{orange}
+The second case study considers the characteristic harmonics up to the 25th, $\HarmonicSet = \{5,7,11,13,17,19,23,25\}$, with the angle distributions of~\cite{vanacker_shhc} and the risk level~$\varepsilon = 0.05$.
+\endgroup
+
+\subsubsection{Choice of the Risk Factor}
+\label{sec:risk_factor_results}
+The \del{three risk factors of Section~III-D}\add{Gaussian and Cantelli factors of Section~\ref{sec:shhc_recap} and the empirical factor of~\cite{vanacker_shhc}} are compared on the nominal network, i.e., without parameter uncertainty, where the exact~$(1-\varepsilon)$ quantile of every constrained quantity follows from Monte Carlo simulation. \del{The case is the purely inductive IEEE 30-bus system of~\mbox{\cite{vanacker_shhc}}, with the characteristic harmonics up to the 25th, $\HarmonicSet = \{5,7,11,13,17,19,23,25\}$, the first~$N = 21$ loads as harmonic units under the absolute equality fairness criterion, and}\add{The network is the purely inductive IEEE 30-bus system of~\cite{vanacker_shhc}, with} three converter populations: all diode bridges, all thyristor bridges, and a mix of both, alternating over the units, i.e., 11 diode and 10 thyristor bridges, with the angle distributions of~\cite{vanacker_shhc} up to the 25th harmonic. \del{The Cantelli and Gaussian factors act on the exact moments of Section~III-D, and the empirical factor is calibrated on the moments of the expansion, as in~\mbox{\cite{vanacker_shhc}}.}\add{All three factors act on the exact moments of Section~\ref{sec:shhc_recap}.} \del{For every risk factor, population and risk level~$\varepsilon \in \{0.01, 0.02, 0.05, 0.1, 0.2\}$, Fig.~\mbox{\ref{fig:risk_factor}} gives (a) the total hosting capacity relative to the one that makes the exact~$(1-\varepsilon)$ quantile of the binding limit equal to its limit, and (b) the violation probability of the binding individual harmonic voltage limit, by Monte Carlo simulation with 20\,000 samples.}\add{Fig.~\ref{fig:risk_factor} compares them for~$\varepsilon \in \{0.01, 0.02, 0.05, 0.1, 0.2\}$.}
 
 The Cantelli bound never exceeds the risk level, with violation probabilities of at most a quarter of~$\varepsilon$, but costs~2.6--13\,\% of hosting capacity for the diode bridges, 11--32\,\% for the thyristor bridges and~12--36\,\% for the mix, the cost growing as~$\varepsilon$ decreases. The Gaussian factor is accurate for one converter technology: within~1.0\,\% of the exact quantile for the diode bridges and~1.3\,\% for the thyristor bridges, with a violation probability of at most~1.07 and~3.0 times the risk level, respectively. For the mix, it overestimates the hosting capacity by up to~2.7\,\% and violates the limit with a probability of up to~3.7 times the risk level: the opposing mean angles of both technologies make the output distribution far from normal. The empirical factor matches the exact quantile within~0.2\,\% and its violation probability lies within~15\,\% of the risk level for all populations.
 
 \del{The exact moments are essential beyond the 13th harmonic. On the moments of the expansion of degree~$\delta = 2$, the Gaussian factor overestimates the hosting capacity of the thyristor bridges by~7.6--8.7\,\%, with a violation probability of~0.40 at~$\varepsilon = 0.01$, i.e., forty times the risk level, and even the Cantelli bound violates the limit at every risk level, up to~0.44 at~$\varepsilon = 0.2$. With exact moments, the Cantelli bound is distribution-free again, and the Gaussian factor regains the accuracy it has up to the 13th harmonic.} % expansion-moment results: HarmonicPowerModels.jl #38, exact moments: #39
 
-The empirical factor is the most accurate, but its gain over the Gaussian factor on exact moments is at most about~3\,\% of hosting capacity, at~$\varepsilon = 0.01$ for the mix, whereas Section~\del{III-D}\add{\ref{sec:robust_counterpart}} shows that it gives up the convexity and the upper bound of the robust counterpart. The Cantelli bound is safe but costs up to~36\,\%, an order of magnitude more. The Gaussian factor on exact moments is therefore used in the remainder of this section, with the understanding that it is optimistic with respect to the angles by a factor of up to about four in violation probability.
+The empirical factor is the most accurate, but its gain over the Gaussian factor on exact moments is at most about~3\,\% of hosting capacity, at~$\varepsilon = 0.01$ for the mix, whereas Section~\del{III-D}\add{\ref{sec:robust_counterpart}} shows that it gives up the convexity and the upper bound of the robust counterpart. \del{The Cantelli bound is safe but costs up to~36\,\%, an order of magnitude more.} The Gaussian factor on exact moments is therefore used in the remainder of this section\del{, with the understanding that it is optimistic with respect to the angles by a factor of up to about four in violation probability}.
 
 \begin{figure}[!tb]
     \centering
@@ -64,29 +124,8 @@ The empirical factor is the most accurate, but its gain over the Gaussian factor
     \label{fig:risk_factor}
 \end{figure}
 
-% To this end, a large-scale transmission system is considered to show \textit{the scalability of the proposed second-order cone formulation}. 
-
-% \subsection{Transmission Power System}
-% \label{sec:transmission_power_system}
-
-% This numerical illustration considers a synthetic phase-balanced three-phase transmission system, more specifically, the Australian National Electricity Market system, with 2340 buses across seven voltage levels, 1757 transformers, 1821 branches, and 1696 harmonic units. All necessary data can be derived from~\cite{heidari_open_2023} and we enforce the power quality standard AS/NZS IEC61000-3-6:2012~\cite{noauthor_electromagnetic_2012} for determining the for the harmonic hosting capacity. 
-
-% The considered harmonic set is~$\HarmonicSet \in \{2,3,...,50\}$. The aim of this numerical illustration is to 
-% \begin{enumerate*}
-%     \item xxx
-% \end{enumerate*}
-
-\subsection{IEEE 30-Bus System with Physical Cable and Line Inputs}
-\label{sec:ieee30_physical}
-
-The robust hosting capacity is computed for the IEEE 30-bus system of~\cite{vanacker_shhc}, with the characteristic harmonics up to the 25th, $\HarmonicSet = \{5,7,11,13,17,19,23,25\}$, the same 21 diode bridges with the angle distributions of~\cite{vanacker_shhc}, fairness criterion and risk level~$\varepsilon = 0.05$, the Gaussian factor on exact moments of Section~\del{III-D}\add{\ref{sec:shhc_recap}}, and the per-unit-length parameters of Section~\ref{sec:parameter_uncertainty} computed with \textsc{LineCableModels.jl}~\cite{lcm_2026} in the exact $\pi$-model~\eqref{eq:pi_series}--\eqref{eq:pi_shunt}. The 33\,kV lines are replaced by 22 underground cables of four sizes, 400 to 800\,mm$^{2}$ aluminum, 18/30(36)\,kV, in touching trefoil at 0.8\,m depth, assigned per branch by the smallest buried rating above the branch current. The twelve 132\,kV lines are aluminum conductors steel reinforced of four sizes on a delta tower under one steel earth wire. Cable screens are solidly bonded at both ends, the earth wire is grounded at every tower, and all circuits are ideally transposed. The 34 branches share eight designs. The transformers carry their vector groups, i.e., YNyn0 for the 132/33\,kV units and YNd11 for the condenser step-up units. Four cases are compared:
-\begin{enumerate*}
-    \item[(i)] \emph{placeholder}, a single 630\,mm$^{2}$ aluminum cable design for all 33\,kV links, with four uncertain inputs, and the 132\,kV lines of~\cite{vanacker_shhc} without line charging;
-    \item[(ii)] \emph{cables}, the four cable sizes with four uncertain inputs, i.e., resistance, insulation thickness, permittivity and earth resistivity, and the same 132\,kV lines;
-    \item[(iii)] \emph{cables and lines}, case~(ii) with the 132\,kV lines modeled physically, including their charging; and
-    \item[(iv)] \emph{full}, case~(iii) with all 23 physical inputs of Section~\ref{sec:parameter_uncertainty}.
-\end{enumerate*}
-The fundamental operating point is that of the nominal parameters, Section~\ref{sec:parametric_network}. Table~\ref{tab:ieee30_physical} gives the results, and Table~\ref{tab:ieee30_harmonics} the robust hosting capacity per harmonic relative to the nominal stochastic one. Every case converges in two or three iterations to a relative gap below~$5\cdot10^{-4}$ and shows no violation on 1024 independent random points of~$\ParamSet$. \add{At the worst-case points of the final scenario sets of case~(iv), the empirical factor of the binding limits lies between 1.54 and 1.79, against 1.645 for the Gaussian factor, so that their sampled 95\,\% quantile stays within 3.0\,\% of the limit and their violation probability lies between 0.035 and 0.064, i.e., at most 1.3 times the risk level, the largest at the 19th harmonic at bus~5.}
+\subsubsection{Robust Hosting Capacity}
+\add{With the Gaussian factor on exact moments, the robust hosting capacity is computed for the four network models with the 21 diode bridges.} Table~\ref{tab:ieee30_physical} gives the results, and Table~\ref{tab:ieee30_harmonics} the robust hosting capacity per harmonic relative to the nominal stochastic one\add{; every case converges to a relative gap below~$5\cdot10^{-4}$ and shows no violation on 1024 random points of~$\ParamSet$}. \add{At the worst-case points of the final scenario sets of case~(iv), the empirical factor of the binding limits lies between 1.54 and 1.79, against 1.645 for the Gaussian factor, so that their sampled 95\,\% quantile stays within 3.0\,\% of the limit and their violation probability lies between 0.035 and 0.064, i.e., at most 1.3 times the risk level, the largest at the 19th harmonic at bus~5.}
 
 \begin{table}[!tb]
     \centering
@@ -118,58 +157,23 @@ The fundamental operating point is that of the nominal parameters, Section~\ref{
 \end{table}
 
 \subsubsection{Line Charging Moves the Resonances}
-With cables only, case~(ii), the parallel resonances lie at~$\Harmonic = 6.95$ and~18.4. Modeling the 132\,kV lines physically restores the line charging that~\cite{vanacker_shhc} removes, which moves the first resonance to~$\Harmonic = 6.27$ and adds resonances at~$\Harmonic = 12.32$ and between the 17th and the 23rd harmonic, case~(iii). The robust hosting capacity relative to the nominal one halves at the 7th harmonic, from 0.966 to 0.483, and drops from 0.851 to 0.623 at the 13th harmonic, i.e., at the harmonics next to the resonances. Over the harmonics up to the 25th, the line charging lowers the total hosting capacity by~23\,\%, nominal and robust alike, as the added resonances reach the higher orders. The network data that enter the robust problem thus matter as much as their uncertainty: a simplified network places the resonances, and with them the worst cases, at other harmonics.
+With cables only, case~(ii), the parallel resonances lie at~$\Harmonic = 6.95$ and~18.4. Modeling the 132\,kV lines physically restores the line charging that~\cite{vanacker_shhc} removes, which moves the first resonance to~$\Harmonic = 6.27$ and adds resonances at~$\Harmonic = 12.32$ and between the 17th and the 23rd harmonic, case~(iii). The robust hosting capacity relative to the nominal one halves at the 7th harmonic, from 0.966 to 0.483, and drops from 0.851 to 0.623 at the 13th harmonic\del{, i.e., at the harmonics next to the resonances}. Over the harmonics up to the 25th, the line charging lowers the total hosting capacity by~23\,\%, nominal and robust alike, as the added resonances reach the higher orders. The network data that enter the robust problem thus matter as much as their uncertainty: a simplified network places the resonances, and with them the worst cases, at other harmonics.
 
 \subsubsection{Dimension of the Parameter Set}
-Extending the parameter set from 4 to 23 physical inputs, case~(iv), lowers the robust hosting capacity by a further~3.5\,\%, mostly at the 5th, 7th, 13th, 19th and 25th harmonic. The uncertainty of the inputs beyond the four dominant ones is therefore not negligible, but it is second order. With~$d = 23$, the dictionary holds 191 sign-predicted corners in place of the~$2^{23}$ vertices. Without them, the method signs off after five iterations at a solution that violates a limit by~0.16\,\% at a sign-predicted corner, whereas 1024 independent random points of~$\ParamSet$ find no violation. With the corners, it converges in three iterations and in 30\,\% less time. In high dimension, random sampling, including the a-posteriori check, does not certify robustness; the corners do, to first order. The binding constraint is the individual harmonic voltage distortion at the 23rd harmonic at bus~3. At its worst predicted corner, the cables are at their lowest temperature, 10\,$^{\circ}$C, with core and screen resistance at their lower bounds, the lines and the ambient air at~$-5\,^{\circ}$C and the earth resistivity at its lowest value, 10\,$\Omega\cdot$m, i.e., the least damped network.
-
-\subsubsection{Reallocation over the Harmonics}
-The robust hosting capacity per harmonic is not bounded by the nominal one. On a three-unit test network with cables and one parallel resonance at~$\Harmonic = 7.03$, the robust problem allocates~6.0 times the nominal current at the 7th harmonic, while the total over the harmonics up to the 25th falls by~13\,\%. The objective weighs the harmonics together, and where the parameter set detunes the resonance, current moves towards the 7th harmonic from the harmonics that the worst case penalizes. A robust budget is therefore a new allocation, not a uniform derating of the nominal one.
+Extending the parameter set from 4 to 23 physical inputs, case~(iv), lowers the robust hosting capacity by a further~3.5\,\%, mostly at the 5th, 7th, 13th, 19th and 25th harmonic. \del{The uncertainty of the inputs beyond the four dominant ones is therefore not negligible, but it is second order.} With~$d = 23$, the dictionary holds 191 sign-predicted corners in place of the~$2^{23}$ vertices. Without them, the method signs off after five iterations at a solution that violates a limit by~0.16\,\% at a sign-predicted corner, whereas 1024 independent random points of~$\ParamSet$ find no violation. With the corners, it converges in three iterations and in 30\,\% less time\add{, 169\,s on 10 threads for about 156\,000 evaluations of \textsc{LineCableModels.jl}}. In high dimension, random sampling, including the a-posteriori check, does not certify robustness; the corners do, to first order. The binding constraint is the individual harmonic voltage distortion at the 23rd harmonic at bus~3. At its worst predicted corner, the cables are at their lowest temperature, 10\,$^{\circ}$C, \del{with core and screen resistance at their lower bounds,} the lines and the ambient air at~$-5\,^{\circ}$C and the earth resistivity at its lowest value, 10\,$\Omega\cdot$m, i.e., the least damped network. \add{Moreover,} the robust hosting capacity per harmonic is not bounded by the nominal one. On a three-unit test network with cables and one parallel resonance at~$\Harmonic = 7.03$, the robust problem allocates~6.0 times the nominal current at the 7th harmonic, while the total over the harmonics up to the 25th falls by~13\,\%. The objective weighs the harmonics together, and where the parameter set detunes the resonance, current moves towards the 7th harmonic from the harmonics that the worst case penalizes. A robust budget is therefore a new allocation, not a uniform derating of the nominal one.
 
 \subsubsection{Frequency Scaling of the Fundamental Parameters}
-A common simplification scales the fundamental $\pi$-model with the harmonic order, i.e., the resistance with~$\sqrt{\Harmonic}$ and the reactance and susceptance with~$\Harmonic$. Applied to the nominal 50\,Hz parameters of case~(iv), it lowers the nominal hosting capacity by~21\,\%, yet its allocation over the harmonics violates the limits of the physical model at the nominal parameters, where a squared harmonic quantity exceeds its limit by a factor of up to~9.7. Factor intervals derived from the same box, i.e., \textcolor{blue}{the hull of the ratios of the resistance, inductance and capacitance of each family to their nominal values over the box, at the fundamental and at every harmonic frequency}, give a robust hosting capacity of \textcolor{blue}{0.0482\,pu, 37\,\%} below the physical one, which still violates the limits of the physical model at every one of 1024 random points of~$\ParamSet$. \textcolor{blue}{The same factors applied to the nominal frequency response of \textsc{LineCableModels.jl} give 0.0726\,pu, 5.7\,\% below the physical one, with no violation of the physical model at 1024 random points.} The frequency dependence of the cable and line parameters, through skin and proximity effects in the conductor, screen and earth return, is therefore part of the robust problem, and a box \textcolor{blue}{of factors on the 50\,Hz parameters} does not contain the physical uncertainty.
+A common simplification scales the fundamental $\pi$-model with the harmonic order, i.e., the resistance with~$\sqrt{\Harmonic}$ and the reactance and susceptance with~$\Harmonic$. Applied to the nominal 50\,Hz parameters of case~(iv), it lowers the nominal hosting capacity by~21\,\%, yet its allocation over the harmonics violates the limits of the physical model at the nominal parameters\del{, where a squared harmonic quantity exceeds its limit by a factor of up to~9.7}. Factor intervals derived from the same box, i.e., \textcolor{blue}{the hull of the ratios of the resistance, inductance and capacitance of each family to their nominal values over the box, at the fundamental and at every harmonic frequency}, give a robust hosting capacity of \textcolor{blue}{0.0482\,pu, 37\,\%} below the physical one, which still violates the limits of the physical model at every one of 1024 random points of~$\ParamSet$. \textcolor{blue}{The same factors applied to the nominal frequency response of \textsc{LineCableModels.jl} give 0.0726\,pu, 5.7\,\% below the physical one, with no violation of the physical model at 1024 random points.} The frequency dependence of the cable and line parameters, through skin and proximity effects in the conductor, screen and earth return, is therefore part of the robust problem, and a box \textcolor{blue}{of factors on the 50\,Hz parameters} does not contain the physical uncertainty.
 
-\subsubsection{Computational Effort}
-One evaluation of \textsc{LineCableModels.jl} takes about~1.5\,ms per cable design and~2.8--3.6\,ms per overhead-line design, per parameter point and frequency, so the physical model can sit inside the oracle. The full case, with 23 inputs and eight harmonics, requires about 156\,000 such evaluations and solves in 169\,s on 10 threads, including the exact moments and their gradients by central differences.
+% To this end, a large-scale transmission system is considered to show \textit{the scalability of the proposed second-order cone formulation}. 
 
-\subsection{Zero-Sequence Harmonics and Transformer Earthing}
-\label{sec:zero_sequence_results}
+% \subsection{Transmission Power System}
+% \label{sec:transmission_power_system}
 
-Case~(iii) is extended to every harmonic order from 2 to 50, including the 16 zero-sequence orders, without recombination\del{, Section~III-E, so that no angle model of the units is needed}\add{, as in~\cite{vanacker_hosting_2026}: the unit contributions align in the worst case, so that no angle model of the units and no risk factor are needed}. The 50th harmonic, at 2.5\,kHz, lies within the \textcolor{blue}{validity range} of the cable and line model of Section~\ref{sec:parameter_uncertainty}. Bus~9 is the star point of the three-winding unit, and each generator is taken to connect through a YNd step-up with a leakage reactance of 0.12\,pu on a rating of 0.2 times its short-circuit power, at~$X/R = 40$; the synchronous condensers at buses~11 and~13 sit behind their own step-up units, whose delta windings block the zero sequence. % generator zero-sequence data: assumption accepted by Tom Van Acker on 2026-11-11
-Five variants differ only in the windings and earthing of the transformers with a 33\,kV winding, Table~\ref{tab:zero_sequence}:
-\begin{enumerate*}
-    \item[(a)] YNyn0 with solidly earthed 33\,kV stars;
-    \item[(b)] YNyn0 with the 33\,kV stars earthed through 19.05\,$\Omega$, which limits an earth fault to 1\,kA, i.e., case~(iii);
-    \item[(c)] Dyn11, with the delta on the 132\,kV side and the 33\,kV stars as in~(b);
-    \item[(d)] YNd11, with the delta on the 33\,kV side and the 33\,kV star of the condenser step-up unearthed; and
-    \item[(e)] YNy0 with every 33\,kV star unearthed.
-\end{enumerate*}
-The clock numbers keep the same phase shift on every 132/33\,kV path.
+% This numerical illustration considers a synthetic phase-balanced three-phase transmission system, more specifically, the Australian National Electricity Market system, with 2340 buses across seven voltage levels, 1757 transformers, 1821 branches, and 1696 harmonic units. All necessary data can be derived from~\cite{heidari_open_2023} and we enforce the power quality standard AS/NZS IEC61000-3-6:2012~\cite{noauthor_electromagnetic_2012} for determining the for the harmonic hosting capacity. 
 
-\begin{table}[!tb]
-    \centering
-    \caption{Zero-sequence hosting capacity~$\sum_{\Harmonic} \HostingCapacity_{\Harmonic}$ over the zero-sequence harmonics without recombination, nominal and robust, and the harmonic with the lowest robust-to-nominal ratio, IEEE 30-bus system, case~(iii), $d = 4$.}
-    \label{tab:zero_sequence}
-    \footnotesize\setlength{\tabcolsep}{3pt}
-    \begin{tabular}{ l r r r r }
-        variant & nominal & robust & ratio & weakest \\
-                & [pu]    & [pu]   & [-]   & $\Harmonic$ (ratio) \\ \hline
-        (a) YNyn0, solid          & 0.00489 & 0.00444 & 0.907 & 24 (0.57) \\
-        (b) YNyn0, 19.05\,$\Omega$ & 0.00352 & 0.00313 & 0.888 & 30 (0.64) \\
-        (c) Dyn11                 & 0.00407 & 0.00361 & 0.886 & 30 (0.67) \\
-        (d) YNd11                 & 0.00344 & 0.00289 & 0.841 & 24 (0.58) \\
-        (e) YNy0, unearthed       & 0.00344 & 0.00294 & 0.854 & 30 (0.66)
-    \end{tabular}
-\end{table}
+% The considered harmonic set is~$\HarmonicSet \in \{2,3,...,50\}$. The aim of this numerical illustration is to 
+% \begin{enumerate*}
+%     \item xxx
+% \end{enumerate*}
 
-\subsubsection{The Earthing Acts on the Zero Sequence Only}
-The robust hosting capacity summed over the positive- and negative-sequence harmonics is the same in all five variants, 0.00344 and 0.00644\,pu, to within~$10^{-6}$\,pu, and so are their weakest harmonics, the 7th and the 13th at 0.48 and 0.62 of the nominal hosting capacity, as in Section~\ref{sec:ieee30_physical}. Without recombination, the phase shift of the vector groups does not change the magnitudes of the transfer impedances along paths with equal shifts, and the earthing does not enter the positive and negative sequence. Every difference between the variants therefore stems from the zero-sequence network.
-
-\subsubsection{Earthing Practice}
-Solid earthing of the 33\,kV stars hosts~42\,\% more zero-sequence current than the earthing through 19.05\,$\Omega$ after robustness, and 39\,\% more at the nominal parameters. With~$3 \times 19.05\,\Omega$ in every zero-sequence path to earth, the resistance already decouples the 33\,kV network to a large extent: removing the earthing altogether, variants~(d) and~(e), lowers the robust zero-sequence hosting capacity by only a further 6--8\,\%. A delta on the 132\,kV side, variant~(c), raises it by 15\,\%: the 132\,kV network no longer shares the zero-sequence path, and each 33\,kV star earths its own network through the leakage and the neutral resistance. The earthing practice of the distribution network is thus a lever on the zero-sequence hosting capacity of the order of the uncertainty of the network itself.
-
-\subsubsection{Robustness at the Zero Sequence}
-The uncertain cable parameters cost 9--16\,\% of the zero-sequence hosting capacity, against 6--15\,\% for the positive- and negative-sequence harmonics. The loss concentrates at a few high orders, the 24th and 30th harmonic, where the robust hosting capacity falls to 0.57--0.67 of the nominal one, and the earthing moves it from one order to the other: the 24th harmonic is the weakest with solid earthing and with a delta on the 33\,kV side, the 30th in the other variants. The zero-sequence parameters of the cables, through the earth return and the screen bonding, and the earthing path together place the zero-sequence resonances, so a deterministic study of the zero-sequence harmonics with nominal cable data misses the harmonics that are most at risk.
-
-\subsubsection{Computational Effort}
-With 49 harmonics, each variant solves in 5.5--7.5 minutes on 16 threads, in two iterations, to a relative gap below~$10^{-4}$, with no violation on 256 independent random points of~$\ParamSet$.
