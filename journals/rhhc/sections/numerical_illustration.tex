@@ -49,16 +49,16 @@ The clock numbers keep the same phase shift on every 132/33\,kV path.
             \addplot[mark=triangle*, dotted]       table[x=h, y=rc] {journals/rhhc/data/zero_sequence.dat};
             \addplot[mark=diamond*, dashdotted]    table[x=h, y=rd] {journals/rhhc/data/zero_sequence.dat};
             \addplot[mark=x, densely dotted, mark size=1.6pt] table[x=h, y=re] {journals/rhhc/data/zero_sequence.dat};
-            \legend{(a), (b), (c), (d), (e)}
+            \legend{(a) 14.32, (b) 13.02, (c) 13.49, (d) 12.78, (e) 12.83}
         \end{semilogyaxis}
     \end{tikzpicture}
-    \caption{Robust harmonic hosting capacity per harmonic without recombination, earthing variants~(a)--(e), network model~(iii), $d = 4$; gray: zero-sequence harmonics.}
+    \caption{Robust harmonic hosting capacity per harmonic without recombination, earthing variants~(a)--(e), network model~(iii), $d = 4$; legend: total robust hosting capacity~$\sum_{\Harmonic \in \HarmonicSet} \HostingCapacity_{\Harmonic}$ in~$10^{-3}$\,pu; gray: zero-sequence harmonics.}
     \label{fig:zero_sequence}
 \end{figure}
 
 \del{The robust hosting capacity summed over the positive- and negative-sequence harmonics is the same in all five variants, 0.00344 and 0.00644\,pu, to within~$10^{-6}$\,pu. As such, the earthing acts on the zero sequence only.}\add{Fig.~\ref{fig:zero_sequence} shows that the earthing acts on the zero sequence only: at the positive- and negative-sequence harmonics, the robust hosting capacity of the five variants agrees to within~$10^{-6}$\,pu.}
 
-Solid earthing of the 33\,kV stars hosts~42\,\% more zero-sequence current than the earthing through 19.05\,$\Omega$ after robustness. Removing the earthing altogether, variants~(d) and~(e), lowers the robust zero-sequence hosting capacity by only a further 6--8\,\%, as the resistance already decouples the 33\,kV network. A delta on the 132\,kV side, variant~(c), raises it by 15\,\%, as the 132\,kV network no longer shares the zero-sequence path. The earthing practice of the distribution network is thus a lever on the zero-sequence hosting capacity of the order of the uncertainty of the network itself.
+Solid earthing of the 33\,kV stars hosts~42\,\% more zero-sequence current than the earthing through 19.05\,$\Omega$ after robustness. Removing the earthing altogether, variants~(d) and~(e), lowers the robust zero-sequence hosting capacity by only a further 6--8\,\%, as the resistance already decouples the 33\,kV network. A delta on the 132\,kV side, variant~(c), raises it by 15\,\%, as the 132\,kV network no longer shares the zero-sequence path. \add{The effect of the earthing fades with the harmonic order: up to the 24th harmonic, the robust zero-sequence hosting capacity differs by a factor of up to 5.7 between the variants, from the 33rd harmonic on by at most 12\,\%, as the zero-sequence current returns increasingly through the cable capacitances, whose admittance grows with the harmonic order.} The earthing practice of the distribution network is thus a lever on the zero-sequence hosting capacity of the order of the uncertainty of the network itself.
 
 The uncertain cable parameters cost 9--16\,\% of the zero-sequence hosting capacity, against 6--15\,\% for the positive- and negative-sequence harmonics. The loss concentrates at a few high orders, the 24th and 30th harmonic, where the robust hosting capacity falls to 0.57--0.67 of the nominal one, depending on the earthing. The zero-sequence parameters of the cables and the earthing path together place the zero-sequence resonances, so a deterministic study of the zero-sequence harmonics with nominal cable data misses the harmonics that are most at risk.
 
