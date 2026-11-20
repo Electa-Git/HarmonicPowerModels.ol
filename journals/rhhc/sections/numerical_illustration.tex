@@ -69,7 +69,7 @@ The uncertain cable parameters cost 9--16\,\% of the zero-sequence hosting capac
 \label{sec:ieee30_physical}
 
 \begingroup\color{orange}
-The second case study considers the characteristic harmonics up to the 25th, $\HarmonicSet = \{5,7,11,13,17,19,23,25\}$, with the angle distributions of~\cite{vanacker_shhc} and the risk level~$\varepsilon = 0.05$.
+The second case study considers the characteristic harmonics up to the 25th, $\HarmonicSet = \{5,7,11,13,17,19,23,25\}$, with recombination. The current angle of every unit is a random variable, affine in one Beta-distributed random variable per unit, with the angle distributions of~\cite{vanacker_shhc}, so that the angles are independent between the units and fully dependent across the harmonics of a unit. The unit contributions~\eqref{eq:response} recombine at every bus and branch, and the chance constraints~\eqref{eq:cc_compact}, with the exact moments~\eqref{eq:mean_vector}--\eqref{eq:gram_matrix}, limit the result at the risk level~$\varepsilon = 0.05$. The choice of the risk factor is first assessed on the purely inductive network of~\cite{vanacker_shhc}, without parameter uncertainty, for diode bridges, thyristor bridges and a mix of both. The robust hosting capacity is then computed for the four network models~(i)--(iv), with the 21 units as diode bridges.
 \endgroup
 
 \subsubsection{Choice of the Risk Factor}
@@ -125,7 +125,7 @@ The empirical factor is the most accurate, but its gain over the Gaussian factor
 \end{figure}
 
 \subsubsection{Robust Hosting Capacity}
-\add{With the Gaussian factor on exact moments, the robust hosting capacity is computed for the four network models with the 21 diode bridges.} Table~\ref{tab:ieee30_physical} gives the results, and Table~\ref{tab:ieee30_harmonics} the robust hosting capacity per harmonic relative to the nominal stochastic one\add{; no case shows a violation on 1024 random points of~$\ParamSet$}. \add{At the worst-case points of the final scenario sets of case~(iv), the empirical factor of the binding limits lies between 1.54 and 1.79, against 1.645 for the Gaussian factor, so that their violation probability lies between 0.035 and 0.064, i.e., at most 1.3 times the risk level.}
+\add{With the Gaussian factor on exact moments,} Table~\ref{tab:ieee30_physical} gives the results\add{ for the four network models}, and Table~\ref{tab:ieee30_harmonics} the robust hosting capacity per harmonic relative to the nominal stochastic one\add{; no case shows a violation on 1024 random points of~$\ParamSet$}. \add{At the worst-case points of the final scenario sets of case~(iv), the empirical factor of the binding limits lies between 1.54 and 1.79, against 1.645 for the Gaussian factor, so that their violation probability lies between 0.035 and 0.064, i.e., at most 1.3 times the risk level.}
 
 \begin{table}[!tb]
     \centering
