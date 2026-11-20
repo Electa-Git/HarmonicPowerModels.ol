@@ -100,36 +100,46 @@ The Gaussian and Cantelli factors (\S\,\ref{sec:shhc_recap}) are compared on the
 \end{figure}
 
 \subsubsection{Robust Hosting Capacity}
-\add{With the Gaussian factor on exact moments,} Table~\ref{tab:ieee30_physical} gives the results\add{ for the four network models}, and Table~\ref{tab:ieee30_harmonics} the robust hosting capacity per harmonic relative to the nominal stochastic one\add{; no case shows a violation on 1024 random points of~$\ParamSet$}. \add{At the worst-case points of the final scenario sets of case~(iv), the sampled 95\,\% quantile of the binding limits lies between 0.5\,\% below and 3.0\,\% above the limit, and their violation probability between 0.035 and 0.064, i.e., at most 1.3 times the risk level.}
+\add{With the Gaussian factor on exact moments,} Fig.~\ref{fig:ieee30_physical} gives \add{(a)} the results\add{ for the four network models}\add{ and (b)} the robust hosting capacity per harmonic relative to the nominal stochastic one\add{; no case shows a violation on 1024 random points of~$\ParamSet$}. \add{At the worst-case points of the final scenario sets of case~(iv), the sampled 95\,\% quantile of the binding limits lies between 0.5\,\% below and 3.0\,\% above the limit, and their violation probability between 0.035 and 0.064, i.e., at most 1.3 times the risk level.}
 
-\begin{table}[!tb]
+\begin{figure}[!tb]
     \centering
-    \caption{Nominal stochastic and robust harmonic hosting capacity of the IEEE 30-bus system, harmonics up to the 25th, Gaussian factor on exact moments, $\varepsilon = 0.05$, 10 threads.}
-    \label{tab:ieee30_physical}
-    \footnotesize\setlength{\tabcolsep}{2.5pt}
-    \begin{tabular}{ l r r r r r l }
-        case & $d$ & nominal & robust & ratio & time & resonances \\
-             &     & [pu]    & [pu]   & [-]   & [s]  & $\Harmonic$ \\ \hline
-        (i) placeholder         & 4  & 0.1330 & 0.1145 & 0.861 & 34  & 6.86, 18.2 \\
-        (ii) cables             & 4  & 0.1282 & 0.1038 & 0.810 & 46  & 6.95, 18.4 \\
-        (iii) cables and lines  & 4  & 0.0993 & 0.0797 & 0.803 & 66  & 6.27, 12.3, 16.9--22.7 \\
-        (iv) full               & 23 & 0.0993 & 0.0769 & 0.775 & 169 & 6.27, 12.3, 16.9--22.7
-    \end{tabular}
-\end{table}
-
-\begin{table}[!tb]
-    \centering
-    \caption{Robust harmonic hosting capacity per harmonic relative to the nominal stochastic one, IEEE 30-bus system.}
-    \label{tab:ieee30_harmonics}
-    \footnotesize\setlength{\tabcolsep}{2.2pt}
-    \begin{tabular}{ l r r r r r r r r }
-        case $\backslash$ $\Harmonic$ & 5 & 7 & 11 & 13 & 17 & 19 & 23 & 25 \\ \hline
-        (i)   & 0.834 & 0.896 & 0.865 & 0.899 & 0.861 & 0.866 & 0.845 & 0.854 \\
-        (ii)  & 0.906 & 0.966 & 0.782 & 0.851 & 0.866 & 0.761 & 0.747 & 0.758 \\
-        (iii) & 0.884 & 0.483 & 0.885 & 0.623 & 0.867 & 0.989 & 0.929 & 0.738 \\
-        (iv)  & 0.825 & 0.447 & 0.874 & 0.581 & 0.859 & 0.937 & 0.868 & 0.711
-    \end{tabular}
-\end{table}
+    \pgfplotsset{nmplot/.style={rhhc, scale only axis, width=0.25\columnwidth, height=2.2cm,
+        legend style={at={(0.5,1.03)}, anchor=south, draw=none, font=\scriptsize, /tikz/every even column/.append style={column sep=2pt}},
+        legend image code/.code={\draw[mark repeat=2, mark phase=2] plot coordinates {(0cm,0cm) (0.15cm,0cm) (0.3cm,0cm)};}},
+        mi/.style={solid, mark=o}, mii/.style={densely dashed, mark=square*}, miii/.style={dotted, mark=triangle*}, miv/.style={dashdotted, mark=diamond*},
+        res/.style={only marks, mark=|, mark size=2.5pt, line width=0.7pt, forget plot}}
+    \subfloat[total]{%
+    \begin{tikzpicture}
+        \begin{axis}[nmplot, ybar, bar width=4pt, ymin=0, ymax=0.165, ylabel={$\sum_{\Harmonic} \HostingCapacity_{\Harmonic}$ [pu]}, ylabel style={yshift=-4pt},
+            symbolic x coords={(i),(ii),(iii),(iv)}, xtick=data, enlarge x limits=0.18, legend columns=2,
+            legend image code/.code={\draw[#1] (0cm,-0.08cm) rectangle (0.2cm,0.08cm);},
+            scaled y ticks=false, yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2},
+            nodes near coords style={font=\tiny, rotate=90, anchor=west, inner sep=1pt}]
+            \addplot[black, fill=white] coordinates {((i),0.1330) ((ii),0.1282) ((iii),0.0993) ((iv),0.0993)};
+            \addplot[black, fill=gray!60, nodes near coords, point meta=explicit symbolic]
+                coordinates {((i),0.1145)[0.86] ((ii),0.1038)[0.81] ((iii),0.0797)[0.80] ((iv),0.0769)[0.78]};
+            \legend{nominal, robust}
+        \end{axis}
+    \end{tikzpicture}}\hfill
+    \subfloat[ratio per harmonic]{%
+    \begin{tikzpicture}
+        \begin{axis}[nmplot, xmin=4, xmax=26, ymin=0.3, ymax=1.05, xtick={5,7,11,13,17,19,23,25}, xticklabels={5,,11,,17,,23,},
+            xlabel={harmonic order $\Harmonic$}, ylabel={ratio [-]}, legend columns=4, ylabel style={yshift=-4pt},
+            every axis plot/.append style={mark size=1.3pt}]
+            \addplot[reference, forget plot] coordinates {(4,1) (26,1)};
+            \addplot[mi]   coordinates {(5,0.834) (7,0.896) (11,0.865) (13,0.899) (17,0.861) (19,0.866) (23,0.845) (25,0.854)};
+            \addplot[mii]  coordinates {(5,0.906) (7,0.966) (11,0.782) (13,0.851) (17,0.866) (19,0.761) (23,0.747) (25,0.758)};
+            \addplot[miii] coordinates {(5,0.884) (7,0.483) (11,0.885) (13,0.623) (17,0.867) (19,0.989) (23,0.929) (25,0.738)};
+            \addplot[miv]  coordinates {(5,0.825) (7,0.447) (11,0.874) (13,0.581) (17,0.859) (19,0.937) (23,0.868) (25,0.711)};
+            \addplot[res, gray] coordinates {(6.86,0.36) (18.22,0.36) (6.95,0.36) (18.35,0.36)};
+            \addplot[res, black] coordinates {(6.27,0.43) (12.32,0.43) (16.86,0.43) (18.21,0.43) (19.12,0.43) (19.65,0.43) (22.72,0.43)};
+            \legend{(i), (ii), (iii), (iv)}
+        \end{axis}
+    \end{tikzpicture}}
+    \caption{Nominal stochastic and robust harmonic hosting capacity of the IEEE 30-bus system for the network models~(i)--(iv), harmonics up to the 25th, Gaussian factor on exact moments, $\varepsilon = 0.05$: (a) total, with the robust-to-nominal ratio above the bars, and (b) robust-to-nominal ratio per harmonic, with the parallel resonances at the nominal parameters as ticks at the bottom, gray for~(i) and~(ii), black for~(iii) and~(iv).}
+    \label{fig:ieee30_physical}
+\end{figure}
 
 \subsubsection{Line Charging Moves the Resonances}
 With cables only, case~(ii), the parallel resonances lie at~$\Harmonic = 6.95$ and~18.4. Modeling the 132\,kV lines physically restores the line charging that~\cite{vanacker_shhc} removes, which moves the first resonance to~$\Harmonic = 6.27$ and adds resonances at~$\Harmonic = 12.32$ and between the 17th and the 23rd harmonic, case~(iii). The robust hosting capacity relative to the nominal one halves at the 7th harmonic, from 0.966 to 0.483, and drops from 0.851 to 0.623 at the 13th harmonic\del{, i.e., at the harmonics next to the resonances}. \del{Over the harmonics up to the 25th, the line charging lowers the total hosting capacity by~23\,\%, nominal and robust alike, as the added resonances reach the higher orders.} The network data that enter the robust problem thus matter as much as their uncertainty: a simplified network places the resonances, and with them the worst cases, at other harmonics.
@@ -143,7 +153,7 @@ A common simplification scales the fundamental $\pi$-model with the harmonic ord
 \subsection{Computational Tractability}
 \label{sec:tractability}
 \begingroup\color{orange}
-The master problem keeps two variables per harmonic and one cut per scenario, so the effort lies in the oracle. One evaluation of \textsc{LineCableModels.jl} takes about~1.5\,ms per cable design and~2.8--3.6\,ms per overhead-line design, per parameter point and frequency. With uncertain current angles, every network model converges in two or three iterations to a relative gap below~$5\cdot10^{-4}$, in 34 to 169\,s on 10 threads, Table~\ref{tab:ieee30_physical}. The full model, with 23 inputs and eight harmonics, requires about 156\,000 such evaluations; the sign-predicted corners reduce its iterations from five to three and its time by 30\,\%. Without recombination, each earthing variant solves its 49 harmonics in 5.5--7.5\,minutes on 16 threads, in two iterations, to a relative gap below~$10^{-4}$.
+The master problem keeps two variables per harmonic and one cut per scenario, so the effort lies in the oracle. One evaluation of \textsc{LineCableModels.jl} takes about~1.5\,ms per cable design and~2.8--3.6\,ms per overhead-line design, per parameter point and frequency. With uncertain current angles, every network model converges in two or three iterations to a relative gap below~$5\cdot10^{-4}$, in 34 to 169\,s on 10 threads\del{, Table~III}. The full model, with 23 inputs and eight harmonics, requires about 156\,000 such evaluations; the sign-predicted corners reduce its iterations from five to three and its time by 30\,\%. Without recombination, each earthing variant solves its 49 harmonics in 5.5--7.5\,minutes on 16 threads, in two iterations, to a relative gap below~$10^{-4}$.
 \endgroup
 
 \subsection{Comparison with the Literature}
