@@ -1,7 +1,7 @@
 \section{Numerical Illustration}
 \label{sec:numerical_illustration}
 
-\del{This section presents the numerical illustration of the robust harmonic hosting capacity problem of a phase-balanced three-phase power system.} All results are presented in per-unit using a 100\,MVA basis. \add{Two case studies are considered on the same test network: first, every harmonic order up to the 50th, including the zero-sequence harmonics, without uncertainty on the current angles, to assess the transformer windings and earthing; and second, the characteristic harmonics up to the 25th with uncertain current angles, to assess the choice of the risk factor and the network data and their uncertainty.}
+This section presents the numerical illustration of the robust harmonic hosting capacity problem of a phase-balanced three-phase power system. Two case studies are considered on the same test network: first, every harmonic order up to the 50th, including the zero-sequence harmonics, without uncertainty on the current angles, to assess the transformer windings and earthing; and second, the characteristic harmonics up to the 25th with uncertain current angles, to assess the choice of the risk factor and the network data and their uncertainty. All results are presented in per-unit using a 100\,MVA basis.
 
 \pgfplotsset{rhhc/.style={
     axis lines=left, xmajorgrids=true, ymajorgrids=true, grid style={gray!10},
@@ -13,29 +13,27 @@
 
 \subsection{Test Network}
 \label{sec:test_network}
-\begingroup\color{orange}
-The test network is the IEEE 30-bus system of~\cite{vanacker_shhc}, with the first~$N = 21$ loads as harmonic units under the absolute equality fairness criterion. The per-unit-length parameters of Section~\ref{sec:parameter_uncertainty} are computed with \textsc{LineCableModels.jl}~\cite{lcm_2026} in the exact $\pi$-model~\eqref{eq:pi_series}--\eqref{eq:pi_shunt}. The 33\,kV lines are replaced by 22 underground cables of four sizes, 400 to 800\,mm$^{2}$ aluminum, 18/30(36)\,kV, in touching trefoil at 0.8\,m depth\del{, assigned per branch by the smallest buried rating above the branch current}. The twelve 132\,kV lines are aluminum conductors steel reinforced of four sizes on a delta tower under one steel earth wire. Cable screens are solidly bonded at both ends, the earth wire is grounded at every tower, and all circuits are ideally transposed. \del{The 34 branches share eight designs.} The transformers carry their vector groups, i.e., YNyn0 for the 132/33\,kV units and YNd11 for the condenser step-up units. The fundamental operating point is that of the nominal parameters, Section~\ref{sec:parametric_network}. Four network models are compared:
-\endgroup
-\begin{enumerate*}
-    \item[(i)] \emph{placeholder}, a single 630\,mm$^{2}$ aluminum cable design for all 33\,kV links, with four uncertain inputs, and the 132\,kV lines of~\cite{vanacker_shhc} without line charging;
-    \item[(ii)] \emph{cables}, the four cable sizes with four uncertain inputs, i.e., resistance, insulation thickness, permittivity and earth resistivity, and the same 132\,kV lines;
-    \item[(iii)] \emph{cables and lines}, case~(ii) with the 132\,kV lines modeled physically, including their charging; and
-    \item[(iv)] \emph{full}, case~(iii) with all 23 physical inputs of Section~\ref{sec:parameter_uncertainty}.
-\end{enumerate*}
 
+The test network is the IEEE 30-bus system of~\cite{vanacker_shhc}, with 21 loads as harmonic units under the absolute equality fairness criterion. The per-unit-length parameters of Section~\ref{sec:parameter_uncertainty} are computed with \textsc{LineCableModels.jl}~\cite{lcm_2026} in the exact $\pi$-model~\eqref{eq:pi_series}--\eqref{eq:pi_shunt}. The 33\,kV lines are replaced by 22 underground cables of four sizes, 400 to 800\,mm$^{2}$ aluminum, 18/30(36)\,kV, in touching trefoil at 0.8\,m depth\. The twelve 132\,kV lines are aluminum conductors steel reinforced of four sizes on a delta tower under one steel earth wire. Cable screens are solidly bonded at both ends, the earth wire is grounded at every tower, and all circuits are ideally transposed. The transformers carry their vector groups, i.e., YNyn0 for the 132/33\,kV units and YNd11 for the condenser step-up units. The fundamental operating point is that of the nominal parameters. Four network models are compared:
+\begin{enumerate}
+    \item[(i)] \textit{placeholder}, a single 630\,mm$^{2}$ aluminum cable design for all 33\,kV links, with four uncertain inputs, and the 132\,kV lines of~\cite{vanacker_shhc} without line charging;
+    \item[(ii)] \textit{cables}, the four cable sizes with four uncertain inputs, i.e., resistance, insulation thickness, permittivity and earth resistivity, and the same 132\,kV lines;
+    \item[(iii)] \textit{cables and lines}, case~(ii) with the 132\,kV lines modeled physically, including their charging; and
+    \item[(iv)] \textit{full}, case~(iii) with all 23 physical inputs of Section~\ref{sec:parameter_uncertainty}.
+\end{enumerate}
 
 \subsection{Zero-Sequence Harmonics and Transformer Earthing}
 \label{sec:zero_sequence_results}
 
-\add{The first case study considers network model~(iii) with} every harmonic order from 2 to 50, including the 16 zero-sequence orders, without recombination\del{, Section~III-E, so that no angle model of the units is needed}\add{, as in~\cite{vanacker_hosting_2026}: the unit contributions align in the worst case, so that no angle model of the units and no risk factor are needed}. The 50th harmonic, at 2.5\,kHz, lies within the \textcolor{blue}{validity range} of the cable and line model of Section~\ref{sec:parameter_uncertainty}. \del{Bus~9 is the star point of the three-winding unit, and each}\add{Each} generator is taken to connect through a YNd step-up with a leakage reactance of 0.12\,pu on a rating of 0.2 times its short-circuit power, at~$X/R = 40$; the synchronous condensers at buses~11 and~13 sit behind their own step-up units, whose delta windings block the zero sequence. % generator zero-sequence data: assumption accepted by Tom Van Acker on 2026-11-11
+The first case study considers network model~(iii) with every harmonic order from 2 to 50, including the 16 zero-sequence orders, without recombination, as in~\cite{vanacker_hosting_2026}: the unit contributions align in the worst case, so that no angle model of the units and no risk factor are needed. The 50th harmonic, at 2.5\,kHz, lies within the valid range of the cable and line model of Section~\ref{sec:parameter_uncertainty}. Each generator is taken to connect through a YNd step-up with a leakage reactance of 0.12\,pu on a rating of 0.2 times its short-circuit power, at~$X/R = 40$. The synchronous condensers at buses~11 and~13 sit behind their own step-up units, whose delta windings block the zero sequence. % generator zero-sequence data: assumption accepted by Tom Van Acker on 2026-11-11
 Five variants differ only in the windings and earthing of the transformers with a 33\,kV winding, Table~\ref{tab:zero_sequence}:
-\begin{enumerate*}
+\begin{enumerate}
     \item[(a)] YNyn0 with solidly earthed 33\,kV stars;
     \item[(b)] YNyn0 with the 33\,kV stars earthed through 19.05\,$\Omega$, which limits an earth fault to 1\,kA, i.e., case~(iii);
     \item[(c)] Dyn11, with the delta on the 132\,kV side and the 33\,kV stars as in~(b);
     \item[(d)] YNd11, with the delta on the 33\,kV side and the 33\,kV star of the condenser step-up unearthed; and
     \item[(e)] YNy0 with every 33\,kV star unearthed.
-\end{enumerate*}
+\end{enumerate}
 The clock numbers keep the same phase shift on every 132/33\,kV path.
 
 \begin{table}[!tb]
